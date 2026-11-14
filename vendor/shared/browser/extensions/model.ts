@@ -7,6 +7,11 @@ export interface ChromeExtension {
 }
 export type ExtensionRequest = { action: 'list' | 'discover' }
   | { action: 'install'; path: string }
+  | { action: 'beginUpload'; files: { path: string; size: number }[] }
+  | { action: 'writeUpload'; token: string; path: string; offset: number; data: string }
+  | { action: 'finishUpload' | 'releaseTransfer'; token: string }
+  | { action: 'export'; path: string }
+  | { action: 'readExport'; token: string; offset: number }
   | { action: 'enable'; id: string; enabled: boolean }
   | { action: 'remove' | 'open'; id: string }
   | { action: 'pin'; id: string; pinned: boolean };

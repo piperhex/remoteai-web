@@ -12,6 +12,7 @@ export type BrowserCommand = { action: 'extensions'; request: import('./extensio
   | { action: 'key'; key: string };
 export interface BrowserRequest { threadId: string; tabId?: string; command: BrowserCommand }
 export interface BrowserReply {
+  transfer?: { token: string; size?: number; data?: string };
   supported?: boolean; entries?: import('./extensions/model').BrowserExtension[];
   candidates?: import('./extensions/model').ChromeExtension[];
   tabs?: ManagedBrowserTab[]; tab?: ManagedBrowserTab;
@@ -23,6 +24,8 @@ export interface BrowserReply {
 }
 export interface BrowserClient {
   native: boolean;
+  browseFiles?: (directory: string, includeFiles?: boolean) =>
+    Promise<import('../remote-chat/projectDirectories').ProjectDirectoriesResponse>;
   request: (request: BrowserRequest) => Promise<BrowserReply>;
   subscribe: (callback: (event: BrowserEvent) => void) => Promise<() => void>;
 }

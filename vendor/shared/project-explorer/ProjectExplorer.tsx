@@ -24,10 +24,19 @@ export function ProjectExplorer(props: ExplorerProps) {
     const target = document.elementFromPoint(position.x, position.y)?.closest<HTMLElement>('[data-path]');
     state.setSelected(target?.dataset.path ?? ''); setMenu(position);
   });
-  const chosen = state.selection?.directory ? state.selection.path : state.result?.directory;
+  const selectedFile = state.selection && !state.selection.directory;
+  const chosen = state.selection && (state.selection.directory || props.mode === 'selectPath')
+    ? state.selection.path : state.result?.directory;
   const canChoose = !!chosen && !state.loading && !state.error && !actions.busy && !actions.prompt;
+  const acceptsSelection = props.mode !== 'selectPath' || !selectedFile
+    || props.acceptsFile(state.selection!.name);
   const browsing = props.mode === 'browse';
-  const choose = () => { if (!browsing && canChoose && chosen) props.choose(directoryProject(chosen)); };
+  const selectionLabel = t(textKey(props.mode === 'selectPath' ? 'location' : 'selection'));
+  const choose = () => {
+    if (!canChoose || !acceptsSelection || !chosen || props.mode === 'browse') return;
+    if (props.mode === 'selectPath') props.choosePath(chosen);
+    else props.choose(directoryProject(chosen));
+  };
   const menus = explorerMenus(state, actions, t);
   return <Modal open centered width="85vw" className="project-explorer-modal" footer={null}
     title={props.title ?? t('client.chat.chooseProject')} maskClosable={!actions.busy}
@@ -75,11 +84,11 @@ export function ProjectExplorer(props: ExplorerProps) {
         <button type="button" aria-label={t(textKey('large'))} aria-pressed={state.view === 'large'}
           onClick={() => state.setView('large')}><LayoutGrid size={17} /></button>
       </div>
-      <div className="pe-footer"><label>{t(textKey('selection'))}<input readOnly
+      <div className="pe-footer"><label>{selectionLabel}<input readOnly
         value={browsing ? state.directory : chosen ?? ''}
-        aria-label={t(textKey('selection'))} /></label>
-        {!browsing && <button type="button" className="pe-primary" disabled={!canChoose}
-          onClick={choose}>{t(textKey('choose'))}</button>}
+        aria-label={selectionLabel} /></label>
+        {!browsing && <button type="button" className="pe-primary" disabled={!canChoose || !acceptsSelection}
+          onClick={choose}>{props.mode === 'selectPath' ? props.chooseLabel : t(textKey('choose'))}</button>}
         <button type="button" disabled={actions.busy} onClick={props.close}>
           {t(browsing ? 'client.projectBrowser.close' : textKey('cancel'))}</button>
       </div>

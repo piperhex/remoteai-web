@@ -6,6 +6,9 @@ import { browserEvent, type BrowserClient } from '../../browser/automation';
 
 export const localBrowserClient: BrowserClient = {
   native: isTauri(),
+  browseFiles: (directory, includeFiles = true) => guiApi.request({
+    operation: 'projectDirectories', directory, includeFiles,
+  }),
   request: request => invoke('codex_gui_browser', { request }),
   subscribe: callback => guiApi.subscribe(event => { const browser = browserEvent(event); if (browser) callback(browser); }),
 };

@@ -19,16 +19,43 @@
 .browser-extensions-menu .browser-extensions-manage { border-top: 1px solid rgba(128, 128, 128, .2);
   border-radius: 0; width: 100%; margin-top: 8px; padding-top: 12px; }
 .browser-extension-manager-actions { display: flex; justify-content: space-between; gap: 12px; margin: 16px 0; }
-.browser-extension-card { display: flex; align-items: start; gap: 12px; border: 1px solid rgba(128, 128, 128, .2);
-  border-radius: 8px; padding: 14px; margin: 10px 0; }
+.browser-extension-card { display: flex; align-items: center; gap: 14px; padding: 16px 4px;
+  border-bottom: 1px solid var(--extension-border); }
+.browser-extension-card:last-child { border-bottom: 0; }
 .browser-extension-details { flex: 1; min-width: 0; overflow-wrap: anywhere; }
-.browser-extension-details p { margin: 8px 0 0; }
-.browser-extension-version, .browser-extension-note { opacity: .65; }
-.browser-extension-permissions { margin: 6px 0 12px; opacity: .7; overflow-wrap: anywhere; }
-.browser-extension-folder { display: grid; gap: 8px; margin: 16px 0; }
-.browser-extension-note { margin: 16px 0 0; }
+.browser-extension-details p { margin: 6px 0 0; color: var(--extension-muted); }
+.browser-extension-version, .browser-extension-note, .browser-extension-subtitle,
+.browser-extension-source { color: var(--extension-muted); }
+.browser-extension-subtitle { margin: 4px 0 12px; }
+.browser-extension-note { margin: 16px 0 0; padding-top: 12px; border-top: 1px solid var(--extension-border); }
 .browser-extension-manager .ant-modal-body { max-height: 75vh; overflow: auto; }
+.browser-extension-card-title { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.browser-extension-card-title .ant-tag { margin: 0; }
+.browser-extension-avatar { display: grid; place-items: center; width: 3em; height: 3em; flex-shrink: 0;
+  border-radius: var(--extension-radius); background: var(--extension-surface); }
+.browser-extension-avatar .browser-extension-icon { width: 2em; height: 2em; }
+.browser-extension-assistant { display: flex; align-items: center; gap: 14px; margin: 16px 0 24px; padding: 16px;
+  border-radius: var(--extension-radius); background: var(--extension-accent-bg); }
+.browser-extension-assistant .browser-extension-avatar { background: transparent; }
+.browser-extension-drop { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 20px;
+  border: 1px dashed var(--extension-border); border-radius: var(--extension-radius);
+  background: var(--extension-surface); transition: border-color .15s, background .15s; }
+.browser-extension-drop[data-dragging] { border-color: var(--extension-accent); background: var(--extension-accent-bg); }
+.browser-extension-drop-icon { color: var(--extension-accent); display: flex; }
+.browser-extension-drop-copy { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 180px; }
+.browser-extension-drop-copy > span { color: var(--extension-muted); }
+.browser-extension-controls { display: flex; align-items: center; flex-shrink: 0; gap: 6px; }
+.browser-extension-controls > .ant-switch { margin-inline-end: 6px; }
+.browser-extension-card-actions { margin-top: 5px; }
+.browser-extension-card-actions .ant-btn, .browser-extension-card .ant-btn-text { color: var(--extension-muted); }
+.browser-extension-card .ant-btn-dangerous { color: var(--extension-error); }
+.browser-extension-card [aria-pressed=true] { color: var(--extension-accent); }
+.browser-extension-source { margin: 5px 0; }
+.browser-extension-list-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.browser-extension-list-heading .ant-input-affix-wrapper { width: 220px; max-width: 55%; }
 @media (max-width: 720px) {
   .browser-extensions-toolbar > button { display: none; }
   .browser-extension-card { flex-wrap: wrap; }
+  .browser-extension-controls { margin-inline-start: auto; }
+  .browser-extension-drop { padding: 14px; }
 }
