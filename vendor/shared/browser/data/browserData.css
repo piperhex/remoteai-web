@@ -28,4 +28,6 @@
   .browser-data-modal .ant-modal-content { padding: 18px 16px; }
   .browser-data-scroll { max-height: 65dvh; }
   .browser-data-choice { gap: 12px; padding: 16px 12px; }
+  .browser-password-row { display: grid; grid-template-columns: auto minmax(0, 1fr); }
+  .browser-password-row > .ant-space { grid-column: 2; }
 }

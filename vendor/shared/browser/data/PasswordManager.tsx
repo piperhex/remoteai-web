@@ -53,10 +53,11 @@ export function PasswordManager({ language, close, currentUrl, fill, candidate }
     {!passwords.unlocked ? <VaultUnlock t={t} /> : <>
       <div className="browser-data-tools"><Input prefix={<Search size="1em" />} value={query}
         placeholder={t('market.browserPasswordSearch')} aria-label={t('market.browserPasswordSearch')}
-        onChange={event => { setQuery(event.target.value); vault.touch(); }} />
+        onChange={event => setQuery(event.target.value)} />
         <Button icon={<Plus size="1em" />} onClick={() => setEditing({ origin: loginOrigin(currentUrl) ?? '',
           username: '', password: '' })}>{t('market.browserPasswordAdd')}</Button>
-        <Button icon={<Lock size="1em" />} aria-label={t('market.browserVaultLock')} onClick={vault.lock} /></div>
+        <Button icon={<Lock size="1em" />} aria-label={t('market.browserVaultLock')}
+          onClick={() => { void vault.lock().catch(() => setError(true)); }} /></div>
       {!fill && <p>{t('market.browserPasswordWebHint')}</p>}
       {status === 'conflict' && <VaultConflict t={t} />}
       {passwords.error && <p role="alert">{t('market.browserVaultCorrupt')}</p>}
@@ -67,9 +68,9 @@ export function PasswordManager({ language, close, currentUrl, fill, candidate }
           <KeyRound size="1.4em" /><span style={{ flex: 1 }}><strong>{entry.origin}</strong><small>{entry.username}</small></span>
           <Space wrap>
             {fill && entry.origin === loginOrigin(currentUrl) && <Button onClick={() => {
-              vault.touch(); void fill(entry).then(close).catch(() => setError(true));
+              void fill(entry).then(close).catch(() => setError(true));
             }}>{t('market.browserPasswordFill')}</Button>}
-            <Button onClick={() => { vault.touch(); setEditing(entry); }}>{t('market.browserPasswordEdit')}</Button>
+            <Button onClick={() => setEditing(entry)}>{t('market.browserPasswordEdit')}</Button>
             <Button danger onClick={() => setRemoving(entry)}>{t('market.bookmarkDelete')}</Button>
           </Space>
         </div>)}
@@ -101,7 +102,7 @@ function VaultConflict({ t }: { t: MarketText }) {
 
 function PasswordEditor({ t, login, close }: { t: MarketText; login: Login | SavedLogin; close: () => void }) {
   const { vault } = useBrowserData(), [draft, setDraft] = useState<Login>(login), [error, setError] = useState(false);
-  const update = (key: keyof Login, value: string) => { vault.touch(); setDraft(current => ({ ...current, [key]: value })); };
+  const update = (key: keyof Login, value: string) => setDraft(current => ({ ...current, [key]: value }));
   const save = () => {
     const origin = loginOrigin(draft.origin);
     if (!origin || !draft.password) { setError(true); return; }

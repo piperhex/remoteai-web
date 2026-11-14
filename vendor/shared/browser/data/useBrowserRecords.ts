@@ -6,6 +6,7 @@ import { useBrowserData } from './context';
 import { browserUrl, type Login } from './model';
 import { newDataId, validateLogin } from './crypto';
 import type { DataControls } from './clear';
+import { usePasswordSuggestions } from './usePasswordSuggestions';
 
 export function useBrowserRecords(options: {
   tabs: BrowserTab[]; activeId: string; active: boolean; closeTabs: (ids: string[]) => void;
@@ -29,13 +30,15 @@ export function useBrowserRecords(options: {
     catch { /* The store exposes persistence failures in the browser data UI. */ }
   }, [store, random]);
   const active = options.tabs.find(tab => tab.id === options.activeId);
+  const suggestions = usePasswordSuggestions(active, options.active);
   useEffect(() => {
     if (!desktop || !options.active || !active) return;
     const unlisten = listen<Login>(`browser-login-${active.id}`, event => {
-      if (validateLogin(event.payload)) setCandidate(event.payload);
+      if (validateLogin(event.payload) && !vault.snapshot().entries.some(entry => entry.origin === event.payload.origin
+        && entry.username === event.payload.username && entry.password === event.payload.password)) setCandidate(event.payload);
     }).catch(() => undefined);
     return () => { void unlisten.then(stop => stop?.()); };
-  }, [desktop, options.active, active?.id]);
+  }, [desktop, options.active, active?.id, vault]);
   useEffect(() => {
     if (!desktop || !options.active || !active?.url.startsWith('https:') || active.automationThread) return;
     let stopped = false, busy = false;
@@ -62,11 +65,11 @@ export function useBrowserRecords(options: {
     closeTabs: options.closeTabs,
     clearSiteData: desktop ? request => invoke('provider_browser_clear_data', { request }) : undefined,
   };
-  const fill = desktop && active && !active.automationThread ? async (login: Login) => {
+  const fill = desktop && active && !active.automationThread ? async (login: Login, focusId?: string) => {
     const { origin, username, password } = login;
     const done = await invoke<boolean>('provider_browser_password', { id: active.id,
-      request: { action: 'fill', login: { origin, username, password } } });
+      request: { action: 'fill', login: { origin, username, password }, focusId } });
     if (!done) throw new Error('password-fill');
   } : undefined;
-  return { controls, fill, candidate, closeCapture, recordVisit };
+  return { controls, fill, candidate, closeCapture, recordVisit, ...suggestions };
 }

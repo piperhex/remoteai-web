@@ -27,6 +27,7 @@ import { openWebsiteInBrowser } from '../conversation/WebsiteLinkMenu';
 import { BrowserSettingsAction } from '../browser/BrowserSettings';
 import { BrowserHistory } from '../browser/data/BrowserDataPanel';
 import { PasswordManager } from '../browser/data/PasswordManager';
+import { PasswordSuggestions } from '../browser/data/PasswordSuggestions';
 import { PasswordCapture } from '../browser/data/PasswordCapture';
 import { useBrowserRecords } from '../browser/data/useBrowserRecords';
 import { BrowserFullscreenControl } from '../browser/BrowserFullscreenControl';
@@ -201,11 +202,13 @@ export function BrowserContents(props: BrowserWindowProps & {
     {dataPanel === 'passwords' && <PasswordManager language={props.language} currentUrl={displayTab?.url ?? ''}
       fill={records.fill} close={() => setDataPanel(undefined)} />}
     {open && records.candidate && <PasswordCapture login={records.candidate} t={t} close={records.closeCapture} />}
+    {open && records.focus && records.fill && <PasswordSuggestions language={props.language} tabId={activeId}
+      focus={records.focus} fill={records.fill} close={records.closeSuggestions} />}
     <BrowserPages key="pages" browser={{ ...props, onAction: home.action, onNavigate: home.navigate,
       onCloseTab: id => closeTabs([id]) }}
       home={home.isHome} bookmarks={bookmarks.manage} t={t} manager={showManager} compact={compact} query={query}
       desktopTabs={desktopTabs}
-      blocked={menuOpen || bookmarks.overlayOpen || mappingsOpen || !!dataPanel || !!records.candidate}
+      blocked={menuOpen || bookmarks.overlayOpen || mappingsOpen || !!dataPanel || !!records.candidate || !!records.focus}
       loadingChanged={loadingChanged}
       recordVisit={records.recordVisit}
       select={id => { props.onSelect(id); setManager(false); }} />
