@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "0f8f894d2a7e10a3cd74a838693741bbe911b946",
+  "revision": "ee0aafa0496b078014980b4b160aef5694afa054",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "e74823564f2f77cfd9e0cfb8c799a10c728ab54a"
+    "revision": "c2e5d05d14e102c443a5f1e8b9def183b670885d"
   },
   "retainedTestSources": {
     "repository": "https://github.com/piperhex/remoteai",
@@ -14,7 +14,7 @@
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
-    "revision": "0d01dd6fb2aee6e3bf1c5fe8f6449de2f428b712"
+    "revision": "f13279385060a52ff57d2542369db9d7c3d0c813"
   },
   "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.27/remoteai-i18n-0.1.27.tgz",
   "files": {
@@ -1722,7 +1722,7 @@
     "shared/provider-market/BrowserTabIcon.tsx": "45aceb99594df9d210f588fa028e77ce03699434f154c1e01b1c6b0ec453a315",
     "shared/provider-market/providerWebsiteIcon.css": "9b13173df3c427d0f6dece11252ad7cdc1f76f4017c4d4e4ac279d5f5bb3d515",
     "shared/browser/managed/providerBrowserSession.ts": "1d09ead472cd5b3e8857e2168bde7b63e3a8e5ccc091be30ccd0d88e7a69ac2d",
-    "shared/browser/managed/BrowserFrame.tsx": "ca63c2349dbfdaad1896eb9ca538d36b9dc9cb959f9db401e62ef54dedb91d35",
+    "shared/browser/managed/BrowserFrame.tsx": "c48d0cb6ff44a3fa6bf5b8d2b28433d94d079ad6fbc94a857ca9214e3a32dd22",
     "shared/chat/mermaidCache.ts": "07da621d1ffd2fc48e1d2d54420e804035cda107ae66a5fff73a4b67c7214dfb",
     "apps/desktop/src/pages/codexGui/ModelChangeNotice.tsx": "9e3306197887961c70103eca28bac9e276d20fceb1dc518e01c9d849fc37b17d",
     "apps/desktop/src/pages/codexGui/MessageActions.tsx": "29276b2182aac1efdee89e303680279c851aa9ce315256cc252e1b0c6ef89b91",

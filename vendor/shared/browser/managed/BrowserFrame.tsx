@@ -26,7 +26,7 @@ export function BrowserFrame({ tab, command, onLoadingChange, onVisit, t, onErro
     current.current.onLoadingChange?.(false);
   }, [command]);
   return <iframe ref={frame} key={attempt} src={tab.url} title={tab.title || t('market.browserNewTab')}
-    allow="microphone; camera"
+    allow="microphone; camera; geolocation"
     sandbox="allow-scripts allow-forms allow-same-origin" referrerPolicy="no-referrer"
     onLoad={() => {
       current.current.onLoadingChange?.(false);

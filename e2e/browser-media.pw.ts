@@ -28,7 +28,7 @@ for (const dark of [false, true]) test(`mobile web capture follows browser conse
     const address = page.getByRole('textbox', { name: '页面地址', exact: true });
     await address.fill(site); await address.press('Enter');
     const frame = page.locator('.pm-browser-page:visible iframe');
-    await expect(frame).toHaveAttribute('allow', 'microphone; camera');
+    await expect(frame).toHaveAttribute('allow', 'microphone; camera; geolocation');
     const content = frame.contentFrame();
     await content.getByRole('button', { name: 'Microphone', exact: true }).click();
     await expect(content.locator('pre')).toHaveText('NotAllowedError');
