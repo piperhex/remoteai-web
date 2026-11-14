@@ -34,6 +34,7 @@ import { DownloadManagerPage } from './downloads/DownloadManagerPage';
 import { LoungePage } from '../../../shared/lounge/LoungePage';
 import { LoungeIcon } from '../../../shared/lounge/LoungeIcon';
 import { useWebLounge } from './lounge/useWebLounge';
+import { ExtensionMarketContext } from "../../../shared/browser/extensions/market";
 import { BookmarkProvider } from '../../../shared/browser/bookmarks/context';
 import { BrowserPage } from '../../../shared/browser/BrowserPage';
 import { BrowserNavigationProvider } from '../../../shared/browser/BrowserNavigationProvider';
@@ -390,7 +391,7 @@ function AppShell() {
     (page === 'discover' || page === 'token-summary') && 'discovery-active',
     !menuVisible && 'main-menu-collapsed'].filter(Boolean).join(' ');
   const MenuToggleIcon = menuVisible ? PanelLeftClose : PanelLeftOpen;
-  return <BookmarkProvider scope={session ? JSON.stringify([session.baseUrl, session.email]) : 'guest'}
+  return <ExtensionMarketContext.Provider value={session?.baseUrl}><BookmarkProvider scope={session ? JSON.stringify([session.baseUrl, session.email]) : 'guest'}
     channel={session ? lounge.controller.bookmarks : undefined}>
     <BrowserNavigationProvider onOpen={() => dispatch(pageChanged('browser'))}><div className={shellClass}>
     <aside className="desktop-sidebar">
@@ -482,7 +483,7 @@ function AppShell() {
         </button>)}
       </div><SafeArea position="bottom" />
     </div>
-  </div></BrowserNavigationProvider></BookmarkProvider>;
+  </div></BrowserNavigationProvider></BookmarkProvider></ExtensionMarketContext.Provider>;
 }
 
 export default function App() {

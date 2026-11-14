@@ -3,7 +3,8 @@ import { BrowserClientContext, localBrowserClient } from '../../file-preview/wor
 import type { BrowserReply } from '../automation';
 import type { BrowserExtension, ChromeExtension, ExtensionRequest } from './model';
 import type { MarketKey } from '../../provider-market/i18n';
-import { command, droppedExtensionFiles, uploadExtension } from './transfer';
+import { browserFile, command, droppedExtensionFiles, uploadExtension } from './transfer';
+import { downloadMarket, type MarketExtension } from './market';
 
 export function useExtensions(active: boolean) {
   const client = useContext(BrowserClientContext);
@@ -35,7 +36,7 @@ export function useExtensions(active: boolean) {
       if (current()) {
         const keys: MarketKey[] = ['market.extensionsInvalid', 'market.extensionsFailed',
           'market.extensionsStorageFailed', 'market.extensionsMissing', 'market.extensionsUnsupported',
-          'market.extensionsDropInvalid'];
+          'market.extensionsDropInvalid', 'market.extensionsDownloadFailed'];
         setError(keys.find(key => String(reason).includes(key)) ?? 'market.extensionsUnavailable');
       }
       return false;
@@ -44,6 +45,17 @@ export function useExtensions(active: boolean) {
     }
   }, []);
   const request = useCallback((request: ExtensionRequest) => run(() => command(client, request)), [client, run]);
+  const installMarket = (base: string, item: MarketExtension) => run(async current => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 120_000);
+    try {
+      const file = await downloadMarket(base, item, controller.signal);
+      if (!current()) throw new Error('market.extensionsUnavailable');
+      setProgress(0);
+      return await uploadExtension({ client, files: [browserFile(file)], current, progress: setProgress,
+        market: { id: item.id, sha256: item.sha256 } });
+    } finally { clearTimeout(timeout); }
+  });
   const installDrop = (data: DataTransfer) => run(async current => {
     const files = await droppedExtensionFiles(data);
     setProgress(0);
@@ -72,6 +84,6 @@ export function useExtensions(active: boolean) {
     }
   });
   useEffect(() => { if (active) void request({ action: 'list' }); }, [active, request]);
-  return { entries, candidates, supported, busy, progress, error, request, installDrop, installPaths,
+  return { entries, candidates, supported, busy, progress, error, request, installDrop, installPaths, installMarket,
     native: client.native, browseFiles: client.browseFiles, reportError: setError };
 }

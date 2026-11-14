@@ -1,5 +1,5 @@
 import { useState, type CSSProperties } from 'react';
-import { Alert, Button, Empty, Input, Modal, Tag, theme } from 'antd';
+import { Alert, Button, Empty, Input, Modal, Progress, Segmented, Tag, theme } from 'antd';
 import { ArrowLeft, Chrome, RefreshCw, Search } from 'lucide-react';
 import { ProjectExplorer } from '../../project-explorer/ProjectExplorer';
 import { t as uiText, getLocale } from '../../localization/browserClient';
@@ -8,12 +8,14 @@ import type { useExtensions } from './useExtensions';
 import { ExtensionCard, ExtensionIcon, ExtensionPermissions } from './ExtensionCard';
 import { ExtensionDropZone } from './ExtensionDropZone';
 import assistantIcon from './assistant.png';
+import { ExtensionMarket } from './ExtensionMarket';
 export { ExtensionIcon } from './ExtensionCard';
 
 type Extensions = ReturnType<typeof useExtensions>;
 export function ExtensionManager({ extensions, t, close }: { extensions: Extensions; t: MarketText; close: () => void }) {
   const [chrome, setChrome] = useState(false), [picking, setPicking] = useState(false);
   const [query, setQuery] = useState('');
+  const [tab, setTab] = useState('installed');
   const { token } = theme.useToken();
   const matches = (name: string) => name.toLocaleLowerCase().includes(query.toLocaleLowerCase().trim());
   const entries = extensions.entries.filter(entry => matches(entry.name));
@@ -30,6 +32,17 @@ export function ExtensionManager({ extensions, t, close }: { extensions: Extensi
           {t(extensions.native ? 'market.extensionsLocalNotice' : 'market.extensionsRemoteNotice')}</p>
         {extensions.error && <Alert type="error" showIcon message={t(extensions.error)} />}
         {extensions.supported === false && <Alert type="info" showIcon message={t('market.extensionsUnsupported')} />}
+        <Segmented block value={tab} onChange={value => setTab(value)} options={[
+          { value: 'installed', label: t('market.extensionsInstalled') },
+          { value: 'market', label: t('market.extensionsMarket') },
+        ]} />
+        {tab === 'market' && <>
+          {extensions.busy && (extensions.progress === undefined
+            ? <p className="browser-extension-subtitle" role="status">{t('market.extensionsDownloading')}</p>
+            : <Progress percent={extensions.progress} size="small" />)}
+          <ExtensionMarket extensions={extensions} t={t} />
+        </>}
+        <div hidden={tab !== 'installed'}>
         <div className="browser-extension-manager-actions">
           {chrome ? <Button type="text" icon={<ArrowLeft size="1em" />} onClick={() => { setChrome(false); setQuery(''); }}>
             {t('market.extensionsBack')}</Button> : <Button icon={<Chrome size="1.15em" />}
@@ -72,6 +85,7 @@ export function ExtensionManager({ extensions, t, close }: { extensions: Extensi
             description={t(chrome ? 'market.extensionsEmptyChrome' : 'market.extensionsEmptyInstalled')} />}
         </div>
         <p className="browser-extension-note">{t('market.extensionsCompatibility')}</p>
+        </div>
       </div>
     </Modal>
     {picking && extensions.browseFiles && <ProjectExplorer mode="selectPath" title={t('market.extensionsBrowseTitle')}

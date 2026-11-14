@@ -1,22 +1,15 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "a209d50048ccd436e28588c462713d407cb364de",
+  "revision": "e8899411a7dee3a60aa4457cb61f69a0ee88118b",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "f88822e867b818832081aeefe059bc6f8cbd733f"
-  },
-  "retainedTestSources": {
-    "repository": "https://github.com/piperhex/remoteai",
-    "revision": "9bfcbf8bd3be2136c987794847302688dce4202a",
-    "paths": [
-      "apps/desktop/e2e/"
-    ]
+    "revision": "91ab325e833e6c261f49fda97b65438533702d34"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
     "revision": "2862340502bd3e83bbc03b9fa913d13a3ddf96b8"
   },
-  "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.32/remoteai-i18n-0.1.32.tgz",
+  "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.33/remoteai-i18n-0.1.33.tgz",
   "files": {
     "scripts/test-browser.mjs": "456d5b867ac937a571630f4a01cd37ded9380d519bee3011e8807480c0739733",
     "scripts/test-browser.d.mts": "0f13ced709be8e097af7d4038400129b64e5d400f62e9bea2a0371125ec4f70f",
@@ -1957,10 +1950,10 @@
     "shared/browser/data/browserVaultKeyStorage.ts": "63c69bb61b6b41f63b5ea44b231298be8f6ae86b4d9c7183ab8cf3717d4881c1",
     "shared/browser/data/passwordFocus.ts": "fb41e8ae3b3250a0d6e4cb1d2d24b5fe0c4940ef4e27058bf4ce5a4be078ce19",
     "shared/browser/data/usePasswordSuggestions.ts": "36188c0f4b57f8d41b7d64a139225f1b35a0a691f7a45951cda28ec4d2491aa4",
-    "shared/browser/extensions/model.ts": "9ba8c530c95e26f0419d17635f16d177a1d90cd0984e264a729ea144053d822c",
+    "shared/browser/extensions/model.ts": "76ed067f157ac360427a0662414fb50a29b884fd6902b1ea50513397d345cbc9",
     "shared/browser/extensions/BrowserExtensions.tsx": "e57746d7c7dd39734f5aa6864d64c8c677c5c9e4e805fcbcf70884647347870e",
-    "shared/browser/extensions/ExtensionManager.tsx": "16f3cbd2fa5b59cde9eede483efd0a8c84ad7a8836454005bbf17210d795f265",
-    "shared/browser/extensions/useExtensions.ts": "216b1b6dd0feafc858e38832a6971014dfb1025e55b54044b87edccd567f889a",
+    "shared/browser/extensions/ExtensionManager.tsx": "85307989fe1bd6bd985c0bee8f3cac20d46a790e31fdd891f6ded65f54b3dc4d",
+    "shared/browser/extensions/useExtensions.ts": "da9656334bfe4d0685426ac2b3ce6284e1d7f6e7e3d7c1ee78e4de428fa778e1",
     "shared/browser/extensions/extensions.css": "c8e7783b54d05d253a38b0a952bbde5efe5b39522730ddcf340ba1bd196f5098",
     "shared/browser/extensions/assistant.png": "c6e11f099d213c5e3b81dc9264403858841e130f07e6f832069cac8eae47db02",
     "apps/native/src/chat/markdownTree.ts": "c717f4481126195f1b542ac400c078a2eac6d6db4154030cf1fbbdc20659893c",
@@ -1975,6 +1968,8 @@
     "apps/native/vendor/shared/theme/mode.ts": "d27ddb4c18a6bdae69e82278457d225466f600bdf003be6e7c34ff9b79f83550",
     "shared/browser/extensions/ExtensionCard.tsx": "3bcb0f09079adf319d4315a89b28e1cf2b97b8a926a1f3d51927696368f6deef",
     "shared/browser/extensions/ExtensionDropZone.tsx": "56ae904e6a1e63cce88fdcb2af61f503013f13e2af3e1aece7414eefaf819e89",
-    "shared/browser/extensions/transfer.ts": "fa052dd41fdf4769c400d44bc791d80e4322744c64cf74e4516176cf1e3c2f4e"
+    "shared/browser/extensions/transfer.ts": "ce815aba8b8452fb5c860ddb0237d5c232264922fc383001458ca8fd117d6c8c",
+    "shared/browser/extensions/market.ts": "fdd18a9eb71b60864ec94ca6fd20bda95cbc8744423690f35d3385845662ea21",
+    "shared/browser/extensions/ExtensionMarket.tsx": "9d18df285fb052c943700444df747e2103f574d5146f58c27fdb0caeff435a4d"
   }
 }

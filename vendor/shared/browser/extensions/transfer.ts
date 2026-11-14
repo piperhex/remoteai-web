@@ -15,6 +15,7 @@ export function browserFile(file: File, path = file.name): ExtensionFile {
 }
 
 export async function uploadExtension(options: { client: BrowserClient; files: ExtensionFile[];
+  market?: { id: string; sha256: string };
   current: () => boolean; progress: (percent: number) => void }): Promise<BrowserReply> {
   const { client, files, current, progress } = options;
   const size = files.reduce((sum, file) => sum + file.size, 0);
@@ -34,7 +35,7 @@ export async function uploadExtension(options: { client: BrowserClient; files: E
       progress(Math.round(done * 100 / Math.max(1, size)));
     }
     if (!current()) throw new Error('market.extensionsUnavailable');
-    return await command(client, { action: 'finishUpload', token });
+    return await command(client, { action: 'finishUpload', token, ...(options.market ? { market: options.market } : {}) });
   } finally {
     await command(client, { action: 'releaseTransfer', token }).catch(() => {
       console.warn('Extension transfer cleanup deferred until session expiry');
