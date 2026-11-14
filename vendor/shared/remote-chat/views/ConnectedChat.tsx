@@ -157,7 +157,8 @@ function ConnectedChatContent({ chat, device, devices, active, scope, email, cho
         ready={ready} respond={(reply) => controller.respond(reply)} />)}
     </div>}
     <ChatAsyncQuestions thread={state.selected} error={error}
-      scope={scope}
+      scope={scope} active={conversationActive && foreground} dictation={controller.dictation}
+      paginated={desktop || desktopDiffs}
       disabled={!ready || state.sending || state.settingsBusy || state.selectedArchived || state.queueBusy
         || state.compacting === state.selected?.id} answer={controller.answerAsyncQuestion} />
     {!external && composerHeader}

@@ -1,0 +1,56 @@
+.card {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 12px;
+  padding: 18px 20px;
+  border: 1px solid;
+  border-radius: 20px;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+  :global(.ant-btn), :global(.ant-input) { font-size: inherit; font-family: inherit; }
+}
+.header, .navigation, .title, .footer, .reply, .actions {
+  display: flex;
+  align-items: center;
+}
+.header { justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.title { gap: 10px; opacity: .7; }
+.navigation { gap: 4px; flex-shrink: 0; }
+.counter { min-width: 4em; text-align: center; font-variant-numeric: tabular-nums; opacity: .65; }
+.body { max-height: min(40vh, 360px); overflow-y: auto; overscroll-behavior: contain; }
+.question { margin: 0 0 16px; white-space: pre-wrap; }
+.options { display: flex; flex-direction: column; gap: 6px; }
+.option {
+  display: flex; align-items: flex-start; gap: 12px; width: 100%;
+  padding: 8px; border: 1px solid transparent; border-radius: 10px;
+  background: transparent; color: inherit; font: inherit; text-align: start; cursor: pointer;
+  &:hover:not(:disabled) { background: color-mix(in srgb, currentColor 5%, transparent); }
+  &:focus-visible { outline: 2px solid var(--app-accent, #14806f); outline-offset: 2px; }
+  &[aria-checked='true'] {
+    border-color: color-mix(in srgb, var(--app-accent, #14806f) 35%, transparent);
+    background: color-mix(in srgb, var(--app-accent, #14806f) 8%, transparent);
+  }
+  &:disabled { cursor: default; opacity: .5; }
+}
+.number {
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  min-width: 1.6em; height: 1.6em; border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+  border-radius: 6px; background: color-mix(in srgb, currentColor 5%, transparent); opacity: .65;
+  font-variant-numeric: tabular-nums;
+}
+.footer { gap: 12px; margin-top: 16px; align-items: flex-end; }
+.reply { flex: 1; min-width: 0; gap: 8px; align-items: flex-start;
+  > svg { flex-shrink: 0; margin-top: 8px; opacity: .5; }
+  :global(.ant-input) { padding: 5px 4px; line-height: inherit; }
+}
+.actions {
+  gap: 8px; flex-shrink: 0;
+  :global(.ant-btn) { height: auto; min-height: 2.2em; padding-block: .2em; }
+}
+.error { margin: 10px 0 0; color: var(--app-danger, #d43838); font-size: .9em; }
+@media (max-width: 900px) {
+  .footer { flex-wrap: wrap; }
+  .reply { flex-basis: 100%; }
+  .actions { margin-left: auto; }
+}

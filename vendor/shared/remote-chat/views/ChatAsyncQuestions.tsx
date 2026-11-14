@@ -8,11 +8,17 @@ import { submitQuestionOnEnter } from '../../conversation/questionKeyboard';
 import { pendingQuestions } from '../client/asyncQuestions';
 import type { Item, Thread } from './types';
 import { useDismissedQuestions } from './useDismissedQuestions';
+import { QuestionPager } from '../../conversation/questions/QuestionPager';
+import type { DictationClient } from '../../chat/dictation/client';
+import { useDesktopLayout } from '../../layout/useDesktopLayout';
 import './asyncQuestions.css';
 
 interface Props {
   thread: Thread | null; disabled: boolean; error: string;
   scope: string;
+  active?: boolean;
+  paginated?: boolean;
+  dictation?: DictationClient;
   answer: (item: Item, answers: string[]) => Promise<boolean>;
 }
 function QuestionFields({ questions, answers, disabled, update }: {
@@ -87,13 +93,18 @@ function QuestionCard({ item, disabled, error, answer, onDelete }: Omit<Props, '
 }
 export function ChatAsyncQuestions({ thread, scope, ...props }: Props) {
   useLanguage();
+  const desktop = useDesktopLayout();
   const { dismissed, dismiss, error } = useDismissedQuestions(scope);
   const questionKey = (item: Item) => JSON.stringify([thread?.id, item.id]);
   const questions = pendingQuestions(thread).filter(item => !dismissed.has(questionKey(item)));
   if (!questions.length) return null;
-  return <div className="chat-async-questions chat-scroll">
-    {questions.map(item => <QuestionCard key={questionKey(item)} item={item} {...props}
-      onDelete={() => dismiss(questionKey(item))} />)}
+  const paginated = props.paginated ?? desktop;
+  return <div className={`chat-async-questions chat-scroll${paginated ? ' chat-question-pager' : ''}`}>
+    {paginated ? <QuestionPager key={JSON.stringify([scope, thread?.id])} items={questions}
+      disabled={props.disabled} active={props.active} dictation={props.dictation} onAnswer={props.answer}
+      onDismiss={item => dismiss(questionKey(item))} />
+      : questions.map(item => <QuestionCard key={questionKey(item)} item={item} {...props}
+        onDelete={() => dismiss(questionKey(item))} />)}
     {error && <p role="alert" className="chat-error">{displayError(error)}</p>}
   </div>;
 }

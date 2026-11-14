@@ -24,3 +24,5 @@
   .chat-question-sheet .sheet-header h2 { font-size: 1em; line-height: 1.5; letter-spacing: 0; }
   .chat-question-sheet .sheet-header .chat-question-icon { margin-right: 10px; }
 }
+.chat-async-questions.chat-question-pager { max-height: none; overflow: visible; }
+.chat-question-pager > section { max-width: 900px; margin: 0 auto; }
