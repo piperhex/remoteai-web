@@ -31,6 +31,7 @@ import { PasswordSuggestions } from '../browser/data/PasswordSuggestions';
 import { PasswordCapture } from '../browser/data/PasswordCapture';
 import { useBrowserRecords } from '../browser/data/useBrowserRecords';
 import { BrowserFullscreenControl } from '../browser/BrowserFullscreenControl';
+import { BrowserExtensions } from '../browser/extensions/BrowserExtensions';
 
 export interface BrowserSurfaceProps {
   tab: BrowserTab; active: boolean; command: { sequence: number; action: BrowserAction } | null;
@@ -115,6 +116,7 @@ export function BrowserContents(props: BrowserWindowProps & {
   const [desktopTabs, setDesktopTabs] = useState<Record<string, boolean>>({});
   const [mappingsOpen, setMappingsOpen] = useState(false);
   const [dataPanel, setDataPanel] = useState<'history' | 'passwords'>();
+  const [extensionsOpen, setExtensionsOpen] = useState(false);
   const externalUrl = bookmarkUrl(displayTab?.url ?? '');
   const showManager = compact && manager;
   const add = () => { props.onNewTab(); setManager(false); setQuery(''); };
@@ -192,7 +194,8 @@ export function BrowserContents(props: BrowserWindowProps & {
       searchEngine={search.engine}
       fullscreen={props.fullscreen} toggleFullscreen={props.toggleFullscreen}
       navigate={(url) => { if (tab) props.onNavigate(tab.id, url); }}
-      action={(action) => { if (tab) props.onAction(tab.id, action); }} t={t} actions={props.actions}
+      action={(action) => { if (tab) props.onAction(tab.id, action); }} t={t}
+      actions={<><BrowserExtensions t={t} active={open} onOverlay={setExtensionsOpen} />{props.actions}</>}
       star={bookmarks.star} settings={bookmarks.settings} />}
     {!mobileFullscreen && !showManager && !(tab && home.isHome(tab.id)) && bookmarks.bar}{bookmarks.overlays}
     {mappingsOpen && <BrowserPortMappings language={props.language} close={() => setMappingsOpen(false)}
@@ -208,7 +211,8 @@ export function BrowserContents(props: BrowserWindowProps & {
       onCloseTab: id => closeTabs([id]) }}
       home={home.isHome} bookmarks={bookmarks.manage} t={t} manager={showManager} compact={compact} query={query}
       desktopTabs={desktopTabs}
-      blocked={menuOpen || bookmarks.overlayOpen || mappingsOpen || !!dataPanel || !!records.candidate || !!records.focus}
+      blocked={menuOpen || extensionsOpen || bookmarks.overlayOpen || mappingsOpen || !!dataPanel
+        || !!records.candidate || !!records.focus}
       loadingChanged={loadingChanged}
       recordVisit={records.recordVisit}
       select={id => { props.onSelect(id); setManager(false); }} />

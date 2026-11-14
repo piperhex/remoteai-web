@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "aceb9de0e3b2ceaa0472ad47c2897c0af3b4d584",
+  "revision": "a209d50048ccd436e28588c462713d407cb364de",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "66496dfa4955d50c16a8aeb35c07702375dbf16b"
+    "revision": "16d0100097753317e5b0ad4f76c3b4d2f202695c"
   },
   "retainedTestSources": {
     "repository": "https://github.com/piperhex/remoteai",
@@ -14,9 +14,9 @@
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
-    "revision": "4c0eec2e7156db7a51696458dfa411913bbb13fe"
+    "revision": "2862340502bd3e83bbc03b9fa913d13a3ddf96b8"
   },
-  "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.30/remoteai-i18n-0.1.30.tgz",
+  "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.31/remoteai-i18n-0.1.31.tgz",
   "files": {
     "scripts/test-browser.mjs": "456d5b867ac937a571630f4a01cd37ded9380d519bee3011e8807480c0739733",
     "scripts/test-browser.d.mts": "0f13ced709be8e097af7d4038400129b64e5d400f62e9bea2a0371125ec4f70f",
@@ -352,7 +352,7 @@
     "shared/remote-chat/diagnostics.ts": "0c5558b939ec378ff5d2d6943a46e89365c09e59a262df6b11c90789ea29521d",
     "shared/remote-desktop/nativeMedia.ts": "3da8916ffaa040a178b36837123ba76c2f4f6e2e8a2079144c73488c962e1ee7",
     "shared/port-mapping/socket.ts": "e759533a0a9073352022422d74539119e71acb49b0528ed2f40c29439675ec57",
-    "shared/browser/automation.ts": "00bbfd1f52ab44a59afa1b24c42500765d49adc819865f6a6fc0de6cf7662659",
+    "shared/browser/automation.ts": "8e71c8c8509840ff33384ceabf4878e8f43025c8b565ae63bb3549d3797b9969",
     "shared/remote-chat/views/HistoryContent.tsx": "bd88b4ad0d02972d5481ff3479d95388839529a0e855ecd4a498b28c0b866a4d",
     "shared/remote-chat/views/useMobileHistoryAnchor.ts": "0a54b8469d90a0fc5df18721c72e0a797b5cb9099b84c620eca584c12f38c083",
     "shared/chat/useCommittedCallback.ts": "3a7c27f5637c3b57ad801dcbe1835fb11c1b9e02abd942867467934ab6349e83",
@@ -929,7 +929,7 @@
     "shared/provider-market/i18n.ts": "99dda5e97e45baf4e6a78c6db8ecf6df1dae0d66356af9647cfe4264dd9413b2",
     "shared/file-preview/workspace/preview.module.less": "ab254b31294a88ac66379927c40523f47cf90756c44da0f2670b9509890d8701",
     "shared/remote-chat/views/remoteFilePreview.css": "fabb7a21c444c886f938711c288702b314d08dcc3e4ca38bbb198229cf700080",
-    "shared/provider-market/ProviderBrowser.tsx": "0261120e3b9305c3faf4a6693a3c222ce5e9bbe1baae0dc37982005b485b1614",
+    "shared/provider-market/ProviderBrowser.tsx": "89d2394067c42d73758e86f472e344c120dc5b71b550e9b1f0e13d27b3063349",
     "shared/file-preview/workspace/ManagedBrowserSurface.tsx": "e6d29c0d335e1c1dc5fd563291fe5a238e5326bd01d08750e5a46fcdf7cea885",
     "shared/remote-chat/views/ChatBinaryFilePreview.tsx": "d18d95c89fcd05ddd62ce5d23297c65dede1f4712cb97af8f641650b0818ad97",
     "shared/remote-chat/filePreview.ts": "8d369c8a09c5a195afe36a072b33eba610baf26717f370c0a7911d6457314096",
@@ -1947,16 +1947,6 @@
     "shared/browser/icons/websiteIcons.ts": "4ea41011c13dbb9cad58f2424436782a8b13a0ab6eb0d7e8977f8788482bbcb2",
     "shared/browser/icons/pageIcons.js": "f7a19e939762ae5a4629f78c39a4e0d1de0c62aa4468fed9724575e55c27d433",
     "shared/browser/icons/pageIcons.d.ts": "f5c0f06046643f89f4267549cfc966b82f0aa63f7e46438a19c293e9842f0ee7",
-    "apps/native/src/chat/markdownTree.ts": "c717f4481126195f1b542ac400c078a2eac6d6db4154030cf1fbbdc20659893c",
-    "apps/native/src/chat/mathDocument.ts": "d4b2d2e61220f574271a306211590b6d7332da61092b4706539c472c828c66fb",
-    "apps/native/assets/terminal.html": "163e393b9dff468ad4c539368f3f1d4a9b18521070d99b59764b884bb2775586",
-    "apps/native/src/chat/desktop/desktopImeHtml.generated.ts": "bf22260f2d23e16d4e0d8e119ad73bfe0c604416e04bb9de7ad447442ffa77e4",
-    "apps/native/vendor/shared/chat/fileReference.ts": "12c41ad7ff3879dfca073d8226eac47a0124e6ec6c60b7d8c28717e953924448",
-    "apps/native/vendor/shared/chat/mathMarkdown.ts": "8c02442fbd0b4933273ca7bff39fca49a1f9fd9f8fbce8e24ef404327dcc4164",
-    "apps/native/assets/math-css.json": "44f4b553d7cf367cb99d91a93feb819dc6b2a79057d7342b1457d655eaeaf4ab",
-    "apps/native/assets/text-selection.json": "5c74dde463682191609cc4192b461e13750e506f2132d2946399c2cb2551426d",
-    "apps/native/vendor/shared/theme/mode.ts": "d27ddb4c18a6bdae69e82278457d225466f600bdf003be6e7c34ff9b79f83550",
-    "apps/native/e2e/pdf-touch.mjs": "bf0adf7508dfa9085fbb65cd89c9a398eeb21b5422e2836809caf44e1bf8e39f",
     "apps/desktop/e2e/question-dialog-harness.tsx": "eb3001c6ac9f6f0bde4d3103930906d39d36a4a18b91c0619ace0a41f4ee24d7",
     "apps/desktop/src/pages/codexGui/AsyncQuestions.tsx": "0bee5ddf1feea7a99edb8a7741a184ebe991943b90ca8e5314d276a4b46fd1b9",
     "shared/conversation/questions/QuestionPager.tsx": "27dc94cb655a4e920449a8f3ff564969dad25a33d60bd89c6540b80375821a28",
@@ -1966,6 +1956,22 @@
     "shared/browser/data/PasswordSuggestions.tsx": "80f2fcef1a473a57549c71fa4d37d33b9a66fda223d36d588fb695e4ee6ba8e1",
     "shared/browser/data/browserVaultKeyStorage.ts": "63c69bb61b6b41f63b5ea44b231298be8f6ae86b4d9c7183ab8cf3717d4881c1",
     "shared/browser/data/passwordFocus.ts": "fb41e8ae3b3250a0d6e4cb1d2d24b5fe0c4940ef4e27058bf4ce5a4be078ce19",
-    "shared/browser/data/usePasswordSuggestions.ts": "36188c0f4b57f8d41b7d64a139225f1b35a0a691f7a45951cda28ec4d2491aa4"
+    "shared/browser/data/usePasswordSuggestions.ts": "36188c0f4b57f8d41b7d64a139225f1b35a0a691f7a45951cda28ec4d2491aa4",
+    "shared/browser/extensions/model.ts": "00cf210f01ca00a33973c9bb546b1da02a7e30e2584e8daf167c09b273868797",
+    "shared/browser/extensions/BrowserExtensions.tsx": "e57746d7c7dd39734f5aa6864d64c8c677c5c9e4e805fcbcf70884647347870e",
+    "shared/browser/extensions/ExtensionManager.tsx": "3831879f51116e9c27aee0d8f037be2c656fde12d9bc42d19b6c0618fb68c8ce",
+    "shared/browser/extensions/useExtensions.ts": "e0a0e7704b337a6572219c028c9e1411459c612b795433a235946931467a5da6",
+    "shared/browser/extensions/extensions.css": "2cff60f92f11ec9e925ed17b3f99b5ca4cbd1e899d0719359e182bc307de8d0a",
+    "shared/browser/extensions/assistant.png": "c6e11f099d213c5e3b81dc9264403858841e130f07e6f832069cac8eae47db02",
+    "apps/native/src/chat/markdownTree.ts": "c717f4481126195f1b542ac400c078a2eac6d6db4154030cf1fbbdc20659893c",
+    "apps/native/src/chat/mathDocument.ts": "d4b2d2e61220f574271a306211590b6d7332da61092b4706539c472c828c66fb",
+    "apps/native/assets/terminal.html": "163e393b9dff468ad4c539368f3f1d4a9b18521070d99b59764b884bb2775586",
+    "apps/native/src/chat/desktop/desktopImeHtml.generated.ts": "bf22260f2d23e16d4e0d8e119ad73bfe0c604416e04bb9de7ad447442ffa77e4",
+    "apps/native/e2e/pdf-touch.mjs": "bf0adf7508dfa9085fbb65cd89c9a398eeb21b5422e2836809caf44e1bf8e39f",
+    "apps/native/vendor/shared/chat/fileReference.ts": "12c41ad7ff3879dfca073d8226eac47a0124e6ec6c60b7d8c28717e953924448",
+    "apps/native/vendor/shared/chat/mathMarkdown.ts": "8c02442fbd0b4933273ca7bff39fca49a1f9fd9f8fbce8e24ef404327dcc4164",
+    "apps/native/assets/math-css.json": "44f4b553d7cf367cb99d91a93feb819dc6b2a79057d7342b1457d655eaeaf4ab",
+    "apps/native/assets/text-selection.json": "5c74dde463682191609cc4192b461e13750e506f2132d2946399c2cb2551426d",
+    "apps/native/vendor/shared/theme/mode.ts": "d27ddb4c18a6bdae69e82278457d225466f600bdf003be6e7c34ff9b79f83550"
   }
 }
