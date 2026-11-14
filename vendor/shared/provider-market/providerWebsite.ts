@@ -2,6 +2,8 @@ import { pageUrl, type ProviderMarketSource } from './pageLink';
 
 // Sites whose API host or default favicon path does not serve their website icon.
 const WEBSITE_ICONS: Readonly<Record<string, string>> = {
+  // The public page declares hashed assets rather than a root favicon. Prefer PNG on either theme.
+  'chatgpt.com': 'https://chatgpt.com/cdn/assets/favicon-48x48.7d42b2e65f.png',
   'api.deepseek.com': 'https://www.deepseek.com/favicon.ico',
   'ark.cn-beijing.volces.com': 'https://portal.volccdn.com/obj/volcfe/misc/favicon.png',
   'token.sensenova.cn': 'https://www.sensenova.cn/favicon.ico',

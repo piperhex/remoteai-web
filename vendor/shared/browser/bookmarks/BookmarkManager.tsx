@@ -2,7 +2,7 @@ import { useState, type CSSProperties } from 'react';
 import { Button, Empty, Input, Modal, Popconfirm, theme } from 'antd';
 import { ArrowDown, ArrowUp, Folder, Pencil, Trash2 } from 'lucide-react';
 import type { MarketText } from '../../provider-market/i18n';
-import { ProviderWebsiteIcon } from '../../provider-market/ProviderWebsiteIcon';
+import { BrowserWebsiteIcon } from '../icons/BrowserWebsiteIcon';
 import type { Bookmark } from './model';
 import { useBookmarks } from './context';
 import { useBookmarkDrag } from './useBookmarkDrag';
@@ -39,7 +39,7 @@ export function BookmarkManager({ t, close, edit, create, visit }: {
         data-bookmark-id={entry.id} key={entry.id}>
         <button data-bookmark-drag className="browser-bookmark-row-name"
           onClick={() => entry.kind === 'folder' ? edit(entry) : visit(entry)}>
-          {entry.kind === 'folder' ? <Folder size={16} /> : <ProviderWebsiteIcon url={entry.url} size={16} />}
+          {entry.kind === 'folder' ? <Folder size={16} /> : <BrowserWebsiteIcon url={entry.url} size={16} />}
           <span><strong>{entry.title}</strong><small>{entry.kind === 'folder' ? t('market.bookmarkFolder') : entry.url}</small>
             {entry.parentId && <small>{entries.find(item => item.id === entry.parentId)?.title}</small>}</span>
         </button>

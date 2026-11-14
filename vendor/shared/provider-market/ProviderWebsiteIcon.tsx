@@ -16,9 +16,9 @@ function IconImage({ sources, size, fallback }: { sources: string[]; size: numbe
 }
 
 /** Keep the fallback visible while loading and reset failures when the website changes. */
-export function ProviderWebsiteIcon({ url, size = 20, fallback = <Server size={size} /> }: {
-  url?: string; size?: number; fallback?: ReactNode;
+export function ProviderWebsiteIcon({ url, icons = [], size = 20, fallback = <Server size={size} /> }: {
+  url?: string; icons?: string[]; size?: number; fallback?: ReactNode;
 }) {
-  const sources = providerIconSources(url);
+  const sources = [...new Set([...icons, ...providerIconSources(url)])];
   return <IconImage key={sources.join('\n')} sources={sources} size={size} fallback={fallback} />;
 }

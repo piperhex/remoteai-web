@@ -1,6 +1,5 @@
-import { Globe } from 'lucide-react';
 import type { BrowserTab } from './browserState';
-import { ProviderWebsiteIcon } from './ProviderWebsiteIcon';
+import { BrowserWebsiteIcon } from '../browser/icons/BrowserWebsiteIcon';
 
 /** Match the Chrome assistant's cursor for conversation-owned browser tabs. */
 export function BrowserTabIcon({ tab }: { tab: BrowserTab }) {
@@ -11,5 +10,5 @@ export function BrowserTabIcon({ tab }: { tab: BrowserTab }) {
         strokeWidth={2.5} strokeLinejoin="round" />
     </svg>;
   }
-  return <ProviderWebsiteIcon url={tab.url} size={14} fallback={<Globe size={14} />} />;
+  return <BrowserWebsiteIcon url={tab.url} size={14} />;
 }

@@ -9,6 +9,7 @@ import { placeBrowser } from './nativeBrowserPlacement';
 import { nativeSurfaceSession } from '../../browser/managed/nativeSurfaceSession';
 import { useNativeBrowserPreview } from '../../browser/managed/useNativeBrowserPreview';
 import { BrowserInspector } from '../../browser/managed/BrowserInspector';
+import { rememberWebsiteIcons } from '../../browser/icons/websiteIcons';
 
 export function WebsiteBrowserSurface(props: BrowserSurfaceProps) {
   return props.tab.automationThread ? <ManagedBrowserSurface {...props} /> : <ProviderBrowserSurface {...props} />;
@@ -34,6 +35,8 @@ function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, ob
     });
     void client.request({ threadId: tab.automationThread!, command: { action: 'list' } })
       .then(reply => {
+        const entry = reply.tabs?.find(entry => entry.id === tab.id);
+        if (!disposed && entry) rememberWebsiteIcons(entry.url, entry.icons);
         if (!disposed && !receivedLoading) {
           current.current.onLoadingChange?.(Boolean(reply.tabs?.find(entry => entry.id === tab.id)?.loading));
         }
@@ -75,7 +78,9 @@ function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, ob
       attributeFilter: browserOverlayAttributes });
     window.addEventListener('resize', sync); window.addEventListener('scroll', sync, true);
     document.addEventListener('visibilitychange', sync);
-    const listener = listen<{ url: string; popup?: boolean }>(`conversation-browser-${tab.id}`, ({ payload }) => {
+    const listener = listen<{ url: string; popup?: boolean; icons?: string[] }>(
+      `conversation-browser-${tab.id}`, ({ payload }) => {
+      if (!payload.popup && payload.url) rememberWebsiteIcons(payload.url, payload.icons);
       if (!payload.popup && payload.url) current.current.onNavigate(payload.url);
     });
     void listener.catch(() => setFailed(true)); sync();
@@ -103,6 +108,7 @@ function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, ob
         const image = reply.result?.image;
         if (image) { setImage(`data:${image.mimeType};base64,${image.data}`); setFailed(false); }
         if (reply.result?.url) current.current.onNavigate(reply.result.url);
+        if (reply.result?.url) rememberWebsiteIcons(reply.result.url, reply.result.icons);
         if (typeof reply.result?.loading === 'boolean') current.current.onLoadingChange?.(reply.result.loading);
       } catch { if (!stopped) setFailed(true); }
       finally { if (!stopped) timer = setTimeout(() => { void read(); }, 700); }

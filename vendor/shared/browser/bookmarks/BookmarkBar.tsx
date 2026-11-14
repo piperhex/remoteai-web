@@ -1,7 +1,7 @@
 import { Dropdown, type MenuProps } from 'antd';
 import { useEffect } from 'react';
 import { Folder, PanelsTopLeft } from 'lucide-react';
-import { ProviderWebsiteIcon } from '../../provider-market/ProviderWebsiteIcon';
+import { BrowserWebsiteIcon } from '../icons/BrowserWebsiteIcon';
 import type { Bookmark } from './model';
 import { BookmarkContextMenu, type BookmarkActions } from './BookmarkContextMenu';
 import { useBookmarks } from './context';
@@ -16,7 +16,7 @@ function folderItems(props: Props, parentId: string, depth = 0): MenuProps['item
   return props.entries.filter(entry => entry.parentId === parentId).map(entry => ({
     key: entry.id, label: <BookmarkContextMenu {...props} entry={entry}>{entry.title}</BookmarkContextMenu>,
     icon: entry.kind === 'folder' ? <Folder size={15} />
-      : <ProviderWebsiteIcon url={entry.url} size={15} />,
+      : <BrowserWebsiteIcon url={entry.url} size={15} />,
     ...(entry.kind === 'folder' ? { children: folderItems(props, entry.id, depth + 1) }
       : { onClick: () => props.visit(entry) }),
   }));
@@ -28,7 +28,7 @@ function BookmarkButton({ entry, dragClass, ...props }: Props & { entry: Bookmar
     className={`browser-bookmark-item ${dragClass}`}
     title={entry.kind === 'folder' ? entry.title : `${entry.title}\n${entry.url}`}
     onClick={event => { if (entry.kind === 'link') visit(entry, event.ctrlKey || event.metaKey); }}>
-    {entry.kind === 'folder' ? <Folder size={16} /> : <ProviderWebsiteIcon url={entry.url} size={16} />}
+    {entry.kind === 'folder' ? <Folder size={16} /> : <BrowserWebsiteIcon url={entry.url} size={16} />}
     <span>{entry.title}</span>
   </button>;
   return <BookmarkContextMenu {...props} entry={entry}>

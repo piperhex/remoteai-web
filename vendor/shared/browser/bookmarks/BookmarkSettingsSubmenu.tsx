@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { BookMarked, ChevronLeft, ChevronRight, Folder } from 'lucide-react';
 import type { MarketText } from '../../provider-market/i18n';
-import { ProviderWebsiteIcon } from '../../provider-market/ProviderWebsiteIcon';
+import { BrowserWebsiteIcon } from '../icons/BrowserWebsiteIcon';
 import { BrowserSettingsSubmenu } from '../BrowserSettingsSubmenu';
 import type { Bookmark } from './model';
 
@@ -31,7 +31,7 @@ function BookmarkChoices({ entries, t, visit }: {
     {shown.map(entry => <button key={entry.id} type="button" role="menuitem"
       className="browser-settings-action" title={entry.kind === 'link' ? entry.url : entry.title}
       onClick={event => entry.kind === 'folder' ? setFolder(entry.id) : visit(entry, event.ctrlKey || event.metaKey)}>
-      {entry.kind === 'folder' ? <Folder size="1.25em" /> : <ProviderWebsiteIcon url={entry.url} size={16} />}
+      {entry.kind === 'folder' ? <Folder size="1.25em" /> : <BrowserWebsiteIcon url={entry.url} size={16} />}
       <span>{entry.title}</span>{entry.kind === 'folder' && <ChevronRight size="1.1em" />}
     </button>)}
   </>;

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { ArrowLeft, ArrowRight, ExternalLink,
-  Globe, History, KeyRound, Maximize2, Minimize2, Plus, RotateCw, X } from 'lucide-react';
+  History, KeyRound, Maximize2, Minimize2, Plus, RotateCw, X } from 'lucide-react';
 import { marketText, type MarketText } from './i18n';
 import type { Language } from '@remoteai/i18n';
 import { browserInput } from '../browser/addressInput';
@@ -10,7 +10,7 @@ import { BrowserSearchSetting } from '../browser/BrowserSearchSetting';
 import type { SearchEngine } from '../browser/searchEngine';
 import type { BrowserAction, BrowserTab } from './browserState';
 import { BrowserTabs } from './BrowserTabs';
-import { ProviderWebsiteIcon } from './ProviderWebsiteIcon';
+import { BrowserWebsiteIcon } from '../browser/icons/BrowserWebsiteIcon';
 import { useBrowserBookmarks } from '../browser/bookmarks/useBrowserBookmarks';
 import './providerBrowser.css';
 import '../browser/browserChrome.css';
@@ -79,7 +79,7 @@ function BrowserToolbar({ tab, loading, fullscreen, toggleFullscreen, navigate, 
       setInvalid(!url);
       if (url) { setAddress(url.href); navigate(url.href); }
     }}>
-      <ProviderWebsiteIcon url={tab?.url} size={15} fallback={<Globe size={15} />} />
+      <BrowserWebsiteIcon url={tab?.url} size={15} />
       <input aria-label={t('market.browserAddress')} aria-invalid={invalid}
         value={address} onChange={(event) => { setAddress(event.target.value); setInvalid(false); }}
         placeholder={t('market.browserSearchOrAddress')} spellCheck={false} autoComplete="off" />

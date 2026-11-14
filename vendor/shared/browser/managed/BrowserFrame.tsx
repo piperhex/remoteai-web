@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { BrowserSurfaceProps } from '../../provider-market/ProviderBrowser';
+import { readPageIcons } from '../icons/pageIcons';
+import { rememberWebsiteIcons } from '../icons/websiteIcons';
 
 /** Browser-hosted previews cannot retain a cross-origin document when cancelling its navigation. */
 export function BrowserFrame({ tab, command, onLoadingChange, onVisit, t, onError }: BrowserSurfaceProps & {
@@ -32,6 +34,7 @@ export function BrowserFrame({ tab, command, onLoadingChange, onVisit, t, onErro
       current.current.onLoadingChange?.(false);
       try {
         const page = frame.current?.contentWindow;
+        if (page) rememberWebsiteIcons(page.location.href, readPageIcons(page.document));
         if (page?.location.href !== 'about:blank') onVisit?.({ url: page?.location.href ?? tab.url,
           title: page?.document.title ?? tab.title });
       } catch { onVisit?.({ url: tab.url, title: tab.title }); }

@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import { X } from 'lucide-react';
 import type { BrowserWindowProps } from '../provider-market/ProviderBrowser';
 import type { MarketText } from '../provider-market/i18n';
-import { ProviderWebsiteIcon } from '../provider-market/ProviderWebsiteIcon';
+import { BrowserWebsiteIcon } from './icons/BrowserWebsiteIcon';
 import { BrowserEdgeGestures } from './BrowserEdgeGestures';
 import { SwipeableBrowserPage } from './SwipeableBrowserPage';
 import { DESKTOP_SITE_WIDTH } from './siteMode';
@@ -47,7 +47,7 @@ export function BrowserPages({ browser, t, manager, compact, query, blocked, sel
         className={`pm-browser-page${entry.id === activeId ? ' browser-tab-selected' : ''}`
           + (compact && desktopTabs[entry.id] ? ' browser-site-desktop' : '')}
         hidden={manager ? !match(title, entry.url) : entry.id !== activeId}>
-        {manager && <div className="browser-tab-card-header"><ProviderWebsiteIcon url={entry.url} size={16} />
+        {manager && <div className="browser-tab-card-header"><BrowserWebsiteIcon url={entry.url} size={16} />
           <span>{title}</span><button aria-label={t('market.browserCloseTab', { name: title })}
             onClick={() => browser.onCloseTab(entry.id)}><X size={18} /></button></div>}
         <div key="surface" className={`browser-tab-canvas${home(entry.id) ? ' browser-home-covered' : ''}`}

@@ -8,6 +8,7 @@ import { browserOverlayAttributes, hasBrowserOverlay } from './browserOverlays';
 import { BrowserFrame } from './BrowserFrame';
 import { useNativeBrowserPreview } from './useNativeBrowserPreview';
 import { BrowserInspector } from './BrowserInspector';
+import { rememberWebsiteIcons } from '../icons/websiteIcons';
 
 function browserFeedback(state: { url: string; unsupported: boolean; needsDesktop: boolean; failed: boolean }) {
   if (!state.url) return 'market.browserBlank';
@@ -55,12 +56,14 @@ export function ProviderBrowserSurface(props: BrowserSurfaceProps) {
       });
     };
     refresh.current = sync;
-    const unlisten = listen<{ url?: string; title?: string; popup?: boolean; loading?: boolean; visited?: boolean }>(
+    const unlisten = listen<{ url?: string; title?: string; popup?: boolean; loading?: boolean;
+      visited?: boolean; icons?: string[] }>(
       `provider-browser-${tab.id}`, ({ payload }) => {
         if (payload.popup && payload.url) { state.current.onPopup(payload.url); return; }
         if (typeof payload.loading === 'boolean') state.current.onLoadingChange?.(payload.loading);
         if (payload.visited && payload.url) state.current.onVisit?.({ url: payload.url, title: payload.title ?? '' });
         if (!payload.url) return;
+        rememberWebsiteIcons(payload.url, payload.icons);
         nativeNavigation.current = payload.url;
         state.current.onNavigate(payload.url);
       });
