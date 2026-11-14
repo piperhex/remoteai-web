@@ -133,7 +133,10 @@ for (const dark of [false, true]) test(`mobile browser retains pages and opens b
   };
   await swipe('left', 10); await expect(tabAddress).toHaveValue(/\/second-tab$/);
   await swipe('left'); await expect(tabAddress).toHaveValue(/\/session-fixture$/);
-  await swipe('right'); await expect(tabAddress).toHaveValue(/\/second-tab$/);
+  await tabAddress.fill(`${new URL(info.project.use.baseURL!).origin}/second-tab`); await tabAddress.press('Enter');
+  await expect(tabAddress).toHaveValue(/\/second-tab$/);
+  await swipe('right'); await expect(tabAddress).toHaveValue(/\/session-fixture$/);
+  await page.screenshot({ path: info.outputPath(`web-mobile-${dark ? 'dark-20px' : 'light-14px'}-left-swipe-back.png`) });
   await expect(browser).toBeVisible();
   await browser.getByRole('button', { name: '管理标签页（2）' }).click();
   const swipeCard = async (dx: number, dy = 0) => {

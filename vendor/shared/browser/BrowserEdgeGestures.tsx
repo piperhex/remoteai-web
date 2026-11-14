@@ -16,7 +16,7 @@ export function BrowserEdgeGestures({ action }: { action: (action: BrowserAction
     const dx = event.clientX - origin.x; const dy = event.clientY - origin.y;
     if (Date.now() - origin.time > 800 || Math.abs(dy) > Math.abs(dx) * 0.6) return;
     if (edge === 'left' && dx >= 60) action('back');
-    if (edge === 'right' && dx <= -60) action('forward');
+    if (edge === 'right' && dx <= -60) action('back');
   };
   return <>{(['left', 'right'] as const).map(edge => <div key={edge} aria-hidden="true"
     className={`browser-gesture-edge browser-gesture-${edge}`} onPointerDown={down}

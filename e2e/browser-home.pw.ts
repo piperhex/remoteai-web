@@ -49,8 +49,9 @@ for (const enlarged of [false, true]) test(`mobile home retains pages and suppor
     await swipe(page, 'left');
     await expect(frame.contentFrame().getByRole('textbox')).toHaveValue('retained draft');
     await swipe(page, 'left'); await expect(home).toBeVisible();
-    await swipe(page, 'right'); await expect(frame.contentFrame().getByRole('textbox')).toHaveValue('retained draft');
-    await browser.getByRole('button', { name: '浏览器首页', exact: true }).click();
+    await swipe(page, 'right'); await expect(browser).toBeHidden();
+    await page.screenshot({ path: info.outputPath(`${prefix}-left-swipe-exit.png`) });
+    await page.locator('nav').getByRole('button', { name: '浏览器', exact: true }).click();
     await home.locator('.browser-home-link').click();
     await expect(frame.contentFrame().getByRole('textbox')).toHaveValue('retained draft');
     await browser.getByRole('button', { name: '新标签页', exact: true }).click();
