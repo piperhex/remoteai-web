@@ -53,6 +53,8 @@
 .pm-browser-toolbar input { min-width: 0; flex: 1; border: 0; background: transparent; color: inherit;
   font: inherit; height: 34px; }
 .pm-browser-toolbar input:focus, .pm-browser-toolbar input:focus-visible { outline: none; }
+.pm-browser-toolbar input[dir='ltr'] { text-align: left; }
+.pm-browser-toolbar input[dir='ltr']:not(:focus) { text-overflow: ellipsis; }
 .pm-browser-address-error { position: absolute; top: 100%; right: 50px; max-width: 400px; padding: 8px 12px;
   border-radius: 8px; background: var(--panel-bg, #fff); color: #d43838; z-index: 1; }
 .pm-browser-pages, .pm-browser-page, .pm-browser-surface { position: relative; flex: 1; min-height: 0; min-width: 0; }

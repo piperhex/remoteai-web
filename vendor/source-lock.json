@@ -1,16 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "7228f45a2a712e1ce0bd2de8c8d2421cb7d02f29",
+  "revision": "c28b9e1589210ec9e4d8373b330ca1745a50daaa",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "72a00142189484d42b089a22ed7ada5bcade3381"
-  },
-  "retainedTestSources": {
-    "repository": "https://github.com/piperhex/remoteai",
-    "revision": "e8899411a7dee3a60aa4457cb61f69a0ee88118b",
-    "paths": [
-      "apps/desktop/e2e/"
-    ]
+    "revision": "68350722670e7dc322374ee789d74fcf0d08c6cf"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -929,7 +922,7 @@
     "shared/provider-market/i18n.ts": "99dda5e97e45baf4e6a78c6db8ecf6df1dae0d66356af9647cfe4264dd9413b2",
     "shared/file-preview/workspace/preview.module.less": "ab254b31294a88ac66379927c40523f47cf90756c44da0f2670b9509890d8701",
     "shared/remote-chat/views/remoteFilePreview.css": "fabb7a21c444c886f938711c288702b314d08dcc3e4ca38bbb198229cf700080",
-    "shared/provider-market/ProviderBrowser.tsx": "89d2394067c42d73758e86f472e344c120dc5b71b550e9b1f0e13d27b3063349",
+    "shared/provider-market/ProviderBrowser.tsx": "53fca5c9ff4e201f61d7dc36172688070f1bd139fd18c39ec369a1a3fb99b80f",
     "shared/file-preview/workspace/ManagedBrowserSurface.tsx": "e6d29c0d335e1c1dc5fd563291fe5a238e5326bd01d08750e5a46fcdf7cea885",
     "shared/remote-chat/views/ChatBinaryFilePreview.tsx": "d18d95c89fcd05ddd62ce5d23297c65dede1f4712cb97af8f641650b0818ad97",
     "shared/remote-chat/filePreview.ts": "8d369c8a09c5a195afe36a072b33eba610baf26717f370c0a7911d6457314096",
@@ -1447,7 +1440,7 @@
     "shared/provider-market/browserState.ts": "62cff28f6c0a8862cd9b965961cddb77d3a0a3c2e7563e87a2a1a9d27e9d97b8",
     "shared/provider-market/BrowserTabs.tsx": "90874a196ab2aba78a9885505d326e95bf42d1334b7ac71c53be78d1c331a082",
     "shared/provider-market/ProviderWebsiteIcon.tsx": "33bc47efad0ae8fa4860962c64ab7ec9f4a8f6c2a1b34b1183226088fa30245d",
-    "shared/provider-market/providerBrowser.css": "4a6ab710911ba88307d1f377fa5fbd8c005abd5ecebc82a183f650d26d8c4ff1",
+    "shared/provider-market/providerBrowser.css": "5b765bb5f2552cd182240cac8d30e107163aa5b8ce0fdd9906abaf28389fe44c",
     "shared/browser/managed/ProviderBrowserSurface.tsx": "80715818c51b5804a6885c9d5c2f55da77860b21709cb9394769b5dccae21890",
     "shared/browser/managed/browserOverlays.ts": "7049ab695b456b6b81304be6a4d09ee9f789c3e20e5762799c86a3f56c507a4f",
     "shared/file-preview/workspace/nativeBrowserPlacement.ts": "1c92017b8a513a44853dc406d12c1213895a66842db6a3c82259dc8d81336967",
@@ -1885,7 +1878,7 @@
     "shared/browser/BrowserSearchSetting.tsx": "4ce09c834fc5cac414d466cf49a00e5763993e94df3275288206e2f9de7ee99a",
     "shared/browser/searchEngine.ts": "6f3d67eabc3cb333ca29447b9e96c10f8740c58dd00ce9f357ac2194e6291bd4",
     "shared/browser/searchPreference.ts": "e735f5fd02aa753eaa37018d75d3baeb6fcdb0ba6e84c2535af4e2b5b2c8e4da",
-    "shared/browser/MobileBrowserToolbar.tsx": "cc84dddbb7e5f6528f819cb1f9ee91240f0acc1a2aa027d8c5646f74d5957f1a",
+    "shared/browser/MobileBrowserToolbar.tsx": "679584a732ebc697a51386f728221895c0a7e0362eefcac478109fe552d77760",
     "shared/browser/BrowserPages.tsx": "8817334341da7d652b6468f14f1e667780617d278aa4edaa73b7ef4517a0c566",
     "shared/browser/BrowserEdgeGestures.tsx": "1577ede3c8eae8703d1c9bfebc103ae158ed8c90a432785aca6bfaa557f44748",
     "shared/browser/mobileBrowser.css": "14c281bb3abecb653262ae0061d22ae4f11ec5af35f6304ca5c27174ce2a7e9f",
@@ -1978,6 +1971,8 @@
     "shared/browser/extensions/transfer.ts": "ce815aba8b8452fb5c860ddb0237d5c232264922fc383001458ca8fd117d6c8c",
     "shared/browser/extensions/market.ts": "fdd18a9eb71b60864ec94ca6fd20bda95cbc8744423690f35d3385845662ea21",
     "shared/browser/extensions/ExtensionMarket.tsx": "9d18df285fb052c943700444df747e2103f574d5146f58c27fdb0caeff435a4d",
-    "shared/chat/useComposerAutoFocus.ts": "c708d8c7150702e8dd55daea464698c5e7b444bf095bb4a3a3920aed465da577"
+    "shared/chat/useComposerAutoFocus.ts": "c708d8c7150702e8dd55daea464698c5e7b444bf095bb4a3a3920aed465da577",
+    "apps/desktop/e2e/browser-address-checks.ts": "6bb1ec5f8b90eb97ec6b1bf33a29dbfcf034faf45e7ecbdbddc68bc21c2d9a83",
+    "shared/browser/useBrowserAddressInput.ts": "3537d58b09d18246f26bc380ac3514bb2c14e5f80f6bbffd1feed38ed23e4b75"
   }
 }

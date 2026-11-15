@@ -4,6 +4,7 @@ import { Dropdown } from 'antd';
 import type { BrowserTab } from '../provider-market/browserState';
 import type { MarketText } from '../provider-market/i18n';
 import { browserInput } from './addressInput';
+import { useBrowserAddressInput } from './useBrowserAddressInput';
 import type { SearchEngine } from './searchEngine';
 
 export function MobileBrowserToolbar({ tab, t, engine, navigate, home, count, newTab, manage, settings }: {
@@ -12,6 +13,7 @@ export function MobileBrowserToolbar({ tab, t, engine, navigate, home, count, ne
   settings: ReactNode;
 }) {
   const [address, setAddress] = useState(tab?.url ?? '');
+  const addressInput = useBrowserAddressInput(address);
   const [invalid, setInvalid] = useState(false);
   useEffect(() => { setAddress(tab?.url ?? ''); setInvalid(false); }, [tab?.id, tab?.url]);
   return <div className="pm-browser-toolbar browser-mobile-toolbar">
@@ -20,9 +22,10 @@ export function MobileBrowserToolbar({ tab, t, engine, navigate, home, count, ne
       event.preventDefault();
       const url = browserInput(address, engine);
       setInvalid(!url);
-      if (url) { navigate(url.href); (document.activeElement as HTMLElement | null)?.blur(); }
+      if (url) { navigate(url.href); addressInput.ref.current?.blur(); }
     }}>
-      <input aria-label={t('market.browserAddress')} aria-invalid={invalid} placeholder={t('market.browserSearchOrAddress')}
+      <input {...addressInput} dir="ltr" aria-label={t('market.browserAddress')} aria-invalid={invalid}
+        placeholder={t('market.browserSearchOrAddress')}
         value={address} onChange={event => { setAddress(event.target.value); setInvalid(false); }}
         spellCheck={false} autoComplete="off" enterKeyHint="go" />
     </form>

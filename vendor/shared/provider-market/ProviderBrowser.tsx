@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, ExternalLink,
 import { marketText, type MarketText } from './i18n';
 import type { Language } from '@remoteai/i18n';
 import { browserInput } from '../browser/addressInput';
+import { useBrowserAddressInput } from '../browser/useBrowserAddressInput';
 import { useSearchEngine } from '../browser/useSearchEngine';
 import { BrowserSearchSetting } from '../browser/BrowserSearchSetting';
 import type { SearchEngine } from '../browser/searchEngine';
@@ -61,6 +62,7 @@ function BrowserToolbar({ tab, loading, fullscreen, toggleFullscreen, navigate, 
   searchEngine: SearchEngine;
 }) {
   const [address, setAddress] = useState(tab?.url ?? '');
+  const addressInput = useBrowserAddressInput(address);
   const [invalid, setInvalid] = useState(false);
   useEffect(() => { setAddress(tab?.url ?? ''); setInvalid(false); }, [tab?.id, tab?.url]);
   return <div className="pm-browser-toolbar">
@@ -75,14 +77,14 @@ function BrowserToolbar({ tab, loading, fullscreen, toggleFullscreen, navigate, 
     <form onSubmit={(event) => {
       event.preventDefault();
       if (tab?.url.startsWith('file:') && address.trim() === tab.url) {
-        setInvalid(false); action('reload'); return;
+        setInvalid(false); addressInput.ref.current?.blur(); action('reload'); return;
       }
       const url = browserInput(address, searchEngine);
       setInvalid(!url);
-      if (url) { setAddress(url.href); navigate(url.href); }
+      if (url) { setAddress(url.href); addressInput.ref.current?.blur(); navigate(url.href); }
     }}>
       <BrowserWebsiteIcon url={tab?.url} size={15} />
-      <input aria-label={t('market.browserAddress')} aria-invalid={invalid}
+      <input {...addressInput} dir="ltr" aria-label={t('market.browserAddress')} aria-invalid={invalid}
         value={address} onChange={(event) => { setAddress(event.target.value); setInvalid(false); }}
         placeholder={t('market.browserSearchOrAddress')} spellCheck={false} autoComplete="off" />
       {star}<button type="submit" aria-label={t('market.visitPage')}><ArrowRight size={16} /></button>
