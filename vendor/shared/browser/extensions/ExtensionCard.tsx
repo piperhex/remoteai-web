@@ -4,6 +4,7 @@ import { ExternalLink, Info, Pin, PinOff, Puzzle, Trash2 } from 'lucide-react';
 import type { MarketText } from '../../provider-market/i18n';
 import type { BrowserExtension } from './model';
 import type { useExtensions } from './useExtensions';
+import type { BrowserPanelSelection } from './BrowserSidePanel';
 
 export function ExtensionIcon({ icon }: { icon?: string }) {
   const [failed, setFailed] = useState<string>();
@@ -20,8 +21,9 @@ export function ExtensionPermissions({ permissions, t }: { permissions?: string[
   </Popover>;
 }
 
-export function ExtensionCard({ entry, extensions, t }: {
+export function ExtensionCard({ entry, extensions, t, onPanel }: {
   entry: BrowserExtension; extensions: ReturnType<typeof useExtensions>; t: MarketText;
+  onPanel: (panel: BrowserPanelSelection) => void;
 }) {
   return <div className="browser-extension-card" data-disabled={!entry.enabled || undefined}>
     <span className="browser-extension-avatar"><ExtensionIcon icon={entry.icon} /></span>
@@ -31,6 +33,8 @@ export function ExtensionCard({ entry, extensions, t }: {
         <Tag bordered={false} color={entry.enabled ? 'success' : 'default'}>
           {t(entry.enabled ? 'market.extensionsEnabled' : 'market.extensionsDisabled')}</Tag></div>
       <Space size={4} wrap className="browser-extension-card-actions">
+        {entry.sidePanel && <Button type="text" size="small" disabled={extensions.busy || !entry.enabled}
+          onClick={() => onPanel({ id: entry.id, name: entry.name })}>{t('market.assistantOpenPanel')}</Button>}
         {entry.popup && <Button type="text" size="small" disabled={extensions.busy || !entry.enabled}
           icon={<ExternalLink size="1em" />} onClick={() => void extensions.request({ action: 'open', id: entry.id })}>
           {t(extensions.native ? 'market.extensionsOpen' : 'market.extensionsRemoteOpen')}</Button>}

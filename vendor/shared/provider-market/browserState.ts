@@ -10,6 +10,8 @@ export interface BrowserTab {
   historyIndex: number;
   /** Present only for conversation-owned tabs controlled by the built-in browser tools. */
   automationThread?: string;
+  /** Preserve the owning computer when a conversation tab moves into the menu browser. */
+  automationClient?: import('../browser/automation').BrowserClient;
 }
 export type BrowserAction = 'back' | 'forward' | 'reload' | 'stop';
 

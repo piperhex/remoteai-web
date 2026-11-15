@@ -9,10 +9,13 @@ import { ExtensionCard, ExtensionIcon, ExtensionPermissions } from './ExtensionC
 import { ExtensionDropZone } from './ExtensionDropZone';
 import assistantIcon from './assistant.png';
 import { ExtensionMarket } from './ExtensionMarket';
+import type { BrowserPanelSelection } from './BrowserSidePanel';
 export { ExtensionIcon } from './ExtensionCard';
 
 type Extensions = ReturnType<typeof useExtensions>;
-export function ExtensionManager({ extensions, t, close }: { extensions: Extensions; t: MarketText; close: () => void }) {
+export function ExtensionManager({ extensions, t, close, onPanel }: {
+  extensions: Extensions; t: MarketText; close: () => void; onPanel: (panel: BrowserPanelSelection) => void;
+}) {
   const [chrome, setChrome] = useState(false), [picking, setPicking] = useState(false);
   const [query, setQuery] = useState('');
   const [tab, setTab] = useState('installed');
@@ -59,6 +62,7 @@ export function ExtensionManager({ extensions, t, close }: { extensions: Extensi
             <div className="browser-extension-details"><div className="browser-extension-card-title">
               <strong>{t('market.extensionsAssistant')}</strong><Tag bordered={false} color="success">
                 {t('market.extensionsBuiltin')}</Tag></div><p>{t('market.extensionsAssistantInfo')}</p></div>
+            <Button onClick={() => onPanel({})}>{t('market.assistantOpenPanel')}</Button>
           </div>
         </>}
         {chrome && <p className="browser-extension-subtitle">{t('market.extensionsChromeHelp')}</p>}
@@ -69,7 +73,8 @@ export function ExtensionManager({ extensions, t, close }: { extensions: Extensi
             onChange={event => setQuery(event.target.value)} />
         </div>
         <div className="browser-extension-cards" aria-busy={extensions.busy}>
-          {!chrome && entries.map(entry => <ExtensionCard key={entry.id} entry={entry} extensions={extensions} t={t} />)}
+          {!chrome && entries.map(entry => <ExtensionCard key={entry.id} entry={entry} extensions={extensions} t={t}
+            onPanel={onPanel} />)}
           {chrome && candidates.map(entry => <div className="browser-extension-card" key={entry.path}>
             <span className="browser-extension-avatar"><ExtensionIcon icon={entry.icon} /></span>
             <div className="browser-extension-details"><strong>{entry.name}</strong>

@@ -12,7 +12,11 @@ import { BrowserInspector } from '../../browser/managed/BrowserInspector';
 import { rememberWebsiteIcons } from '../../browser/icons/websiteIcons';
 
 export function WebsiteBrowserSurface(props: BrowserSurfaceProps) {
-  return props.tab.automationThread ? <ManagedBrowserSurface {...props} /> : <ProviderBrowserSurface {...props} />;
+  if (!props.tab.automationThread) return <ProviderBrowserSurface {...props} />;
+  return props.tab.automationClient
+    ? <BrowserClientContext.Provider value={props.tab.automationClient}><ManagedBrowserSurface {...props} />
+      </BrowserClientContext.Provider>
+    : <ManagedBrowserSurface {...props} />;
 }
 
 function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, obscured }: BrowserSurfaceProps) {

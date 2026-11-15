@@ -42,7 +42,7 @@ export function useWebsiteTabs({ reuseTabs = true }: { reuseTabs?: boolean } = {
   const managedCommand = useCallback((id: string, command: import('../../browser/automation').BrowserCommand) => {
     const tab = currentTabs.current.find(tab => tab.id === id);
     if (!tab?.automationThread) return false;
-    void client.request({ threadId: tab.automationThread, tabId: id, command })
+    void (tab.automationClient ?? client).request({ threadId: tab.automationThread, tabId: id, command })
       .catch(() => { void message.error({ content: uiText('market.browserFailed'),
         style: { maxWidth: 400, marginInline: 'auto' } }); });
     return true;
@@ -142,11 +142,11 @@ export function useWebsiteTabs({ reuseTabs = true }: { reuseTabs?: boolean } = {
     const command = { action, sequence: ++sequence.current };
     setState(current => ({ ...current, commands: { ...current.commands, [id]: command } }));
   }, [managedCommand, resources]);
-  const adopt = useCallback((tab: ManagedBrowserTab) => {
+  const adopt = useCallback((tab: ManagedBrowserTab, owner = client) => {
     setState(current => ({ ...current, activeId: tab.id, tabs: current.tabs.some(entry => entry.id === tab.id)
       ? current.tabs : [...current.tabs, { ...createBrowserTab(), ...tab,
-        title: pageTitle(tab.url), automationThread: tab.threadId }] }));
-  }, []);
+        title: pageTitle(tab.url), automationThread: tab.threadId, automationClient: owner }] }));
+  }, [client]);
   return { ...state, open, reset, adopt, remove, resources, openResource, selectResource,
     onCloseTab: close, onCloseTabs: closeTabs, onNewTab: add,
     onSelect: (activeId: string) => setState(current => ({ ...current, activeId })),

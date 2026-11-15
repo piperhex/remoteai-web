@@ -33,6 +33,8 @@ import { PasswordCapture } from '../browser/data/PasswordCapture';
 import { useBrowserRecords } from '../browser/data/useBrowserRecords';
 import { BrowserFullscreenControl } from '../browser/BrowserFullscreenControl';
 import { BrowserExtensions } from '../browser/extensions/BrowserExtensions';
+import { BrowserSidePanel, type BrowserPanelSelection } from '../browser/extensions/BrowserSidePanel';
+import { Settings } from 'lucide-react';
 
 export interface BrowserSurfaceProps {
   tab: BrowserTab; active: boolean; command: { sequence: number; action: BrowserAction } | null;
@@ -119,6 +121,8 @@ export function BrowserContents(props: BrowserWindowProps & {
   const [mappingsOpen, setMappingsOpen] = useState(false);
   const [dataPanel, setDataPanel] = useState<'history' | 'passwords'>();
   const [extensionsOpen, setExtensionsOpen] = useState(false);
+  const [sidePanel, setSidePanel] = useState<BrowserPanelSelection>();
+  const closeSidePanel = useCallback(() => setSidePanel(undefined), []);
   const externalUrl = bookmarkUrl(displayTab?.url ?? '');
   const showManager = compact && manager;
   const add = () => { props.onNewTab(); setManager(false); setQuery(''); };
@@ -153,6 +157,9 @@ export function BrowserContents(props: BrowserWindowProps & {
       <BrowserSettingsAction icon={KeyRound} onClick={() => { dismiss(); setDataPanel('passwords'); }}>
         {t('market.browserPasswords')}</BrowserSettingsAction>
       <BrowserSearchSetting t={t} search={search} />
+      {!compact && <BrowserSettingsAction icon={Settings} onClick={() => {
+        dismiss(); setSidePanel({ settings: true });
+      }}>{t('market.assistantSettings')}</BrowserSettingsAction>}
       {props.mainBrowser && <BrowserPortMappingsSetting language={props.language} compact={compact}
         close={dismiss} showDialog={() => setMappingsOpen(true)}
         visit={url => { if (tab) home.navigate(tab.id, url); }} />}
@@ -197,7 +204,8 @@ export function BrowserContents(props: BrowserWindowProps & {
       fullscreen={props.fullscreen} toggleFullscreen={props.toggleFullscreen}
       navigate={(url) => { if (tab) props.onNavigate(tab.id, url); }}
       action={(action) => { if (tab) props.onAction(tab.id, action); }} t={t}
-      actions={<><BrowserExtensions t={t} active={open} onOverlay={setExtensionsOpen} />{props.actions}</>}
+      actions={<><BrowserExtensions t={t} active={open} onOverlay={setExtensionsOpen} onPanel={setSidePanel}
+        panelId={sidePanel?.id} closePanel={closeSidePanel} />{props.actions}</>}
       star={bookmarks.star} settings={bookmarks.settings} />}
     {!mobileFullscreen && !showManager && !(tab && home.isHome(tab.id)) && bookmarks.bar}{bookmarks.overlays}
     {mappingsOpen && <BrowserPortMappings language={props.language} close={() => setMappingsOpen(false)}
@@ -209,7 +217,7 @@ export function BrowserContents(props: BrowserWindowProps & {
     {open && records.candidate && <PasswordCapture login={records.candidate} t={t} close={records.closeCapture} />}
     {open && records.focus && records.fill && <PasswordSuggestions language={props.language} tabId={activeId}
       focus={records.focus} fill={records.fill} close={records.closeSuggestions} />}
-    <BrowserPages key="pages" browser={{ ...props, onAction: home.action, onNavigate: home.navigate,
+    <div className="browser-content-row"><BrowserPages key="pages" browser={{ ...props, onAction: home.action, onNavigate: home.navigate,
       onCloseTab: id => closeTabs([id]) }}
       home={home.isHome} bookmarks={bookmarks.manage} t={t} manager={showManager} compact={compact} query={query}
       desktopTabs={desktopTabs}
@@ -218,6 +226,9 @@ export function BrowserContents(props: BrowserWindowProps & {
       loadingChanged={loadingChanged}
       recordVisit={records.recordVisit}
       select={id => { props.onSelect(id); setManager(false); }} />
+    {sidePanel && !compact && <BrowserSidePanel key={sidePanel.id ?? 'builtin'}
+      selection={sidePanel} active={open && !extensionsOpen && !bookmarks.overlayOpen && !dataPanel}
+      t={t} close={closeSidePanel} />}</div>
   </>;
 }
 

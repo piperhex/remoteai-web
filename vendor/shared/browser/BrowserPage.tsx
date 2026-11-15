@@ -10,6 +10,7 @@ import { useWebsiteTabs } from '../file-preview/workspace/useWebsiteTabs';
 import { marketText } from '../provider-market/i18n';
 import { useCompactBrowser } from './bookmarks/useCompactBrowser';
 import './browserPage.css';
+import { BrowserClientContext } from '../file-preview/workspace/browserClient';
 
 /** Reuse the established engine and tabs without tying the main browser to a conversation. */
 export function BrowserPage({ language, active = true, onClose, homeBaseUrl, homeTransport }: {
@@ -19,6 +20,8 @@ export function BrowserPage({ language, active = true, onClose, homeBaseUrl, hom
   const navigation = useContext(BrowserNavigationContext);
   const standalone = useWebsiteTabs();
   const browser = navigation?.browser ?? standalone;
+  const client = useContext(BrowserClientContext);
+  const browserClient = browser.tabs.find(tab => tab.id === browser.activeId)?.automationClient ?? client;
   const [expanded, setExpanded] = useState(false);
   const host = useRef<HTMLElement>(null);
   const compact = useCompactBrowser() && !isTauri();
@@ -52,9 +55,11 @@ export function BrowserPage({ language, active = true, onClose, homeBaseUrl, hom
     <NavigationBrowserHomeContext.Provider value={compact ? '' : homeUrl}>
     <section ref={host} hidden={!active} className={`pm-browser browser-main-page${expanded ? ' browser-main-expanded' : ''}`}
     aria-label={marketText(language)('market.browserNavigation')}>
+    <BrowserClientContext.Provider value={browserClient}>
     <BrowserContents {...browser} embedded mainBrowser language={language} open={active} Surface={NavigationBrowserSurface}
       onCloseTab={id => closeTabs([id])} onCloseTabs={closeTabs}
       onClose={() => { setExpanded(false); onClose?.(); }}
       fullscreen={expanded} toggleFullscreen={() => setExpanded(value => !value)} />
+    </BrowserClientContext.Provider>
   </section></NavigationBrowserHomeContext.Provider></BrowserResourcesContext.Provider>;
 }
