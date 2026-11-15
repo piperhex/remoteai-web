@@ -4,6 +4,7 @@ import { ComposerDictation } from '../../chat/dictation/ComposerDictation';
 import { useComposerSuggestion } from '../../chat/useComposerSuggestion';
 import { ComposerSuggestion } from './ComposerSuggestion';
 import { ComposerInput } from './ComposerInput';
+import { useComposerAutoFocus } from '../../chat/useComposerAutoFocus';
 import { t, useLanguage } from '../../localization/browserClient';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { ArrowUp, ChevronDown, Pause, Play, Plus,
@@ -47,6 +48,7 @@ export function ChatComposer(props: ComposerProps) {
     uploadProgress, threadId, active, ready, sending, goal, goalBusy, catalog, cwd, loadFiles, loadCatalog } = props;
   const state = useComposerState(props);
   const { draft, attachments, menu, busy, compact, action, actionDisabled, goalMode } = state;
+  useComposerAutoFocus({ input: menu.input, active, disabled: !ready || busy });
   const voiceAction = !desktop && !!props.dictation && action === 'send'
     && !draft.hasContent && !attachments.items.length && !state.hasQuotes;
   const [settings, setSettings] = useState(false);

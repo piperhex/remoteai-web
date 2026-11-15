@@ -20,9 +20,20 @@ for (const large of [false, true]) {
     await expect(page.locator('.chat-thread-filter')).toHaveCSS('white-space', 'nowrap');
     await expect(page.locator('.adm-toast-mask')).toHaveCount(0);
     await expect(page.locator('.cli-gui-engine:visible')).toContainText('0.155.0');
-    const evidence = resolve('../../.codex-tmp/agent-hub-evidence');
+    const input = page.getByRole('textbox', { name: '聊天消息' });
+    await input.fill('保留草稿 Focus draft');
+    await navigation.getByText('设置', { exact: true }).click();
+    await navigation.getByText('Agent Hub', { exact: true }).click();
+    await expect(input).toBeFocused();
+    await expect(input).toHaveValue('保留草稿 Focus draft');
+    const evidence = resolve('../../.codex-tmp/agent-hub-focus');
     await mkdir(evidence, { recursive: true });
-    await page.screenshot({ path: resolve(evidence, `web-app-${large ? 'dark-large-narrow' : 'light-default'}.png`),
+    const prefix = `web-app-${large ? 'dark-large-narrow' : 'light-default'}`;
+    await page.screenshot({ path: resolve(evidence, `${prefix}-menu.png`), animations: 'disabled' });
+    await page.locator('.cli-gui-engine:visible').focus();
+    await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+    await expect(input).toBeFocused();
+    await page.screenshot({ path: resolve(evidence, `${prefix}-activation.png`),
       animations: 'disabled' });
   });
 }

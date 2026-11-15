@@ -1,13 +1,20 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "e8899411a7dee3a60aa4457cb61f69a0ee88118b",
+  "revision": "7228f45a2a712e1ce0bd2de8c8d2421cb7d02f29",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "91ab325e833e6c261f49fda97b65438533702d34"
+    "revision": "72a00142189484d42b089a22ed7ada5bcade3381"
+  },
+  "retainedTestSources": {
+    "repository": "https://github.com/piperhex/remoteai",
+    "revision": "e8899411a7dee3a60aa4457cb61f69a0ee88118b",
+    "paths": [
+      "apps/desktop/e2e/"
+    ]
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
-    "revision": "2862340502bd3e83bbc03b9fa913d13a3ddf96b8"
+    "revision": "bfc10135c63e2113101cffdbb50666d605842b44"
   },
   "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.33/remoteai-i18n-0.1.33.tgz",
   "files": {
@@ -20,7 +27,7 @@
     "apps/desktop/e2e/mobile-fixture.mjs": "841b9a12320c8e07627cd3999a28cd6e02f837bfdc9b139c933c91f10ed1ca62",
     "apps/desktop/src-tauri/icons/32x32.png": "7f5310d2f4b466d841479766ddf28a8b1003e167bfbc2e723d6de7ee967f4466",
     "apps/desktop/src-tauri/icons/128x128.png": "c6e11f099d213c5e3b81dc9264403858841e130f07e6f832069cac8eae47db02",
-    "apps/desktop/src-tauri/tauri.conf.json": "1497fa13da68dd780af02ceaeee4ff60685e1091a09bb9ad5dcf50b50eee4ad4",
+    "apps/desktop/src-tauri/tauri.conf.json": "8fc85a10ef3f6e7fac4db2fd200755115a1bf940456f13794b0ca99f73851f09",
     "shared/localization/testLocale.ts": "6ca4daa3a6a5d9442013a8b5861803edfafebf20d2bd875d6a2608158dc53e35",
     "apps/desktop/e2e/browser-chrome-checks.ts": "ffb5e29d72a5b938cdea6adbe30bead71f221aecc1ef3f49e8a1890d88fd231e",
     "apps/desktop/e2e/browser-loading-checks.ts": "75711e132895ee135d1a2f1b54396cd0a114f2722169001434a7e15aec364118",
@@ -69,7 +76,7 @@
     "apps/desktop/e2e/chat-surface-theme-checks.ts": "8fa5ab94adadc0e9c5a4df51fc4d2f9ae7fade2a8b4c0ec6b0bc1384aa57070d",
     "apps/desktop/e2e/model-availability-checks.ts": "956bfd145bb507265082a29d2c4340bea988b07436b258241d9d8a4ecb2a0414",
     "apps/desktop/e2e/project-reference-harness.tsx": "ceb0f47a7f1f418b56f604ba8261ba56fa80516e32a7445bccaf4e598b7c02fc",
-    "shared/remote-chat/views/ChatComposer.tsx": "67d1b3076bba76ec2c7045f343d7feacdba8beb59edb3e9c6b3a85c9705f255c",
+    "shared/remote-chat/views/ChatComposer.tsx": "53eeedeb64448efdbd702251d8588afd974a4ba678b8e1a14da4332b6a260c74",
     "shared/remote-chat/views/composerProps.ts": "67acd910e97b345021bdf0d9be33b553632fef90e354244f6205e1df5ec83112",
     "shared/remote-chat/client/types.ts": "773f5c63a8177d8ecb1d93c6ca47c8b32244d92faac2a87fc3a40f660dcc355d",
     "shared/remote-chat/client/promptSuggestion.ts": "966b8023f9522f8e6edc05fe3a6e1be51e55cff1d0db54eeeabd78d82d24d818",
@@ -1016,7 +1023,7 @@
     "shared/conversation/ProjectPicker.module.less": "73f138f105ab65f5b8c00208f7cab1a8069c980acf27bb9d427b3d8c77bb6bec",
     "shared/conversation/GuiHostPicker.module.less": "b2d21f420767f80ab93736a1261fea873d8f5178a15e0972757beb4535fe1c0b",
     "shared/appearance/themeColor.ts": "41d9cbcc78bc95d97e4322e2836e526235481ba5dcec63e8bd11cc095887496b",
-    "apps/desktop/src/pages/codexGui/SkillInput.tsx": "4975e50ebb6aa2e6f92462160b003b5924b5dc8888b5862fffe5308671a1b99b",
+    "apps/desktop/src/pages/codexGui/SkillInput.tsx": "b5235b7b322ed3c428b0d89df95a34514ae80ff97d9584dec80f9b8c51beb77a",
     "shared/chat/useProjectFileCandidates.ts": "f359c8c071de1e5a40b9a04c96a69cb5dfb34ae680eb355ee7b092f7f831b297",
     "shared/project-browser/fileSelection.ts": "52f28f25e51ea939057e12245409911e8263d6038332f2fd9a650fc80ef4c8ed",
     "apps/desktop/src/api/codexServiceStatus.ts": "38d09f718deeca962c3d2ef2fd90d1dc85d1c9deed334bc1068c8922e154b42a",
@@ -1666,7 +1673,7 @@
     "shared/cli-gui/presentation.ts": "26df2612a07d3108481b51504991ca5eef23761c2a3918554454fa8ee7f3163a",
     "shared/cli-gui/CliModePicker.tsx": "654f8e866b847978365a8ed418ee4d5fa4e881e58d3158f00b082bb0ddc8901e",
     "shared/cli-gui/CliAddContent.tsx": "973e44e6d999ffc736a51d05fdcf328bc03aaf0c94a40eda933c879cebe7edff",
-    "shared/cli-gui/CliComposerInput.tsx": "865da7d8a1d9e3768760b667c0da8f1a783e216c58c9cb2c69eb5dda2116b02b",
+    "shared/cli-gui/CliComposerInput.tsx": "35d4e1194f511e4e1a18e4aa61ea38bd4f9134d318e6d4958d3afddc19259487",
     "shared/cli-gui/CliInstallLink.tsx": "e6134243d8eb52bc54ccd64aaf723cf87ab6f6eb717bfe3cb9b682de10149c3c",
     "shared/conversation/cliManualDownloadApi.ts": "c35d18ea5713c8681d9442e726ed2041de93ae1f9fc6e0d8dea110622a28c6c9",
     "shared/conversation/useCliManualDownload.ts": "3f08b019de686edc78f7c34f06a8573805a1996205127ed913965d1f2cfe8226",
@@ -1970,6 +1977,7 @@
     "shared/browser/extensions/ExtensionDropZone.tsx": "56ae904e6a1e63cce88fdcb2af61f503013f13e2af3e1aece7414eefaf819e89",
     "shared/browser/extensions/transfer.ts": "ce815aba8b8452fb5c860ddb0237d5c232264922fc383001458ca8fd117d6c8c",
     "shared/browser/extensions/market.ts": "fdd18a9eb71b60864ec94ca6fd20bda95cbc8744423690f35d3385845662ea21",
-    "shared/browser/extensions/ExtensionMarket.tsx": "9d18df285fb052c943700444df747e2103f574d5146f58c27fdb0caeff435a4d"
+    "shared/browser/extensions/ExtensionMarket.tsx": "9d18df285fb052c943700444df747e2103f574d5146f58c27fdb0caeff435a4d",
+    "shared/chat/useComposerAutoFocus.ts": "c708d8c7150702e8dd55daea464698c5e7b444bf095bb4a3a3920aed465da577"
   }
 }

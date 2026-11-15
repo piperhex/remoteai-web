@@ -3,6 +3,7 @@ import { ComposerInput } from '../remote-chat/views/ComposerInput';
 import { ComposerContextMenu } from '../chat/ComposerContextMenu';
 import { uiText } from '../localization/uiText';
 import { useGuiFontSize } from '../appearance/fontSize';
+import { useComposerAutoFocus } from '../chat/useComposerAutoFocus';
 
 function resize(input: HTMLTextAreaElement | null) {
   if (!input) return;
@@ -18,6 +19,7 @@ export function CliComposerInput({ value, scope, active, disabled, canSend, onCh
   onPasteKeyDown: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
 }) {
   const input = useRef<HTMLTextAreaElement>(null);
+  useComposerAutoFocus({ input, active, disabled });
   const fontSize = useGuiFontSize();
   useLayoutEffect(() => { resize(input.current); }, [value, scope, active, fontSize]);
   useLayoutEffect(() => {
