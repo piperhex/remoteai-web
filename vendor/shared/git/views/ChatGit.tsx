@@ -51,7 +51,8 @@ function GitContent(props: Props & { panel: RemoteGit; shared: boolean; onRefres
       {panel.error && <p role="alert" className="git-error">{displayError(panel.error)}</p>}
       {panel.notice && <p role="status" className="git-notice">{panel.notice.startsWith('已提交 ')
         ? t("client.git.committed", { hash: panel.notice.slice(4) }) : displayError(panel.notice)}</p>}
-      {panel.busy && !panel.loading && <div className="git-loading"><Spin size="small" />{t("client.threadActions.working")}</div>}
+      {panel.busy && !panel.loading && !panel.updating
+        && <div className="git-loading"><Spin size="small" />{t("client.threadActions.working")}</div>}
       {panel.detail?.kind === 'diff' && <GitDiff
         key={JSON.stringify([props.cwd, panel.detail.path, panel.detail.commit?.hash])}
         client={props.client} cwd={panel.detail.commit?.repository ?? props.cwd} detail={panel.detail} enabled={props.active && props.connected}

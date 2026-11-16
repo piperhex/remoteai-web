@@ -7,6 +7,7 @@ import { GIT_ACTIONS, gitSyncCounts } from '../../remote-chat/gitActions';
 import type { GitAction } from '../../remote-chat/gitTypes';
 import { GitBranchMenu, GitSyncMenu } from './GitToolbarMenu';
 import { t } from '../../localization/browserClient';
+import { GitUpdateStatus } from './GitUpdateStatus';
 
 const ACTION_ICONS = { fetch: Download, pull: ArrowDown, update: ArrowDownUp, push: ArrowUp };
 const MENU_POPOVER_PROPS: PopoverProps = {
@@ -31,7 +32,7 @@ export function GitToolbar({ panel, connected, onRefresh }: {
   const changeMenu = (target: ToolbarMenu, open: boolean) => {
     setMenu(current => open ? target : current === target ? null : current);
   };
-  return <div className="git-toolbar-container" onKeyDown={event => {
+  return <><div className="git-toolbar-container" onKeyDown={event => {
     if (event.key === 'Escape' && menu) { event.stopPropagation(); close(); }
   }}>
     <div className="git-toolbar">
@@ -73,5 +74,5 @@ export function GitToolbar({ panel, connected, onRefresh }: {
           onClick={() => { panel.setDetail(null); onRefresh?.(); void panel.refresh(); }}><RefreshCw size={18} /></button>
       </div>
     </div>
-  </div>;
+  </div><GitUpdateStatus panel={panel} connected={connected} /></>;
 }

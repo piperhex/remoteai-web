@@ -1,0 +1,7 @@
+.git-update-status { display: flex; align-items: center; gap: 8px; padding: 10px 12px; }
+.git-update-recovery { margin: 8px 12px; padding: 10px; border: 1px solid var(--git-border);
+  border-radius: 6px; overflow-wrap: anywhere; }
+.git-update-recovery p { margin: 0 0 8px; }
+.git-update-recovery details { margin-bottom: 8px; }
+.git-update-recovery summary { cursor: pointer; }
+.git-update-recovery code { display: block; white-space: pre-wrap; user-select: text; }

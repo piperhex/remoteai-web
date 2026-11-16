@@ -46,7 +46,7 @@
 .git-menu p { max-width: 400px; line-height: 1.6; color: var(--git-muted, #718078); overflow-wrap: anywhere; }
 .git-menu-heading { margin-bottom: 8px; }
 .git-menu input, .git-menu select { border: 1px solid var(--git-border, #dfe5df); border-radius: 6px; padding: 8px;
-  box-sizing: border-box; max-width: 100%; color: inherit; background: var(--git-surface, white); }
+  box-sizing: border-box; max-width: 100%; font: inherit; color: inherit; background: var(--git-surface, white); }
 .git-menu input { width: 100%; }
 .git-branch-list { max-height: 200px; overflow: auto; }
 .git-branch-list button { display: flex; flex-direction: column; text-align: left; gap: 4px;

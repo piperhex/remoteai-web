@@ -35,9 +35,12 @@ function MergeContent({ conflict, panel, connected }: {
   const [dirty, setDirty] = useState(false);
   const disabled = panel.busy || !connected;
   const rebasing = panel.changes?.integration?.kind === 'rebase';
+  const restoring = panel.changes?.integration?.kind === 'stash';
   const labels = {
-    left: t(rebasing ? 'client.gitConflict.rebaseLeft' : 'client.gitConflict.left'),
-    right: t(rebasing ? 'client.gitConflict.rebaseRight' : 'client.gitConflict.right'),
+    left: t(restoring ? 'client.gitUpdate.updatedVersion'
+      : rebasing ? 'client.gitConflict.rebaseLeft' : 'client.gitConflict.left'),
+    right: t(restoring ? 'client.gitUpdate.savedChanges'
+      : rebasing ? 'client.gitConflict.rebaseRight' : 'client.gitConflict.right'),
     result: t('client.gitConflict.result'),
   };
   const editor = useMergeEditors({ model, path: conflict.path, disabled, label: side => labels[side],

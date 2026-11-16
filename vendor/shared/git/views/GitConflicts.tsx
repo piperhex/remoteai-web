@@ -8,7 +8,7 @@ export function GitConflicts({ panel, connected }: { panel: RemoteGit; connected
   const integration = panel.changes?.integration;
   const disabled = panel.busy || !connected;
   return <>
-    {(conflicts.length > 0 || integration) && <div className="git-conflict-banner">
+    {(conflicts.length > 0 || (integration && integration.kind !== 'stash')) && <div className="git-conflict-banner">
       <p>{t(conflicts.length ? 'client.gitConflict.banner' : 'client.gitConflict.ready', { count: conflicts.length })}</p>
       {conflicts.length ? <Button disabled={disabled} onClick={() => void panel.openConflict(conflicts[0].path)}>
         {t('client.gitConflict.resolve')}</Button> : <Button type="primary" disabled={disabled}

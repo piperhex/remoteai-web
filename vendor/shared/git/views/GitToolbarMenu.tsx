@@ -34,24 +34,23 @@ export function GitSyncMenu({ panel, disabled, onClose, action }: MenuProps & {
 }) {
   const repository = panel.repository;
   const item = GIT_ACTIONS.find(item => item.action === action)!;
-  const requiresCleanWorkspace = action === 'pull' || action === 'update';
+  const updating = action === 'pull' || action === 'update';
   return <div className="git-menu" role="region" aria-label={t('client.git.syncProject')}>
     <div className="git-menu-heading"><strong>{t('client.git.syncProject')}</strong></div>
     <strong>{displayText(item.label)}</strong>
-    <p>{displayText(item.hint)}</p>
+    <p>{updating ? t('client.gitUpdate.hint') : displayText(item.hint)}</p>
     <p>{t('client.git.currentBranch')}：{panel.changes?.branch ?? 'HEAD'}<br />
       {t('client.git.trackedBranch')}：{repository?.upstream ?? t('client.accounts.notSet')}</p>
-    {action === 'pull' && <label className="git-strategy">{t('client.git.updateMethod')}
+    {updating && <label className="git-strategy">{t('client.git.updateMethod')}
       <select aria-label={t('client.git.updateMethod')} value={panel.strategy}
         onChange={event => panel.setStrategy(event.target.value === 'rebase' ? 'rebase' : 'merge')}>
         <option value="merge">{t('client.git.merge')}</option><option value="rebase">{t('client.git.rebase')}</option>
       </select></label>}
-    {requiresCleanWorkspace && !!panel.changes?.files.length
-      && <p>{t('client.git.commitLocalChangesBeforePullingOrUpdatingTheProject')}</p>}
+    {updating && !!panel.changes?.files.length && <p>{t('client.gitUpdate.autoSave')}</p>}
     {!repository?.remotes.length && <p>{t('client.git.addARemoteRepositoryOnYourComputerFirst')}</p>}
     <button type="button" className="git-submit" disabled={disabled || !repository?.remotes.length
       || (action !== 'fetch' && !repository.upstream)
-      || (requiresCleanWorkspace && !!panel.changes?.files.length)}
+      || (updating && (!!panel.changes?.integration || panel.changes?.files.some(file => file.conflict)))}
       onClick={() => { onClose(); void panel.action(action); }}>
       {t('client.git.run', { action: displayText(item.label) })}</button>
   </div>;
