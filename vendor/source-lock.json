@@ -1,13 +1,13 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "1d888bbc86ef22cfec78a51a48798bf5cb403bed",
+  "revision": "afe1606096bd891c47bdc0d927f9340b5baab0c8",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "c3c888269ffa452bba6a615f8bfa666a01aac2c4"
+    "revision": "2fdc17e45e18cbb21628694b076eb6e3012a2c63"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
-    "revision": "9c1d464c2debc6640bde2307b94fa1bdfe83a888"
+    "revision": "78c9136c583b4e1316bd1360a62dfe87794dfdfe"
   },
   "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.36/remoteai-i18n-0.1.36.tgz",
   "files": {
@@ -30,7 +30,7 @@
     "shared/localization/browserLanguage.ts": "890f9fc9442e132ff333e4321070b6071269dafed72c85c1641a2da01caa566b",
     "shared/remote-chat/views/chat.css": "f98de4f7e84f7e53da2a42048f6080bcb7063abcfc54c61ab5063b9bafe3a8dc",
     "apps/desktop/e2e/project-browser-touch.ts": "3472c558a7d07b2d7a0cc85068365a4ad9d7358d8209dc6c109147a1e78d77ee",
-    "shared/remote-chat/bulkCipher.ts": "dc8ef989500cfc39812ba8ac193508d8111615bd3c71eea01536a1ab96b3dbcb",
+    "shared/remote-chat/bulkCipher.ts": "11ea8c3e8d3ef01ad92851b5aca21770b33d359f5243d872b2923a0be20937e7",
     "shared/remote-chat/bulkProtocol.ts": "16a0b0e980eebbd34acebe8c4f99aa0b86d375cd0858c5023351b942e9b54a16",
     "shared/remote-chat/bulkTransport.ts": "2051f08edcf2e6771a3be6c0fd6a16a01026beaa69b804f302e3fc21ecf8ea42",
     "shared/remote-chat/bulkLimits.ts": "86f65fa97bab6864cf48f732be7817504fedcb6a01b4f92d5f3418d1305d366e",
