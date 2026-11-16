@@ -31,7 +31,8 @@ export function ChatTools(props: Props) {
     if (!workspace?.tabs.entries.some(tab => tab.id === id)) browsers.open(props.cwd);
     workspace?.tabs.open(id);
   };
-  useWorkspaceLauncher({ id: 'files', enabled: props.active && props.connected && Boolean(props.cwd), open: openFiles });
+  useWorkspaceLauncher({ id: 'files', tabId: workspaceTabId.files(props.cwd),
+    enabled: props.active && props.connected && Boolean(props.cwd), open: openFiles });
   return <>
     {wide && props.desktopActions}
     <ProjectTools key={props.cwd} {...props} wide={wide} openDesktop={desktop.open} openFiles={openFiles} />
@@ -53,7 +54,8 @@ function ProjectTools({ client, openFiles, wide, terminal, ...props }: Props & {
   const openGit = () => {
     setGit(true); workspace?.tabs.open(workspaceTabId.git(props.cwd));
   };
-  useWorkspaceLauncher({ id: 'git', enabled: props.active && props.connected && Boolean(props.cwd), open: openGit });
+  useWorkspaceLauncher({ id: 'git', tabId: workspaceTabId.git(props.cwd),
+    enabled: props.active && props.connected && Boolean(props.cwd), open: openGit });
   useEffect(() => { if (!props.active) setMenu(false); }, [props.active]);
   return <>
     {!wide && <Popover trigger="click" placement="bottomRight" arrow={false}

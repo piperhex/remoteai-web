@@ -25,7 +25,8 @@ export function GuiToolbox(props: Props) {
   const [panel, setPanel] = useState<'git' | null>(null);
   useEffect(() => { if (!props.active) setMenu(false); }, [props.active]);
   const openGit = () => { setPanel('git'); workspace?.tabs.open(workspaceTabId.git(props.cwd)); };
-  useWorkspaceLauncher({ id: 'git', enabled: props.active && props.connected && Boolean(props.cwd), open: openGit });
+  useWorkspaceLauncher({ id: 'git', tabId: workspaceTabId.git(props.cwd),
+    enabled: props.active && props.connected && Boolean(props.cwd), open: openGit });
   const gitVisible = workspace?.tabs.visible && workspace.tabs.selected === workspaceTabId.git(props.cwd);
   return <>
     {props.trigger === 'git' ? <button type="button" className={workspaceStyles.trigger}

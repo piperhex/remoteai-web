@@ -19,6 +19,7 @@ import { WorkspaceLaunchersContext, useWorkspaceLaunchers } from '../chat/worksp
 import { WorkspaceStartPage } from './WorkspaceStartPage';
 import { marketText } from '../provider-market/i18n';
 import { guiLanguage } from '../localization/uiText';
+import { useWorkspaceTabActions } from './useWorkspaceTabActions';
 
 const MIN_CHAT_WIDTH = 520;
 
@@ -55,6 +56,9 @@ export function DetailsWorkspace({ selected, active, children, enabled = true, c
     ...(preview ? [{ id: 'preview', title: t('client.configLabels.browser'), icon: <FileSearch size={16} /> }] : []),
     ...drawer.tabs.entries,
   ].filter(tab => !drawer.tabs.closed.has(tab.id));
+  const tabActions = useWorkspaceTabActions({ launchers: launchers.launchers,
+    openBrowser: enabled ? panel.openBrowser : undefined, showChanges: hasChanges ? panel.showChanges : undefined,
+    entries: drawer.tabs.entries, openTabs: tabs, openTab: drawer.tabs.open });
   const hasOpenTabs = Boolean(enabled && ((hasChanges && !drawer.tabs.closed.has('changes'))
     || (preview && !drawer.tabs.closed.has('preview'))))
     || drawer.tabs.entries.some(tab => !drawer.tabs.closed.has(tab.id));
@@ -92,7 +96,7 @@ export function DetailsWorkspace({ selected, active, children, enabled = true, c
           aria-label={t("client.chat.resizeDetailsPanel")} aria-orientation="vertical" aria-controls={panelId}
           aria-valuemin={resize.minimum} aria-valuemax={resize.maximum} aria-valuenow={width} {...resize.handle} />}
         <header className={styles.header}>
-          <WorkspaceDrawerTabs tabs={tabs} selected={drawer.tabs.selected} visible={visible}
+          <WorkspaceDrawerTabs tabs={tabs} actions={tabActions} selected={drawer.tabs.selected} visible={visible}
             choose={id => {
               if (id === 'changes') panel.showChanges();
               else if (id === 'preview') panel.showPreview();

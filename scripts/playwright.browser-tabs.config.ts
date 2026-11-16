@@ -3,7 +3,7 @@ import { testBrowserLaunchOptions } from '../../../scripts/test-browser.mjs';
 
 export default defineConfig({
   testDir: '../e2e', testMatch: ['browser-tabs.pw.ts', 'browser-chrome.pw.ts',
-    'browser-loading.pw.ts', 'workspace-start.pw.ts', 'workspace-tab-menu.pw.ts'],
+    'browser-loading.pw.ts', 'workspace-start.pw.ts', 'workspace-tab-menu.pw.ts', 'workspace-add-tab.pw.ts'],
   workers: 1, timeout: 60_000,
   outputDir: '../../../.codex-tmp/browser-tabs-web',
   use: { baseURL: 'http://127.0.0.1:1567/web/', launchOptions: testBrowserLaunchOptions(),

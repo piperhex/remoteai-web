@@ -3,6 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 export type WorkspaceLauncherId = 'git' | 'files';
 export interface WorkspaceLauncher {
   id: WorkspaceLauncherId;
+  tabId: string;
   enabled: boolean;
   open: () => void;
 }
@@ -16,8 +17,9 @@ export function useWorkspaceLauncher(launcher: WorkspaceLauncher) {
   const register = useContext(WorkspaceLaunchersContext);
   const action = useRef(launcher.open);
   action.current = launcher.open;
-  useEffect(() => register?.({ id: launcher.id, enabled: launcher.enabled, open: () => action.current() }),
-    [register, launcher.id, launcher.enabled]);
+  useEffect(() => register?.({ id: launcher.id, tabId: launcher.tabId,
+    enabled: launcher.enabled, open: () => action.current() }),
+    [register, launcher.id, launcher.tabId, launcher.enabled]);
 }
 
 export function useWorkspaceLaunchers() {

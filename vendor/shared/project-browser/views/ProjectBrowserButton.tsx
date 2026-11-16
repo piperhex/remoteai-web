@@ -21,7 +21,7 @@ export function ProjectBrowserButton({ client, cwd, connected, active, className
     if (!workspace?.tabs.entries.some(tab => tab.id === id)) browsers.open(cwd);
     workspace?.tabs.open(id);
   };
-  useWorkspaceLauncher({ id: 'files', enabled: active && connected && Boolean(cwd), open: openFiles });
+  useWorkspaceLauncher({ id: 'files', tabId: id, enabled: active && connected && Boolean(cwd), open: openFiles });
   return <>
     <button type="button" className={className} disabled={!active || !connected || !cwd}
       aria-label={t("client.projectBrowser.browseFiles")} aria-haspopup="dialog" aria-expanded={Boolean(visible)}
