@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "ddaf6c670937e4b74f89d6bf50a999644ad2006d",
+  "revision": "1d888bbc86ef22cfec78a51a48798bf5cb403bed",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "4c0ed2e94a6e81645f9f8d12d76b818145e05e59"
+    "revision": "c3c888269ffa452bba6a615f8bfa666a01aac2c4"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -33,7 +33,7 @@
     "shared/remote-chat/bulkCipher.ts": "dc8ef989500cfc39812ba8ac193508d8111615bd3c71eea01536a1ab96b3dbcb",
     "shared/remote-chat/bulkProtocol.ts": "16a0b0e980eebbd34acebe8c4f99aa0b86d375cd0858c5023351b942e9b54a16",
     "shared/remote-chat/bulkTransport.ts": "2051f08edcf2e6771a3be6c0fd6a16a01026beaa69b804f302e3fc21ecf8ea42",
-    "shared/remote-chat/bulkLimits.ts": "df86dc5f364b55735e2838ac4ee65062543ce0a0fb7d12f41d0a8c2dc2a50ae1",
+    "shared/remote-chat/bulkLimits.ts": "86f65fa97bab6864cf48f732be7817504fedcb6a01b4f92d5f3418d1305d366e",
     "shared/remote-chat/downloadManifest.ts": "1e7a19b877a7dde693edb2457a509fcd52c7af684c80d443913b67b702c19ba9",
     "shared/remote-chat/bulkControl.ts": "d46f8e6b233926b8390ccfb63d597c1878a75ea7478ab28632a375565423d0f6",
     "apps/desktop/e2e/changes-selection-harness.tsx": "54c698c35545250181ee4e09761b01364008ab85c3ed1e834d3267977b3281e5",
@@ -1558,7 +1558,7 @@
     "shared/conversation/sync/rate.ts": "ded5aec6ec3028742cb7bee870c3d60b311ce952809e9d4e0e900c1bdb5fd657",
     "shared/conversation/EditedFilesSummary.module.less": "2942b29429a2fa5a5db66de775bfbeb27427cbff4d83b817434da926b258df06",
     "shared/remote-chat/bulkReceiver.ts": "c9a9b3b40214a06cd92c160d9c812cec24d86d4de4ffe795e45f28afcaf5d6d3",
-    "shared/downloads/bulkStorage.ts": "17bbdd1557a3ddaf8af9d3f3d0bd92a788bf611d878f5e03c5d5be5a31ca1b61",
+    "shared/downloads/bulkStorage.ts": "a02f072b72b1452bcd14c0efc16b31958760b06b57b489734ad60786f27a8893",
     "shared/remote-chat/downloadSession.ts": "c5559982a3dde154e5dde8cfb2f2cf121bb8bc917a8e68f290586167968eebcd",
     "shared/downloads/bulkResume.ts": "77d7799d790ca8662a2c93c6394867a5c062d2df0c72b05039fff71ce38f7756",
     "shared/terminal/sshUpload.ts": "8d6428fc71f977490a520d8cf65fc43d927f405c595430459821c0d3c917e4dd",
