@@ -1,3 +1,4 @@
+// Browser-only simulated remote host for Web tests; desktop production uses the Rust transport.
 import type { IceServer } from '../../../../shared/remote-chat/protocol';
 import { DesktopAdaptation, type NetworkSample } from '../../../../shared/remote-desktop/adaptation';
 import type { DesktopSettings, DesktopSignal, DesktopSignalReply } from '../../../../shared/remote-desktop/protocol';

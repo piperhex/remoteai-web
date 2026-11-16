@@ -35,8 +35,7 @@ import { useDesktopOrientation } from './useDesktopOrientation';
 import { DesktopErrorBoundary } from './DesktopErrorBoundary';
 import { DesktopTakeover } from './DesktopTakeover';
 import './desktop.css';
-
-const createPeer = (configuration: RTCConfiguration) => new RTCPeerConnection(configuration);
+import { createDesktopPeerConnection as createPeer } from '../runtime';
 
 interface Props {
   client: DesktopClient; active: boolean; close: () => void; localClipboard?: LocalDesktopClipboard;

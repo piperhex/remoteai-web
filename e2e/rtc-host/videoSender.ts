@@ -1,3 +1,4 @@
+// Browser-only simulated remote host for Web tests; desktop production uses the Rust transport.
 import type { DesktopProfile } from '../../../../shared/remote-desktop/profiles';
 
 /** Every connection keeps capture's resolution, including peers awaiting a direct or relay handover. */

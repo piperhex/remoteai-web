@@ -2,7 +2,8 @@ import type { DesktopSecurity } from '../../../shared/remote-desktop/security';
 import type { DesktopDisplay, DesktopInput, DesktopInputFocus, DesktopResolution, DesktopSettings, DesktopSystemPermission }
   from '../../../shared/remote-desktop/protocol';
 import { RemoteDesktopHost } from '../../desktop/src/remoteDesktop/host';
-import { HostSession } from '../../desktop/src/remoteDesktop/hostSession';
+import { HostSession } from './rtc-host/hostSession';
+import { setNativeDesktopRuntime } from '../../../shared/remote-desktop/runtime';
 import { createGuiToolsClient } from '../../../shared/remote-chat/guiTools';
 import type { IceServer } from '../../../shared/remote-chat/protocol';
 import { clipboardFixture, desktopClipboard } from './remote-desktop-clipboard-fixture';
@@ -105,7 +106,10 @@ async function frame(id: string, width: number) {
   } finally { desktopTest.concurrent -= 1; }
 }
 
-// Only native IPC is substituted. Host capture pacing, WebRTC/SRTP, receiver and controls are production code.
+// The fake capture uses a Tauri IPC marker, so explicitly keep this Web receiver on browser RTC.
+// The desktop application installs the Rust factory; its own smoke test rejects browser RTC construction.
+setNativeDesktopRuntime({ createPeer: configuration => new RTCPeerConnection(configuration),
+  videoCodecs: async () => ['h264'] });
 let callbackId = 0;
 if (new URLSearchParams(location.search).has('native-clipboard')) {
   Object.defineProperty(window, 'isTauri', { value: true, configurable: true });
@@ -214,7 +218,7 @@ if (window.desktopRelayFixture) {
     desktopTest.peers.push(peer); return peer;
   } });
 }
-// The privacy fixture substitutes display management only; media still uses the production peer.
+// The Web fixture simulates a remote sender; media uses real browser RTP and the production receiver.
 const privacyFixture = new URLSearchParams(location.search).has('privacy');
 const resolutionFixture = new URLSearchParams(location.search).has('resolutions');
 const securityFixture = new URLSearchParams(location.search).has('security');
@@ -264,7 +268,7 @@ const host = new RemoteDesktopHost(privacyFixture || resolutionFixture || securi
         privacyScreen: selected.id === 'private', resolutions };
     },
   };
-} : undefined);
+} : (settings, ice, expiry, diagnostic) => new HostSession(settings, ice, expiry, diagnostic));
 host.register('fixture', window.desktopRelayFixture?.iceServers ?? []);
 export async function desktopRequest<T>(body: object): Promise<T> {
   const request = body as { action: string; id: string; settings?: DesktopSettings; directUpgrade?: { action: string } };

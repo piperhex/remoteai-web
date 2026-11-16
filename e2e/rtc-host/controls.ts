@@ -1,3 +1,4 @@
+// Browser-only simulated remote host for Web tests; desktop production uses the Rust transport.
 import { object } from '../../../../shared/remote-chat/protocol';
 import type { DesktopCapture } from './capture';
 import type { ClipboardReply } from '../../../../shared/remote-desktop/clipboard';

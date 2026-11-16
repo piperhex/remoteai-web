@@ -1,3 +1,4 @@
+// Browser-only simulated remote host for Web tests; desktop production uses the Rust transport.
 export interface RemoteLossReport {
   id: string; timestamp: number; fractionLost?: number; roundTripTimeMeasurements?: number;
 }

@@ -1,3 +1,4 @@
+// Browser-only simulated remote host for Web tests; desktop production uses the Rust transport.
 import { Channel, invoke } from '@tauri-apps/api/core';
 import type { DesktopDisplays, DesktopInputFocus } from '../../../../shared/remote-desktop/protocol';
 import type { ClipboardReply } from '../../../../shared/remote-desktop/clipboard';
