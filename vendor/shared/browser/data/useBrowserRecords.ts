@@ -3,7 +3,7 @@ import { invoke, isTauri } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import type { BrowserTab } from '../../provider-market/browserState';
 import { useBrowserData } from './context';
-import { browserUrl, type Login } from './model';
+import { browserUrl, loginOrigin, type Login } from './model';
 import { newDataId, validateLogin } from './crypto';
 import type { DataControls } from './clear';
 import { usePasswordSuggestions } from './usePasswordSuggestions';
@@ -40,7 +40,7 @@ export function useBrowserRecords(options: {
     return () => { void unlisten.then(stop => stop?.()); };
   }, [desktop, options.active, active?.id, vault]);
   useEffect(() => {
-    if (!desktop || !options.active || !active?.url.startsWith('https:') || active.automationThread) return;
+    if (!desktop || !options.active || !active || !loginOrigin(active.url) || active.automationThread) return;
     let stopped = false, busy = false;
     const capture = async () => {
       if (busy || document.hidden) return;

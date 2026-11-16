@@ -1,15 +1,15 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "f8c5c3a7f40ac53ebb56097ba30f150ff258f15c",
+  "revision": "cd4513df3b032d830763c8028a228ad0cb778a01",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "890dd55c452c3b16706c092295b4f8f2412771e6"
+    "revision": "1b2dcf643cc9a938e602c79b9257ab9e3dbf09e3"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
     "revision": "9c1d464c2debc6640bde2307b94fa1bdfe83a888"
   },
-  "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.35/remoteai-i18n-0.1.35.tgz",
+  "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.36/remoteai-i18n-0.1.36.tgz",
   "files": {
     "scripts/test-browser.mjs": "456d5b867ac937a571630f4a01cd37ded9380d519bee3011e8807480c0739733",
     "scripts/test-browser.d.mts": "0f13ced709be8e097af7d4038400129b64e5d400f62e9bea2a0371125ec4f70f",
@@ -1916,11 +1916,11 @@
     "shared/browser/data/BrowserDataPanel.tsx": "6025c3253dddf90da1b4f142a2ffd9e4974781f20706fefb9ed380624a396895",
     "shared/browser/data/PasswordManager.tsx": "063a2752d351fc0b1178a908085a1dbe81d8a9d787162a935929d5b4c3e13e30",
     "shared/browser/data/PasswordCapture.tsx": "ed1ce72518bc3f3afff44b39843ceef22a99ed86dd940f4005fa650fa4f7df30",
-    "shared/browser/data/useBrowserRecords.ts": "a025b7d6a9ab08d9d5d32cd467714efa2a7367b7e56729a06f82acdf4e8cb72d",
+    "shared/browser/data/useBrowserRecords.ts": "688d6f8660dbd0b71de797bcae9b32e5718fbc091b71518b73ea42062decdd13",
     "shared/browser/data/channel.ts": "50d2a16d076b8b97ba068d518aa670f7d7ca4b71582fd3144ee0139e5a58d64a",
     "shared/browser/data/store.ts": "4d20c5992a193305b528151e8ce9a4f156bb4be64ac5a80882936ee817915dcb",
     "shared/browser/data/vault.ts": "2304274200f081f95d549f854b11273a8e9b5348e6d54a75080accd8b8658a61",
-    "shared/browser/data/model.ts": "a0fe563753dc58000a214a324a68e5d316c3224ab598b8c0a3339dd41457f662",
+    "shared/browser/data/model.ts": "fa42deb87321ff72510a1fb47a9c1361b61c767be5f2c4a26bb7543d42182812",
     "shared/browser/data/presentation.ts": "d6ace98a340b40e96077d83fc9eebc5838f1e64acca99cf49af47eae86e20e28",
     "shared/browser/data/ClearBrowserData.tsx": "f106e722fd03598c6eedf87d17e4c8df7a183f5cf438da52e2c5ec794182b36b",
     "shared/browser/data/clear.ts": "a188d3d8c8dc8db9cad30a2a73b8c61087cb0ffcd6351a1f18aaabbd2b2e3fde",
