@@ -55,7 +55,7 @@ for (const dark of [false, true]) test(`mobile browser retains pages and opens b
   await page.route('**/second-tab', route => route.fulfill({ contentType: 'text/html',
     body: '<h1>Second retained tab</h1><input value="second-draft">' }));
   await browser.getByRole('button', { name: '新标签页', exact: true }).click();
-  const tabAddress = browser.getByRole('textbox', { name: '页面地址', exact: true });
+  const tabAddress = browser.getByLabel('页面地址', { exact: true });
   await tabAddress.fill(`${new URL(info.project.use.baseURL!).origin}/second-tab`);
   await tabAddress.press('Enter');
   await expect(browser.locator('iframe').last().contentFrame().getByRole('heading')).toHaveText('Second retained tab');
@@ -80,7 +80,7 @@ for (const dark of [false, true]) test(`mobile browser retains pages and opens b
   await page.screenshot({ path: info.outputPath(`web-mobile-${dark ? 'dark-20px' : 'light-14px'}-refresh-menu.png`),
     animations: 'disabled' });
   await popup.getByRole('button', { name: '全屏展示', exact: true }).click();
-  await expect(browser.getByRole('textbox', { name: '页面地址', exact: true })).toBeHidden();
+  await expect(browser.getByLabel('页面地址', { exact: true })).toBeHidden();
   await expect(browser.getByRole('button', { name: '更多操作', exact: true })).toBeVisible();
   await expect(second.contentFrame().locator('input')).toHaveValue('mode-draft');
   await expect.poll(() => browser.evaluate(element => element.matches(':popover-open'))).toBe(true);
@@ -89,12 +89,12 @@ for (const dark of [false, true]) test(`mobile browser retains pages and opens b
   await page.screenshot({ path: info.outputPath(`web-mobile-${dark ? 'dark-20px' : 'light-14px'}-fullscreen.png`),
     animations: 'disabled' });
   await verifyFullscreenControl({ page, browser, info, label: `web-mobile-${dark ? 'dark-20px' : 'light-14px'}` });
-  await expect(browser.getByRole('textbox', { name: '页面地址', exact: true })).toBeVisible();
+  await expect(browser.getByLabel('页面地址', { exact: true })).toBeVisible();
   await expect(second.contentFrame().locator('input')).toHaveValue('mode-draft');
   await browser.getByRole('button', { name: '浏览器设置', exact: true }).click();
   await popup.getByRole('button', { name: '全屏展示', exact: true }).click();
   await page.keyboard.press('Escape');
-  await expect(browser.getByRole('textbox', { name: '页面地址', exact: true })).toBeVisible();
+  await expect(browser.getByLabel('页面地址', { exact: true })).toBeVisible();
   await expect(second.contentFrame().locator('input')).toHaveValue('mode-draft');
   await browser.getByRole('button', { name: '浏览器设置', exact: true }).click();
   await reload.click();
@@ -172,7 +172,7 @@ for (const dark of [false, true]) test(`mobile browser retains pages and opens b
   await browser.getByRole('menuitem', { name: '退出全屏', exact: true }).click();
   await page.route(/^https:\/\/(www\.google\.com|www\.baidu\.com)/,
     route => route.fulfill({ contentType: 'text/html', body: '<h1>Search result fixture</h1>' }));
-  const address = browser.getByRole('textbox', { name: '页面地址', exact: true });
+  const address = browser.getByLabel('页面地址', { exact: true });
   await address.fill('mobile search'); await address.press('Enter');
   await expect(address).toHaveValue('https://www.google.com/search?q=mobile+search');
   await browser.getByRole('button', { name: '浏览器设置', exact: true }).click();

@@ -25,7 +25,7 @@ for (const dark of [false, true]) test(`mobile web capture follows browser conse
     await context.grantPermissions([], { origin: site });
     await page.goto(`e2e/web-browser-bookmarks-harness.html${dark ? '?dark&font=20' : ''}`);
     expect(await page.evaluate(() => innerWidth)).toBe(dark ? 430 : 390);
-    const address = page.getByRole('textbox', { name: '页面地址', exact: true });
+    const address = page.getByLabel('页面地址', { exact: true });
     await address.fill(site); await address.press('Enter');
     const frame = page.locator('.pm-browser-page:visible iframe');
     await expect(frame).toHaveAttribute('allow', 'microphone; camera; geolocation');

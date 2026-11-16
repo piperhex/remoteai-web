@@ -292,7 +292,7 @@ test('PC remote Markdown links use browser tabs with retained source controls', 
   await preview.getByRole('button', { name: '预览', exact: true }).click();
   await preview.getByRole('button', { name: '后续文档', exact: true }).click();
   await expect(preview.getByRole('heading', { name: '后续文档' })).toBeVisible();
-  await expect(browser.getByRole('textbox', { name: '页面地址', exact: true }))
+  await expect(browser.getByLabel('页面地址', { exact: true }))
     .toHaveValue('file:///F:/remote/docs/next.md');
   await expect(page.locator('aside[data-details-panel]')).toHaveCount(1);
   await expect(browser.getByRole('tab')).toHaveCount(2);

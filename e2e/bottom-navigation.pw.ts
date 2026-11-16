@@ -42,7 +42,7 @@ for (const dark of [false, true]) test(`icon navigation retains the browser ${da
   await navigation.getByRole('tab', { name: '浏览器' }).click();
   await expect(navigation.getByRole('tab', { selected: true })).toHaveAccessibleName('浏览器');
   const browser = page.locator('.browser-main-page');
-  const address = browser.getByRole('textbox', { name: '页面地址', exact: true });
+  const address = browser.getByLabel('页面地址', { exact: true });
   await address.fill(`${new URL(info.project.use.baseURL!).origin}/retained-page`);
   await address.press('Enter');
   const frame = browser.locator('iframe').first();

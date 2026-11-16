@@ -18,7 +18,7 @@ for (const dark of [false, true]) test(`mobile web location follows browser cons
     await context.route(`${site}/**`, route => route.fulfill({ contentType: 'text/html', body: locationPage }));
     await context.grantPermissions([], { origin: site });
     await page.goto(`e2e/web-browser-bookmarks-harness.html${dark ? '?dark&font=20' : ''}`);
-    const address = page.getByRole('textbox', { name: '页面地址', exact: true });
+    const address = page.getByLabel('页面地址', { exact: true });
     await address.fill(site); await address.press('Enter');
     const frame = page.locator('.pm-browser-page:visible iframe');
     await expect(frame).toHaveAttribute('allow', 'microphone; camera; geolocation');

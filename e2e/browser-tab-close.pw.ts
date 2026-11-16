@@ -30,7 +30,7 @@ for (const enlarged of [false, true]) test(`closing last and all mobile tabs ret
     await openBrowser(page, enlarged);
     const browser = page.locator('.browser-main-page');
     const manager = page.locator('.browser-tab-manager-toolbar');
-    const address = browser.getByRole('textbox', { name: '页面地址', exact: true });
+    const address = browser.getByLabel('页面地址', { exact: true });
     const home = async () => {
       await expect(manager).toBeHidden(); await expect(address).toHaveValue('');
       await expect(browser.getByRole('button', { name: '管理标签页（1）' })).toBeVisible();

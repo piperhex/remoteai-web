@@ -1,17 +1,13 @@
 import { useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { ArrowLeft, ArrowRight, ExternalLink,
-  History, KeyRound, Maximize2, Minimize2, Plus, RotateCw, X } from 'lucide-react';
+import { ExternalLink, History, KeyRound, Maximize2, Plus, X } from 'lucide-react';
 import { marketText, type MarketText } from './i18n';
 import type { Language } from '@remoteai/i18n';
-import { browserInput } from '../browser/addressInput';
-import { useBrowserAddressInput } from '../browser/useBrowserAddressInput';
 import { useSearchEngine } from '../browser/useSearchEngine';
 import { BrowserSearchSetting } from '../browser/BrowserSearchSetting';
-import type { SearchEngine } from '../browser/searchEngine';
 import type { BrowserAction, BrowserTab } from './browserState';
 import { BrowserTabs } from './BrowserTabs';
-import { BrowserWebsiteIcon } from '../browser/icons/BrowserWebsiteIcon';
+import { BrowserToolbar } from '../browser/BrowserToolbar';
 import { useBrowserBookmarks } from '../browser/bookmarks/useBrowserBookmarks';
 import './providerBrowser.css';
 import '../browser/browserChrome.css';
@@ -53,51 +49,6 @@ export interface BrowserWindowProps {
   onNavigate: (id: string, url: string) => void; onAction: (id: string, action: BrowserAction) => void;
   onPopup: (id: string, url: string) => void;
   commands: Record<string, BrowserSurfaceProps['command']>; Surface: ComponentType<BrowserSurfaceProps>;
-}
-
-function BrowserToolbar({ tab, loading, fullscreen, toggleFullscreen, navigate, action, t, actions, star, settings,
-  searchEngine }: {
-  loading: boolean;
-  tab?: BrowserTab; fullscreen: boolean; toggleFullscreen: () => void;
-  navigate: (url: string) => void; action: (action: BrowserAction) => void; t: MarketText; actions?: ReactNode;
-  star?: ReactNode; settings?: ReactNode;
-  searchEngine: SearchEngine;
-}) {
-  const [address, setAddress] = useState(tab?.url ?? '');
-  const addressInput = useBrowserAddressInput(address);
-  const [invalid, setInvalid] = useState(false);
-  useEffect(() => { setAddress(tab?.url ?? ''); setInvalid(false); }, [tab?.id, tab?.url]);
-  return <div className="pm-browser-toolbar">
-    <button aria-label={t('market.browserBack')} title={t('market.browserBack')}
-      disabled={!tab?.url} onClick={() => action('back')}><ArrowLeft size={17} /></button>
-    <button aria-label={t('market.browserForward')} title={t('market.browserForward')}
-      disabled={!tab?.url} onClick={() => action('forward')}><ArrowRight size={17} /></button>
-    <button aria-label={t(loading ? 'market.cancel' : 'market.browserReload')}
-      title={t(loading ? 'market.cancel' : 'market.browserReload')}
-      disabled={!tab?.url} onClick={() => action(loading ? 'stop' : 'reload')}>
-      {loading ? <X size={17} /> : <RotateCw size={17} />}</button>
-    <form onSubmit={(event) => {
-      event.preventDefault();
-      if (tab?.url.startsWith('file:') && address.trim() === tab.url) {
-        setInvalid(false); addressInput.ref.current?.blur(); action('reload'); return;
-      }
-      const url = browserInput(address, searchEngine);
-      setInvalid(!url);
-      if (url) { setAddress(url.href); addressInput.ref.current?.blur(); navigate(url.href); }
-    }}>
-      <BrowserWebsiteIcon url={tab?.url} size={15} />
-      <input {...addressInput} dir="ltr" aria-label={t('market.browserAddress')} aria-invalid={invalid}
-        value={address} onChange={(event) => { setAddress(event.target.value); setInvalid(false); }}
-        placeholder={t('market.browserSearchOrAddress')} spellCheck={false} autoComplete="off" />
-      {star}<button type="submit" aria-label={t('market.visitPage')}><ArrowRight size={16} /></button>
-    </form>
-    {actions}
-    <button aria-label={t(fullscreen ? 'market.browserRestore' : 'market.browserFullscreen')}
-      title={t(fullscreen ? 'market.browserRestore' : 'market.browserFullscreen')} onClick={toggleFullscreen}>
-      {fullscreen ? <Minimize2 size={17} /> : <Maximize2 size={17} />}</button>
-    {settings}
-    {invalid && <span className="pm-browser-address-error" role="alert">{t('market.browserInvalidUrl')}</span>}
-  </div>;
 }
 
 /** Browser chrome shared by the Provider dialog and the conversation sidebar. */
@@ -169,6 +120,7 @@ export function BrowserContents(props: BrowserWindowProps & {
     newTab: url => { if (tab) props.onPopup(tab.id, url); },
   });
   const [menuOpen, setMenuOpen] = useState(false);
+  const [addressOpen, setAddressOpen] = useState(false);
   const [loadingTabs, setLoadingTabs] = useState<ReadonlySet<string>>(() => new Set());
   const loadingChanged = useCallback((id: string, loading: boolean) => {
     setLoadingTabs(current => {
@@ -200,7 +152,7 @@ export function BrowserContents(props: BrowserWindowProps & {
         navigate={url => { if (tab) home.navigate(tab.id, url); }}
         home={() => { if (tab) home.show(tab.id); }} />
       : <BrowserToolbar tab={tab} loading={Boolean(tab && loadingTabs.has(tab.id))}
-      searchEngine={search.engine}
+      searchEngine={search.engine} active={open} overlayChanged={setAddressOpen}
       fullscreen={props.fullscreen} toggleFullscreen={props.toggleFullscreen}
       navigate={(url) => { if (tab) props.onNavigate(tab.id, url); }}
       action={(action) => { if (tab) props.onAction(tab.id, action); }} t={t}
@@ -221,13 +173,13 @@ export function BrowserContents(props: BrowserWindowProps & {
       onCloseTab: id => closeTabs([id]) }}
       home={home.isHome} bookmarks={bookmarks.manage} t={t} manager={showManager} compact={compact} query={query}
       desktopTabs={desktopTabs}
-      blocked={menuOpen || extensionsOpen || bookmarks.overlayOpen || mappingsOpen || !!dataPanel
+      blocked={addressOpen || menuOpen || extensionsOpen || bookmarks.overlayOpen || mappingsOpen || !!dataPanel
         || !!records.candidate || !!records.focus}
       loadingChanged={loadingChanged}
       recordVisit={records.recordVisit}
       select={id => { props.onSelect(id); setManager(false); }} />
     {sidePanel && !compact && <BrowserSidePanel key={sidePanel.id ?? 'builtin'}
-      selection={sidePanel} active={open && !extensionsOpen && !bookmarks.overlayOpen && !dataPanel}
+      selection={sidePanel} active={open && !addressOpen && !extensionsOpen && !bookmarks.overlayOpen && !dataPanel}
       t={t} close={closeSidePanel} />}</div>
   </>;
 }

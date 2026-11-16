@@ -1,0 +1,27 @@
+.pm-browser-toolbar { container-type: inline-size; }
+.pm-browser-toolbar form { position: relative; }
+.browser-address-suggestions {
+  position: absolute; top: calc(100% + 5px); inset-inline: 0; z-index: 10;
+  max-height: min(360px, 45vh); overflow-y: auto; overscroll-behavior: contain;
+  padding: 4px; border: 1px solid var(--border, #dce1e8); border-radius: 10px;
+  background: var(--panel-bg, #fff); color: var(--text, #182230);
+  box-shadow: 0 8px 24px #10182824;
+}
+.browser-address-suggestion {
+  display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 6px; cursor: pointer;
+}
+.browser-address-suggestion:hover { background: var(--hover-bg, #e8edf4); }
+.browser-address-suggestion[aria-selected='true'] {
+  background: color-mix(in srgb, var(--accent, #6175db) 14%, var(--panel-bg, #fff));
+}
+.browser-address-suggestion > svg { flex-shrink: 0; color: var(--text-secondary, #667085); }
+.browser-address-suggestion-text { display: grid; gap: 3px; min-width: 0; flex: 1; line-height: 1.4; }
+.browser-address-suggestion-text > span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.browser-address-suggestion-title { font-weight: 500; }
+.browser-address-suggestion-url { font-size: .9em; color: var(--text-secondary, #667085); text-align: left; }
+
+/* Narrow sidebars need room to distinguish page titles and URL paths at larger font settings. */
+@container (max-width: 640px) {
+  .pm-browser-toolbar form { position: static; }
+  .browser-address-suggestions { inset-inline: 8px; top: calc(100% - 4px); }
+}

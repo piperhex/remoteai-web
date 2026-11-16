@@ -31,7 +31,7 @@ for (const enlarged of [false, true]) test(`mobile numeric searches stay stable,
     await page.goto('./', { waitUntil: 'domcontentloaded' });
     await page.locator('.mobile-tabbar').getByRole('tab', { name: '浏览器', exact: true }).click();
     const browser = page.locator('.browser-main-page');
-    const address = browser.getByRole('textbox', { name: '页面地址', exact: true });
+    const address = browser.getByLabel('页面地址', { exact: true });
     for (const query of ['666', '664656', '666']) {
       await address.fill(query); await address.press('Enter');
       await expect(address).toHaveValue(`https://www.google.com/search?q=${query}`);

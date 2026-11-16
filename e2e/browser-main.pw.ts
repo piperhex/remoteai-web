@@ -9,7 +9,7 @@ for (const enlarged of [false, true]) test(`web desktop browser ${enlarged ? 'da
     await page.goto(`e2e/web-browser-bookmarks-harness.html${enlarged ? '?dark=1&font=20' : ''}`,
       { waitUntil: 'domcontentloaded' });
     const browser = page.locator('.browser-main-page');
-    const address = browser.getByRole('textbox', { name: '页面地址', exact: true });
+    const address = browser.getByLabel('页面地址', { exact: true });
     await address.fill('https://preview.example.test/guide'); await address.press('Enter');
     await expect(browser.locator('iframe').contentFrame().getByRole('heading')).toHaveText('Website preview');
     await browser.getByRole('button', { name: '浏览器设置', exact: true }).click();

@@ -8,7 +8,7 @@ for (const enlarged of [false, true]) {
     const theme = enlarged ? '?dark=1&font=20' : '?font=14';
     await page.goto(`e2e/web-browser-bookmarks-harness.html${theme}`, { waitUntil: 'domcontentloaded' });
     const browser = page.locator('.pm-browser');
-    const address = browser.getByRole('textbox', { name: '页面地址', exact: true });
+    const address = browser.getByLabel('页面地址', { exact: true });
     await address.fill('https://example.test/guide'); await address.press('Enter');
     await browser.getByRole('button', { name: '添加书签', exact: true }).click();
     const editor = page.getByRole('dialog', { name: '编辑书签', exact: true });
