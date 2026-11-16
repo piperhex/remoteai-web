@@ -3,7 +3,14 @@
   "revision": "fd9be71edd54dfb94e71be6b320a932dbaf99219",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "fefff1a1df472db3f8d9f3ec305235479b2249f7"
+    "revision": "f55ae1c862fcf7ab61f762582b20a7a048dbc9fe"
+  },
+  "retainedTestSources": {
+    "repository": "https://github.com/piperhex/remoteai",
+    "revision": "fd9be71edd54dfb94e71be6b320a932dbaf99219",
+    "paths": [
+      "apps/desktop/e2e/"
+    ]
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -1969,7 +1976,7 @@
     "shared/browser/extensions/ExtensionCard.tsx": "b1285569256208109acfb427d69185bfe09fddd958f9a424a117ed37c10e4bf6",
     "shared/browser/extensions/ExtensionDropZone.tsx": "56ae904e6a1e63cce88fdcb2af61f503013f13e2af3e1aece7414eefaf819e89",
     "shared/browser/extensions/transfer.ts": "ce815aba8b8452fb5c860ddb0237d5c232264922fc383001458ca8fd117d6c8c",
-    "shared/browser/extensions/market.ts": "fdd18a9eb71b60864ec94ca6fd20bda95cbc8744423690f35d3385845662ea21",
+    "shared/browser/extensions/market.ts": "ef3d828b5bfe4c5c12c204c2d6735458be2e5f7df93e91f8f5f3776a4d85333b",
     "shared/browser/extensions/ExtensionMarket.tsx": "9d18df285fb052c943700444df747e2103f574d5146f58c27fdb0caeff435a4d",
     "shared/chat/useComposerAutoFocus.ts": "c708d8c7150702e8dd55daea464698c5e7b444bf095bb4a3a3920aed465da577",
     "apps/desktop/e2e/browser-address-checks.ts": "6bb1ec5f8b90eb97ec6b1bf33a29dbfcf034faf45e7ecbdbddc68bc21c2d9a83",
@@ -1979,6 +1986,7 @@
     "shared/browser/extensions/PanelSurface.tsx": "9b6ad366a2fc30f459a122c6ee384be3d5a81d2abc0b2b4f7c4dccb263585cee",
     "shared/browser/extensions/usePanelTransport.ts": "af3e41dc434dc2bfb0c874a750018ef27ecc6502804bac4722fcebfb06332f27",
     "shared/browser/extensions/sidePanel.css": "29e3308e5cb3d81b082de8d0795dcdf5533311432acbb183aac8ba0884a834e7",
-    "shared/browser/extensions/usePanelPlacement.ts": "0c3a8507b6c9025f8c120c3a47f806ccedfb4592f86dde8435244976332174b3"
+    "shared/browser/extensions/usePanelPlacement.ts": "0c3a8507b6c9025f8c120c3a47f806ccedfb4592f86dde8435244976332174b3",
+    "shared/browser/extensions/marketTransport.ts": "a43da90e91d310ad5f1aef0e5e825ee78ee72345579ab420e307267f865ea227"
   }
 }
