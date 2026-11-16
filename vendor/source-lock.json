@@ -1,20 +1,13 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "36b6fa562c2b164f0a228902c7f4a7540d1b8a7e",
+  "revision": "fd9be71edd54dfb94e71be6b320a932dbaf99219",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "b427c98c3f0eb88dc63ab7befc4466cc9f5c13fa"
-  },
-  "retainedTestSources": {
-    "repository": "https://github.com/piperhex/remoteai",
-    "revision": "c28b9e1589210ec9e4d8373b330ca1745a50daaa",
-    "paths": [
-      "apps/desktop/e2e/"
-    ]
+    "revision": "fefff1a1df472db3f8d9f3ec305235479b2249f7"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
-    "revision": "593a3c0ea69d2486b1554dbac790415578dd97e9"
+    "revision": "9c1d464c2debc6640bde2307b94fa1bdfe83a888"
   },
   "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.34/remoteai-i18n-0.1.34.tgz",
   "files": {
@@ -27,7 +20,7 @@
     "apps/desktop/e2e/mobile-fixture.mjs": "841b9a12320c8e07627cd3999a28cd6e02f837bfdc9b139c933c91f10ed1ca62",
     "apps/desktop/src-tauri/icons/32x32.png": "7f5310d2f4b466d841479766ddf28a8b1003e167bfbc2e723d6de7ee967f4466",
     "apps/desktop/src-tauri/icons/128x128.png": "c6e11f099d213c5e3b81dc9264403858841e130f07e6f832069cac8eae47db02",
-    "apps/desktop/src-tauri/tauri.conf.json": "8fc85a10ef3f6e7fac4db2fd200755115a1bf940456f13794b0ca99f73851f09",
+    "apps/desktop/src-tauri/tauri.conf.json": "7043ae5a7257b4e5fe920c32c07bfaa24d2602d32e2185707f20ec629a87a199",
     "shared/localization/testLocale.ts": "6ca4daa3a6a5d9442013a8b5861803edfafebf20d2bd875d6a2608158dc53e35",
     "apps/desktop/e2e/browser-chrome-checks.ts": "ffb5e29d72a5b938cdea6adbe30bead71f221aecc1ef3f49e8a1890d88fd231e",
     "apps/desktop/e2e/browser-loading-checks.ts": "75711e132895ee135d1a2f1b54396cd0a114f2722169001434a7e15aec364118",
@@ -1912,8 +1905,8 @@
     "shared/browser/managed/useNativeBrowserPreview.ts": "9fbc6be08de4a4e3df85a5a040f118d870dfe6eef95a8afc83e3a94ec2e188e9",
     "shared/browser/managed/nativeBrowserPreview.css": "8992184a0f5abd3f0a298d8a2692ba2a3b6f9597db8372ad5a49b3658e316401",
     "shared/browser/managed/BrowserInspector.tsx": "7ea72b5698f8a4fc91fc17d8a5729725fc826913c30d1d887f26a67e4a902c20",
-    "shared/browser/managed/useInspector.ts": "190ed76050c7e224586651a08d7997978cbd94fb2e2190bf0667952ced83c952",
-    "shared/browser/managed/inspectorSession.ts": "9afbceecadd58b079e2386c15b766b2af314e8a817ac714d21f132151595d2b7",
+    "shared/browser/managed/useInspector.ts": "22f5e03f1edaa28cdefc73ab3b4564fa8e4ad955662b189bae1ebeccdd46cf53",
+    "shared/browser/managed/inspectorSession.ts": "648fea59969528d754314d4ba5b0c649eac614b00b3eca32bdb674045d9d3b75",
     "shared/browser/managed/browserInspector.css": "5968db6fc3ceb970d9cf419521dbc24c5432698b3738056234c9e8723b4d1179",
     "shared/browser/BrowserFullscreenControl.tsx": "ae09e0409f5429329f519e2dd0d16b555159fbe75132a2552405dd8fa7063f3d",
     "shared/browser/useFullscreenControl.ts": "11d6cfd8855b21c1486c2ced59c4be5cc0b34b9dd9436b7c7c4c7069a51d6974",

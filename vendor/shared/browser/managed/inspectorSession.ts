@@ -22,6 +22,12 @@ export function inspectorCommand(target: InspectorTarget, command: Command) {
   return operation;
 }
 
+function samePlacement(previous: InspectorPlacement | undefined, next: InspectorPlacement) {
+  return previous?.dock === next.dock && previous.visible === next.visible
+    && previous.bounds.x === next.bounds.x && previous.bounds.y === next.bounds.y
+    && previous.bounds.width === next.bounds.width && previous.bounds.height === next.bounds.height;
+}
+
 /** Coalesce geometry updates; retiring a surface hides only after its last placement completes. */
 export function inspectorSession(target: InspectorTarget, onError: () => void) {
   const key = targetKey(target);
@@ -30,24 +36,37 @@ export function inspectorSession(target: InspectorTarget, onError: () => void) {
   let flight: Promise<void> | undefined;
   let stopped = false;
   let last: InspectorPlacement | undefined;
+  let pendingScale = 1;
+  let lastScale = 1;
   const flush = async () => {
     while (pending) {
       const request = pending; pending = undefined;
-      try { await inspectorCommand(target, request); last = request; }
-      catch { if (!stopped) onError(); }
+      const scale = pendingScale;
+      // Compare after the previous command finishes: a queued resize may return to an earlier position.
+      if (samePlacement(last, request) && lastScale === scale) continue;
+      try { last = await inspectorCommand(target, request) ? request : undefined; lastScale = scale; }
+      catch { last = undefined; if (!stopped) onError(); }
     }
   };
+  const start = () => {
+    flight = flush().finally(() => {
+      flight = undefined;
+      if (pending) start();
+    });
+  };
   return {
-    update(request: InspectorPlacement) {
+    // Native placement converts CSS bounds using the current monitor's scale.
+    update(request: InspectorPlacement, scale = 1) {
       if (stopped || owners.get(key) !== owner) return;
-      pending = request;
-      if (!flight) flight = flush().finally(() => { flight = undefined; });
+      if (!flight && samePlacement(last, request) && lastScale === scale) return;
+      pending = request; pendingScale = scale;
+      if (!flight) start();
     },
     async stop() {
       stopped = true; pending = undefined; await flight;
       if (owners.get(key) !== owner) return;
       owners.delete(key);
-      if (last) await inspectorCommand(target, { ...last, visible: false });
+      if (last?.visible) await inspectorCommand(target, { ...last, visible: false });
     },
   };
 }

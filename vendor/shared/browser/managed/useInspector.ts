@@ -40,7 +40,7 @@ export function useInspector({ id, kind, enabled, active }: InspectorTarget & { 
         session.update({ action: 'place', dock, visible, bounds: {
           x: Math.max(0, bounds.x), y: Math.max(0, bounds.y),
           width: Math.max(1, bounds.width), height: Math.max(1, bounds.height),
-        } });
+        } }, window.devicePixelRatio);
       });
     };
     refresh.current = sync;
