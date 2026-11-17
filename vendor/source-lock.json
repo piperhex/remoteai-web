@@ -3,7 +3,7 @@
   "revision": "80189aaa10f7861d2e972e54d1d19402ac490af9",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "8f6ca11c6cc2774362eaedf8221acffe8ecd696e"
+    "revision": "5a06e4d1da6e008a2af22c79cf21da6479d877c0"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -28,7 +28,7 @@
     "shared/remote-chat/views/ChatDetailsWorkspace.tsx": "e1a12887ce7607188dcf61742e0a9184545789ddb6011a6784260ac24be6be0d",
     "shared/remote-chat/views/ChatMarkdown.tsx": "0410e8473384d0362054f556d44bcddaed5dec73893cfb0cbbb97240107fb67f",
     "shared/localization/browserLanguage.ts": "890f9fc9442e132ff333e4321070b6071269dafed72c85c1641a2da01caa566b",
-    "shared/remote-chat/views/chat.css": "f98de4f7e84f7e53da2a42048f6080bcb7063abcfc54c61ab5063b9bafe3a8dc",
+    "shared/remote-chat/views/chat.css": "b261b859d53cf380b4714eec8515c0d0121dd08a28b0aae3c22c490ca6da2717",
     "apps/desktop/e2e/project-browser-touch.ts": "3472c558a7d07b2d7a0cc85068365a4ad9d7358d8209dc6c109147a1e78d77ee",
     "shared/remote-chat/bulkCipher.ts": "1ec89656be8b7572ac9285da1f8e800e364a8e893ff1fbbb88f1404c44c0c78e",
     "shared/remote-chat/bulkProtocol.ts": "16a0b0e980eebbd34acebe8c4f99aa0b86d375cd0858c5023351b942e9b54a16",
@@ -154,7 +154,7 @@
     "apps/desktop/src/pages/codexGui/ThreadSidebar.tsx": "eabdce9ecd16f2182177ec5abdd8dafd6ce32a3eee114c032a1aec53b314decd",
     "apps/desktop/src/pages/codexGui/controller.ts": "498d784dc97aeb0a5f4e2a66be3b3f216fc4bd61f0c0c1d1f8a1f1e3a7ad15eb",
     "shared/conversation/api.ts": "58912e76a7c2ab479bcd48be9ee4a0bffa561252954feeb663857777507d97e7",
-    "shared/conversation/styles.module.less": "bcac40fb69ab078a5438334d72fb2ec064c1a3472112d31bdac2e81a5fca17e2",
+    "shared/conversation/styles.module.less": "bca4029ba061b304c74aa38a7fba9af4789f882ecc281ff9e8b78c8b4552bdf9",
     "shared/testing/threadActivityFixture.ts": "ff5b7a65a00bfcf1779527d80f71ada0e0108c275ee0295a2f35a40781ca5e8a",
     "shared/remote-chat/tokenSummary.ts": "46d28c51c9ceec13812a174885ac4bbd6deb9b1230c52077a22e8b8718e99b4b",
     "apps/desktop/e2e/official-usage-fixture.ts": "763e5211262a337fd915d423f919b70c767e3348f49189dd217e2ae41241684f",

@@ -16,7 +16,9 @@ html:has(.app-shell.chat-active), body:has(.app-shell.chat-active) { overscroll-
 .chat-page {
   flex: 1; min-width: 0; min-height: 0; display: flex;
   color: var(--chat-ink); background: var(--chat-background); font-size: 15px; line-height: 1.6;
+  caret-color: transparent;
 }
+.chat-page :where(input, textarea, [contenteditable]:not([contenteditable='false'])) { caret-color: auto; }
 .chat-conversation { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
 .chat-device-session { flex: 1; min-width: 0; min-height: 0; display: flex; }
 .chat-device-session[hidden] { display: none; }
