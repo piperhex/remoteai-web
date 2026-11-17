@@ -1,13 +1,20 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "80189aaa10f7861d2e972e54d1d19402ac490af9",
+  "revision": "cb385bf4fafbcad2b65bcbda633ac80c88da4e12",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "5a06e4d1da6e008a2af22c79cf21da6479d877c0"
+    "revision": "4a8af5283e30e401db49a8f67cc69e5025319217"
+  },
+  "retainedTestSources": {
+    "repository": "https://github.com/piperhex/remoteai",
+    "revision": "80189aaa10f7861d2e972e54d1d19402ac490af9",
+    "paths": [
+      "apps/desktop/e2e/"
+    ]
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
-    "revision": "dac5efa8f507363e5e7c54b60d9f9fb7b78eae21"
+    "revision": "8916296ffa303b655be9015d00188d0a7df5adec"
   },
   "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.37/remoteai-i18n-0.1.37.tgz",
   "files": {
@@ -69,7 +76,7 @@
     "apps/desktop/e2e/chat-surface-theme-checks.ts": "8fa5ab94adadc0e9c5a4df51fc4d2f9ae7fade2a8b4c0ec6b0bc1384aa57070d",
     "apps/desktop/e2e/model-availability-checks.ts": "956bfd145bb507265082a29d2c4340bea988b07436b258241d9d8a4ecb2a0414",
     "apps/desktop/e2e/project-reference-harness.tsx": "ceb0f47a7f1f418b56f604ba8261ba56fa80516e32a7445bccaf4e598b7c02fc",
-    "shared/remote-chat/views/ChatComposer.tsx": "53eeedeb64448efdbd702251d8588afd974a4ba678b8e1a14da4332b6a260c74",
+    "shared/remote-chat/views/ChatComposer.tsx": "2cc1a2a46f3df9b4c879e354a3709dd6227df2c96c8ff015ebd97b45959c66ee",
     "shared/remote-chat/views/composerProps.ts": "67acd910e97b345021bdf0d9be33b553632fef90e354244f6205e1df5ec83112",
     "shared/remote-chat/client/types.ts": "cc5b6b8e665a441d81c03cb7fcf56f8d2589dacac439ccd92e3940c0a7e4b4f8",
     "shared/remote-chat/client/promptSuggestion.ts": "966b8023f9522f8e6edc05fe3a6e1be51e55cff1d0db54eeeabd78d82d24d818",
@@ -80,7 +87,7 @@
     "shared/remote-chat/views/ComposerFooter.tsx": "685abb04ea2500bb4dc9d5ad1559dba84d72e2086aaca3fcb51948e06698ba71",
     "shared/remote-chat/client/controller.ts": "3fa3a1561388859db958f62792bf788031636d4c8ae5a5fea9e57102ce87d62e",
     "shared/remote-chat/trustedHost.ts": "0108ec06a394f6812d014a2536e574bb076730c77ff9d33f37dedc8abc3cb024",
-    "shared/remote-chat/views/composer.css": "25f5293ffd8cd7985c4238cd656f2e86d304ff108765c7af84ca82f1bf142582",
+    "shared/remote-chat/views/composer.css": "43aea89373d80ead58a57b7483d6adc3f7101f47e56375315345bd145040b19d",
     "shared/remote-chat/views/composerDesktop.css": "9fa61d81fb5821e09442d9e9254def651073a65742a2ae487ff4100cb4693421",
     "shared/remote-chat/views/chatUsage.css": "41a77db3e64c76329db7ae002b046162c982b2048b876dbeee62c9b31a2f97cd",
     "shared/conversation/sync/ConversationSyncPanel.tsx": "b64e5bfc96ee27a99eb6c041cf1f8a91e43fa3356f44a2bed91b9feda8f57e47",

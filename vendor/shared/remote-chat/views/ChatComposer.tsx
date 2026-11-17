@@ -72,7 +72,7 @@ export function ChatComposer(props: ComposerProps) {
   useEffect(() => { if (!active) { setSettings(false); setAdding(false); setProjectFiles(null); } }, [active]);
   useEffect(() => { setSettings(false); setAdding(false); setProjectFiles(null); }, [threadId]);
   useEffect(() => { setProjectFiles(null); }, [cwd]);
-  useEffect(() => { if (desktop) setSettings(false); }, [desktop]);
+  useEffect(() => { setAdding(false); if (desktop) setSettings(false); }, [desktop]);
   useEffect(() => {
     if (!adding && !menu.open) return;
     const close = (event: PointerEvent) => {
@@ -131,7 +131,7 @@ export function ChatComposer(props: ComposerProps) {
       {props.compacting && <p role="status" className="chat-muted">{t("client.chat.compactingContext")}</p>}
       {(draft.picking || attachments.busy || state.readingClipboard || state.drop.reading)
         && <p role="status" className="chat-muted">{t("client.chat.addingAttachments")}</p>}
-      {(adding || menu.open) && <div className="chat-composer-popover" onKeyDown={event => {
+      {((desktop && adding) || menu.open) && <div className="chat-composer-popover" onKeyDown={event => {
         if (event.defaultPrevented || event.nativeEvent.isComposing || event.keyCode === 229) return;
         if (event.key === 'Escape') { setAdding(false); menu.close(); menu.input.current?.focus(); }
       }}>{adding && <ComposerAddMenu busy={busy} choose={chooseAdd} />}
@@ -158,7 +158,8 @@ export function ChatComposer(props: ComposerProps) {
         <div className="chat-composer-content">
           <ChatAttachmentPreviews images={draft.images} busy={busy} remove={draft.removeImage}
             upload={sending ? uploadProgress : undefined} reconnecting={!ready}
-            add={() => setAdding(true)} edit={id => { menu.input.current?.blur(); setEditingId(id); }} />
+            add={() => { menu.close(); if (!desktop) menu.input.current?.blur(); setAdding(true); }}
+            edit={id => { menu.input.current?.blur(); setEditingId(id); }} />
           <ComposerAttachments items={attachments.items} busy={busy} active={active} ready={ready}
             uploadProgress={sending ? uploadProgress : undefined} remove={attachments.remove} />
           <ComposerQuotes disabled={busy} />
@@ -170,6 +171,7 @@ export function ChatComposer(props: ComposerProps) {
           <ComposerInput ref={menu.input} aria-label={t("client.chat.chatMessage")} value={draft.text} maxLength={100_000} rows={1}
             contextScope={`${threadId}:${cwd}`} active={active}
             readOnly={state.queueEditor.loading}
+            onFocus={() => { if (!desktop) setAdding(false); }}
             onBeforeInput={suggestion.dismiss} onCompositionStart={suggestion.dismiss}
             onCompositionEnd={suggestion.restore}
             onPaste={event => { suggestion.dismiss(); state.paste(event); }} onChange={event => {
@@ -197,7 +199,8 @@ export function ChatComposer(props: ComposerProps) {
         <div className="chat-composer-actions">
           <button type="button" className="chat-composer-add" aria-label={t("client.chat.addContent")} aria-expanded={adding}
             disabled={busy} onPointerDown={event => event.preventDefault()}
-            onClick={() => { menu.close(); setAdding(value => !value); }}><Plus size={desktop ? 18 : 24} /></button>
+            onClick={() => { menu.close(); if (!desktop) menu.input.current?.blur(); setAdding(value => !value); }}>
+            {!desktop && adding ? <X size={24} /> : <Plus size={desktop ? 18 : 24} />}</button>
           {desktop && <ComposerAccess key={`${threadId}:${active}`} selection={selection}
             settingsBusy={settingsBusy} updateSettings={updateSettings} beforeOpen={closeMenus} />}
           <div className="chat-composer-trailing">
@@ -229,6 +232,9 @@ export function ChatComposer(props: ComposerProps) {
         </div>
       </div>
     </form>
+    {!desktop && adding && <div className="chat-attachment-panel">
+      <ComposerAddMenu busy={busy} choose={chooseAdd} />
+    </div>}
     <ComposerFooter desktop={desktop} cliVersion={props.cliVersion} threadId={props.threadId}
       readServiceStatus={props.readServiceStatus} statusActive={active} statusConnected={props.serviceStatusConnected}
       usage={usageSnapshot.usage} metrics={metrics}

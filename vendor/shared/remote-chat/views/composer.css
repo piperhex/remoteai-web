@@ -66,6 +66,27 @@
   font-size: 13px; }
 .chat-add-menu svg { box-sizing: content-box; padding: 10px; border-radius: 50%; background: var(--app-canvas, #f4f4f4); }
 .chat-add-menu button:hover, .chat-menu-options button:hover { background: var(--app-canvas, #f2f4f3); }
+@media (max-width: 860px) {
+  .chat-attachment-panel {
+    margin: 12px -12px -12px; max-height: 40dvh; overflow: auto; overscroll-behavior: contain;
+    border-top: 1px solid var(--app-border, #e4e8e5); background: var(--app-canvas, #f4f4f4);
+    scrollbar-width: none;
+  }
+  .chat-attachment-panel::-webkit-scrollbar { display: none; }
+  .chat-attachment-panel .chat-add-menu {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px 0; padding: 16px 12px 24px;
+  }
+  .chat-attachment-panel .chat-add-menu button {
+    flex-direction: column; gap: 6px; padding: 4px 2px; min-width: 0;
+    text-align: center; line-height: 20px; color: var(--app-muted, #636b66);
+  }
+  .chat-attachment-panel .chat-add-menu svg {
+    flex-shrink: 0; width: 24px; height: 24px; padding: 14px; border-radius: 16px;
+    background: var(--app-surface, #fff); color: var(--app-ink, #25332b);
+  }
+  .chat-attachment-panel .chat-add-menu span { max-width: 100%; overflow-wrap: anywhere; }
+  .chat-composer-add[aria-expanded="true"] { color: var(--app-accent, #14806f); }
+}
 /* One scroll container keeps wheel gestures over the heading and entries on the same list. */
 .chat-command-menu header { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px;
   position: sticky; top: 0; z-index: 1; background: var(--app-surface, #fff); color: var(--app-muted, #74847b); font-size: 12px; }
