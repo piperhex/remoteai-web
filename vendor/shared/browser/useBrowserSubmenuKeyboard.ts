@@ -23,7 +23,7 @@ export function useBrowserSubmenuKeyboard(open: boolean, change: (open: boolean)
     }
     const items = [...(menu.current?.querySelectorAll<HTMLElement>('[role=menuitem]:not(:disabled)') ?? [])];
     if (!items.length) return;
-    const index = items.findIndex(item => item === document.activeElement);
+    const index = items.findIndex(item => item === menu.current?.ownerDocument.activeElement);
     const target = { ArrowDown: (index + 1) % items.length, ArrowUp: (index - 1 + items.length) % items.length,
       Home: 0, End: items.length - 1 }[event.key];
     if (target === undefined) return;

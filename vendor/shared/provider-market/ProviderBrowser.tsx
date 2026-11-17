@@ -31,6 +31,7 @@ import { BrowserFullscreenControl } from '../browser/BrowserFullscreenControl';
 import { BrowserExtensions } from '../browser/extensions/BrowserExtensions';
 import { BrowserSidePanel, type BrowserPanelSelection } from '../browser/extensions/BrowserSidePanel';
 import { Settings } from 'lucide-react';
+import { BrowserOverlayProvider, useBrowserOverlay } from '../browser/overlays/BrowserOverlayProvider';
 
 export interface BrowserSurfaceProps {
   tab: BrowserTab; active: boolean; command: { sequence: number; action: BrowserAction } | null;
@@ -57,6 +58,11 @@ export function BrowserContents(props: BrowserWindowProps & {
   mainBrowser?: boolean;
   onPageNavigate?: (id: string, url: string) => void; history?: ReactNode;
 }) {
+  return <BrowserOverlayProvider><BrowserContentsView {...props} /></BrowserOverlayProvider>;
+}
+
+function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
+  const nativeOverlay = useBrowserOverlay();
   const { tabs, activeId, open } = props;
   const t = marketText(props.language);
   const tab = tabs.find((entry) => entry.id === activeId);
@@ -173,8 +179,8 @@ export function BrowserContents(props: BrowserWindowProps & {
       onCloseTab: id => closeTabs([id]) }}
       home={home.isHome} bookmarks={bookmarks.manage} t={t} manager={showManager} compact={compact} query={query}
       desktopTabs={desktopTabs}
-      blocked={addressOpen || menuOpen || extensionsOpen || bookmarks.overlayOpen || mappingsOpen || !!dataPanel
-        || !!records.candidate || !!records.focus}
+      blocked={!nativeOverlay && (addressOpen || menuOpen || extensionsOpen || bookmarks.overlayOpen || mappingsOpen
+        || !!dataPanel || !!records.candidate || !!records.focus)}
       loadingChanged={loadingChanged}
       recordVisit={records.recordVisit}
       select={id => { props.onSelect(id); setManager(false); }} />

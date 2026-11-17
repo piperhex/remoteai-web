@@ -16,6 +16,8 @@ export function useBookmarkDrag(options: {
   const latest = useRef(options); latest.current = options;
   const [preview, setPreview] = useState<{ source: string; target?: Target }>();
   useEffect(() => {
+    const owner = root.current?.ownerDocument ?? document;
+    const eventWindow = owner.defaultView ?? window;
     const finish = (cancelled: boolean) => {
       const current = drag.current;
       drag.current = undefined;
@@ -31,7 +33,7 @@ export function useBookmarkDrag(options: {
       if (!current.moved && Math.hypot(event.clientX - current.x, event.clientY - current.y) < DRAG_THRESHOLD) return;
       current.moved = true; suppressClick.current = true; event.preventDefault();
       current.element.setPointerCapture(current.pointer);
-      const hit = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>('[data-bookmark-id]');
+      const hit = owner.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>('[data-bookmark-id]');
       const source = latest.current.entries.find(entry => entry.id === current.id);
       const destination = latest.current.entries.find(entry => entry.id === hit?.dataset.bookmarkId);
       target.current = undefined;
@@ -47,13 +49,13 @@ export function useBookmarkDrag(options: {
     const up = (event: globalThis.PointerEvent) => { if (drag.current?.pointer === event.pointerId) finish(false); };
     const cancel = () => finish(true);
     const key = (event: KeyboardEvent) => { if (event.key === 'Escape') cancel(); };
-    window.addEventListener('pointermove', move, { passive: false });
-    window.addEventListener('pointerup', up); window.addEventListener('pointercancel', cancel);
-    window.addEventListener('blur', cancel); window.addEventListener('keydown', key);
+    eventWindow.addEventListener('pointermove', move, { passive: false });
+    eventWindow.addEventListener('pointerup', up); eventWindow.addEventListener('pointercancel', cancel);
+    eventWindow.addEventListener('blur', cancel); eventWindow.addEventListener('keydown', key);
     return () => {
-      window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up);
-      window.removeEventListener('pointercancel', cancel); window.removeEventListener('blur', cancel);
-      window.removeEventListener('keydown', key);
+      eventWindow.removeEventListener('pointermove', move); eventWindow.removeEventListener('pointerup', up);
+      eventWindow.removeEventListener('pointercancel', cancel); eventWindow.removeEventListener('blur', cancel);
+      eventWindow.removeEventListener('keydown', key);
       const current = drag.current;
       if (current?.element.hasPointerCapture(current.pointer)) current.element.releasePointerCapture(current.pointer);
     };
