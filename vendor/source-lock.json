@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "cb385bf4fafbcad2b65bcbda633ac80c88da4e12",
+  "revision": "8772711469d0382a6983a55ea3b489b4c8a78d4d",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "4a8af5283e30e401db49a8f67cc69e5025319217"
+    "revision": "48c63f879bfd37fcc1082ff957503c90b58c2743"
   },
   "retainedTestSources": {
     "repository": "https://github.com/piperhex/remoteai",
@@ -14,7 +14,7 @@
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
-    "revision": "8916296ffa303b655be9015d00188d0a7df5adec"
+    "revision": "2727f56d582563c5a5a303853a655068593ac73a"
   },
   "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.37/remoteai-i18n-0.1.37.tgz",
   "files": {
@@ -1060,7 +1060,7 @@
     "shared/chat/ComposerContextMenu.tsx": "d89112c88d15fce0c6b1afc4c7d3f6e5150bf190201b07daefdacc58063c64c0",
     "shared/chat/UsageAmounts.tsx": "1892f0d8009fdb5c01392c5ec083131d3c2ae9e949ea82374d8625bd5009193a",
     "shared/remote-chat/views/ComposerContext.tsx": "b6cf6d20081f660b6ea1c70aa06c90164bd407045cfeda32f5fc7c1caf025bfb",
-    "shared/remote-chat/views/composerModelPicker.css": "ec4a1a176f4011df107061aa1085de23946420a66a759e28683c7b08a5d62500",
+    "shared/remote-chat/views/composerModelPicker.css": "93ea9898935a577ca209e6e667efef5374e08a4a48ebcc3afbfea65825ca0b23",
     "shared/remote-chat/RequestSpeedButton.tsx": "736f6043909fb1e55cd939f04e8d5270e975e990aff978c5f91a2c934591e652",
     "shared/remote-chat/views/composerGoal.css": "2873f1a7c91d1a5076fe736589875a2c4e725ad09418a4e2691b583127e8435d",
     "shared/remote-chat/views/ChatUploadProgress.tsx": "b94df819d5b042c9cd0b5bd525c559d9c1ce11d3f7d46f5a736a4619073bef71",
@@ -1733,7 +1733,7 @@
     "apps/desktop/src/pages/codexGui/nativeFile.ts": "2297b502f226a293b69e710e4f25c16f9f6cd5f69409c97a664de632df3f630c",
     "apps/desktop/src/pages/codexGui/clipboardImages.ts": "980e726108a23b6b24e43046f105e2b872d7634d47ef972c45714fd464d374ea",
     "apps/desktop/src/pages/codexGui/usePastedTextAttachment.ts": "85db71a8978eeba2940a40d00926efc132118c182792f4e7ee27ff4c8ce9b34c",
-    "shared/conversation/ModelPicker.module.less": "47fa977077d02855bea66186d0a58a8c7e36a4c6392eaec6645c09fcab870932",
+    "shared/conversation/ModelPicker.module.less": "dc8f3949b06f53e8ac45f77b00dca075edbbf1fee91cf3f9a84975115a00e075",
     "apps/desktop/src/pages/codexGui/ContextUsageButton.module.less": "620abd3c308ff1e35e53e4ee98076de884def2b5cc24858fa6b5e53ada42f5ad",
     "apps/desktop/src/pages/codexGui/ContextCapacityHint.tsx": "a2a3418de0b9e947089398d77c8bd29245385a73bcd9925b1fa24ad9073a8b02",
     "apps/desktop/src/pages/codexGui/useContextSettings.ts": "7e654458da4197f91bdd0d417691ad7f040514f04a73ab8e0c39e1e9dcfad71d",

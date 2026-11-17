@@ -1,5 +1,8 @@
 .composer-model-panel { width: min(224px, calc(100vw - 24px)); max-width: 400px; color: var(--app-ink, #13231c);
-  background: var(--app-surface, #fbfcfa); border: 1px solid var(--app-border, #dfe5df); border-radius: 16px; font-size: 12px; line-height: 18px; }
+  background: var(--app-surface, #fbfcfa); border: 1px solid var(--app-border, #dfe5df); border-radius: 16px;
+  font-size: 12px; line-height: 18px;
+  /* This panel is portaled outside the chat page's browsing-caret policy. */
+  caret-color: transparent; }
 .chat-composer .chat-model[data-model-unavailable] .chat-model-name,
 .chat-composer .chat-model[data-model-unavailable] .chat-model-effort { color: #d77979; }
 .composer-model-reasoning { padding: 12px; }
@@ -14,8 +17,10 @@
 .composer-model-reset { position: absolute; top: -2px; right: -3px; color: var(--app-muted, #718078); }
 .composer-model-speed { position: absolute; top: -5px; left: -5px; z-index: 1; }
 .composer-model-slider-wrap { position: relative; height: 24px; margin-top: 6px; }
-.composer-model-slider { display: block; appearance: none; -webkit-appearance: none; width: 100%; height: 24px;
+.composer-model-panel .composer-model-slider {
+  display: block; appearance: none; -webkit-appearance: none; width: 100%; height: 24px;
   margin: 0; border: 0; border-radius: 999px; outline-offset: 5px; cursor: pointer;
+  caret-color: transparent;
   background: linear-gradient(105deg, #315ae9 0%, #8564fd 53%, #ac6dff 100%); }
 .composer-model-slider::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 28px; height: 28px;
   position: relative; z-index: 1; border: 1px solid var(--app-border, #dedee4); border-radius: 50%; background: var(--app-surface, #fff);
@@ -34,7 +39,7 @@
   border: 0; background: transparent; color: var(--app-muted, #718078); font: inherit; font-size: 11px; line-height: 16px;
   text-align: left; cursor: pointer; }
 .composer-model-list { max-height: min(280px, 55vh); overflow-y: auto; overscroll-behavior: contain; }
-.composer-model-search { margin-bottom: 6px; font-size: 12px; }
+.composer-model-search { margin-bottom: 6px; font-size: 12px; caret-color: auto; }
 .composer-model-option { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%;
   padding: 7px 9px; border: 0; border-radius: 7px; background: transparent; color: var(--app-ink, #13231c);
   font: inherit; font-size: 12px; line-height: 18px; text-align: left; cursor: pointer; }

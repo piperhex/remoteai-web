@@ -15,7 +15,9 @@
   svg { flex-shrink: 0; } }
 .speedSeparator { margin-right: .35em; }
 .panel { width: min(224px, calc(100vw - 24px)); max-width: 400px; color: var(--ink); background: var(--panel);
-  border: 1px solid var(--line); border-radius: 16px; font-size: 12px; line-height: 18px; }
+  border: 1px solid var(--line); border-radius: 16px; font-size: 12px; line-height: 18px;
+  // This panel is portaled outside the workspace's browsing-caret policy.
+  caret-color: transparent; }
 .reasoning { padding: 12px; }
 .summary { display: flex; align-items: flex-start; position: relative; min-height: 40px; }
 .modelHeading {
@@ -30,9 +32,10 @@
 .reset { position: absolute; top: -2px; right: -3px; color: var(--muted); }
 .speed { position: absolute; top: -5px; left: -5px; z-index: 1; }
 .sliderWrap { position: relative; height: 24px; margin: 6px 0 0; }
-.slider {
+.panel .slider {
   display: block; appearance: none; -webkit-appearance: none; width: 100%; height: 24px;
   margin: 0; border: 0; border-radius: 999px; outline-offset: 5px; cursor: pointer;
+  caret-color: transparent;
   background: linear-gradient(105deg, #315ae9 0%, #8564fd 53%, #ac6dff 100%);
   &::-webkit-slider-thumb {
     appearance: none; -webkit-appearance: none; width: 28px; height: 28px; position: relative; z-index: 1;
@@ -58,7 +61,7 @@
   text-align: left; cursor: pointer;
 }
 .modelList { max-height: min(280px, 55vh); overflow-y: auto; overscroll-behavior: contain; }
-.search { margin-bottom: 6px; font-size: 12px; }
+.search { margin-bottom: 6px; font-size: 12px; caret-color: auto; }
 .modelOption {
   display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%;
   padding: 7px 9px; border: 0; border-radius: 7px; background: transparent; color: var(--ink);
