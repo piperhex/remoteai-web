@@ -12,5 +12,5 @@ export function useBrowserAddressInput(address: string) {
   useLayoutEffect(() => {
     if (document.activeElement !== ref.current) showAddressStart(ref.current);
   }, [address]);
-  return { ref, onBlur: () => showAddressStart(ref.current) };
+  return { ref, onFocus: () => ref.current?.select(), onBlur: () => showAddressStart(ref.current) };
 }

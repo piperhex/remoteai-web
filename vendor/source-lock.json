@@ -1,20 +1,13 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "32b1ef76d89df3cef211ab0ceb01e6ef323390a1",
+  "revision": "b91a839d7808708248e214d79849fd835d3da68b",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "5022c3a7054bd11869f843aed375ce4fff9bc4bb"
-  },
-  "retainedTestSources": {
-    "repository": "https://github.com/piperhex/remoteai",
-    "revision": "d8c45b32b099aeebc169469504824239783850d5",
-    "paths": [
-      "apps/desktop/e2e/"
-    ]
+    "revision": "01b0caadba916a57faf3205925e8fdcdc9291be3"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
-    "revision": "974fd088b63205527b870fafca38b6d0541b0079"
+    "revision": "2a59916644e93ddae2a4fd1cdd09e1a28a0debed"
   },
   "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.37/remoteai-i18n-0.1.37.tgz",
   "files": {
@@ -1971,8 +1964,8 @@
     "shared/browser/extensions/market.ts": "ef3d828b5bfe4c5c12c204c2d6735458be2e5f7df93e91f8f5f3776a4d85333b",
     "shared/browser/extensions/ExtensionMarket.tsx": "9d18df285fb052c943700444df747e2103f574d5146f58c27fdb0caeff435a4d",
     "shared/chat/useComposerAutoFocus.ts": "c708d8c7150702e8dd55daea464698c5e7b444bf095bb4a3a3920aed465da577",
-    "apps/desktop/e2e/browser-address-checks.ts": "1e3e506af937808717a34dde6537ec200fea8b6425da16a0f6b24cdca2f87a53",
-    "shared/browser/useBrowserAddressInput.ts": "3537d58b09d18246f26bc380ac3514bb2c14e5f80f6bbffd1feed38ed23e4b75",
+    "apps/desktop/e2e/browser-address-checks.ts": "ad61219ab24e9120761d94ece6da16673802c3d7427ae4cfa1b44a596e168581",
+    "shared/browser/useBrowserAddressInput.ts": "787065cc1f27a60d4b519196b71821a8a79757262e24d36779b7bc68015895af",
     "shared/browser/extensions/BrowserSidePanel.tsx": "f9717a4be3576ac35b1d7d8000a3ed3113937afe48df355a34bdfc11de365442",
     "shared/browser/extensions/AssistantSettings.tsx": "7b95a8e2c686c18b9e9a0002c2a86d4a4ac6752e2feaa1818542adb622aa9930",
     "shared/browser/extensions/PanelSurface.tsx": "9b6ad366a2fc30f459a122c6ee384be3d5a81d2abc0b2b4f7c4dccb263585cee",
@@ -1990,7 +1983,7 @@
     "shared/git/views/gitUpdate.css": "fd0e570bac08edfabf234b9fe741b18a1cf9e931f3fb57e5d7e3c772d6834657",
     "apps/desktop/e2e/browser-suggestions-checks.ts": "6580788f321738b1299ef111472058174d512238ba908f93526b1dba3c29671a",
     "shared/browser/BrowserToolbar.tsx": "16695600bf20cfd209e5dde742210bb16d565095b7914f8bf3c4d12a0053ed38",
-    "shared/browser/BrowserAddressField.tsx": "f137502d1b148a3a95e7c2b84fc05b9258cdd79b1e08b1fab8fec616ae8ec512",
+    "shared/browser/BrowserAddressField.tsx": "d5f9f0102295b57b05a010d58d33421eff0debebad782d0f2152bc8144c9d406",
     "shared/browser/useAddressSuggestions.ts": "a69fc3aebbeefd9cd69f70faa83ea150eb2aec931d291e1f3706445ece394b80",
     "shared/browser/browserAddress.css": "0dc0d623472eedd77889896739c72fcf796edaf47c36c8e8e3a9f426c271b7f7",
     "shared/browser/addressSuggestions.ts": "d78b951359c5ff9f9f62832ed8900c50778323dfbf09041f314b5b9701f2588c",

@@ -40,7 +40,8 @@ export function BrowserAddressField({ address, context, active, invalid, change,
     <input {...input} dir="ltr" role="combobox" aria-label={t('market.browserAddress')} aria-invalid={invalid}
       aria-autocomplete="list" aria-expanded={menu.open} aria-controls={menu.open ? listId : undefined}
       aria-activedescendant={menu.index >= 0 ? `${listId}-${menu.index}` : undefined}
-      value={address} onChange={event => { change(event.target.value); menu.edit(); }} onFocus={menu.edit}
+      value={address} onChange={event => { change(event.target.value); menu.edit(); }}
+      onFocus={() => { input.onFocus(); menu.edit(); }}
       onBlur={() => { input.onBlur(); menu.close(); }} onKeyDown={menu.onKeyDown}
       onCompositionStart={menu.onCompositionStart} onCompositionEnd={menu.onCompositionEnd}
       placeholder={t('market.browserSearchOrAddress')} spellCheck={false} autoComplete="off" />

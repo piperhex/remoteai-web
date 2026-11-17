@@ -1,6 +1,8 @@
 import { test } from '@playwright/test';
 import { prepareAddressPages, verifyAddressDisplay } from '../../desktop/e2e/browser-address-checks';
 
+test.use({ hasTouch: true });
+
 for (const entry of ['desktop-main', 'desktop-sidebar', 'mobile']) for (const enlarged of [false, true]) {
   const mobile = entry === 'mobile';
   const label = `web-${entry}-${enlarged ? 'dark-20px-narrow' : 'light-14px'}`;
