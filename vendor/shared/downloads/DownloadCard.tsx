@@ -22,12 +22,14 @@ export function DownloadCard({ task, busy, connected, action, open, share, remov
   const running = ['downloading', 'queued', 'preparing', 'verifying'].includes(task.status);
   const completed = ['completed', 'ready', 'saving'].includes(task.status);
   const completion = completed ? downloadCompletionDetails(task, text) : undefined;
-  const label = completed ? "client.downloads.saveToDevice" : running ? "client.downloads.pause" : "client.downloads.resumeDownload";
+  const label = task.browser?.awaitingConfirmation ? 'client.downloads.keep'
+    : completed ? "client.downloads.saveToDevice" : running ? "client.downloads.pause" : "client.downloads.resumeDownload";
   const Icon = completed ? Download : running ? Pause : Play;
   const preparation = task.status === 'preparing' ? task.preparation : undefined;
   const downloadPercent = task.size ? Math.round(task.received / task.size * 100) : 0;
   const percent = preparation ? archivePercent(preparation) : completed ? 100 : downloadPercent;
-  const status = task.sync && task.status === 'verifying' ? 'client.conversationSync.importing'
+  const status = task.browser?.awaitingConfirmation ? 'client.downloads.browser.insecure'
+    : task.sync && task.status === 'verifying' ? 'client.conversationSync.importing'
     : task.sync && task.status === 'completed' ? 'client.conversationSync.imported'
     : preparation ? archiveStatus(preparation) : STATUS[task.status];
   const detail = preparation ? text("client.downloads.compressedFiles", {
@@ -52,14 +54,15 @@ export function DownloadCard({ task, busy, connected, action, open, share, remov
     {completion?.summary && <p className="download-completion">{completion.summary}</p>}
     {task.message && task.status !== 'completed' && <p role="status" className="download-notice">
       {displayError(task.message)}</p>}
-    {!connected && !completed && <p className="download-notice">{text(task.source.attachment
+    {!connected && !completed && <p className="download-notice">{text(task.browser
+      ? 'client.downloads.browser.unavailable' : task.source.attachment
       ? 'client.lounge.fileUnavailable' : 'client.downloads.reconnectToTheOriginalComputerToResume')}</p>}
     <div className="download-actions">
       {completed && !task.sync && <button type="button" className="download-button" onClick={open}
         disabled={busy || task.status === 'saving'}><ExternalLink size={17} />{text("client.portForwarding.open")}</button>}
-      {completed && !task.sync && share && canShareDownload(task) && <button type="button" className="download-button"
+      {completed && !task.sync && !task.browser && share && canShareDownload(task) && <button type="button" className="download-button"
         onClick={share} disabled={busy || task.status === 'saving'}><Share2 size={17} />{text("client.downloads.share")}</button>}
-      {!(completed && task.sync) && <button type="button" className="download-button" onClick={action}
+      {!(completed && (task.sync || task.browser)) && <button type="button" className="download-button" onClick={action}
         disabled={busy || task.status === 'saving' || (!running && !completed && !connected)}>
         <Icon size={17} />{text(label)}</button>}
       <button type="button" className="download-button download-danger" disabled={busy} onClick={remove}>

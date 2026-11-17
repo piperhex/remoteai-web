@@ -21,7 +21,7 @@ export interface DownloadItemProps {
 function TaskMenu({ task, busy, run, text, allowShare, retryAttempt }: DownloadItemProps) {
   const items = [{ key: 'remove', label: text('client.projectBrowser.deleted'),
     icon: <Trash2 size={16} />, danger: true, onClick: () => run(task, 'remove') }];
-  const share = !task.sync && allowShare && isDownloadReady(task) && canShareDownload(task)
+  const share = !task.sync && !task.browser && allowShare && isDownloadReady(task) && canShareDownload(task)
     ? [{ key: 'share', label: text('client.downloads.share'), icon: <Share2 size={16} />,
       danger: false, onClick: () => run(task, 'share') }] : [];
   const pause = retryAttempt ? [{ key: 'pause', label: text('client.downloads.pause'), icon: <Pause size={16} />,
@@ -36,10 +36,10 @@ function TaskMenu({ task, busy, run, text, allowShare, retryAttempt }: DownloadI
 }
 
 function TaskStatus({ task, retryAttempt, text }: DownloadItemProps) {
-  const warning = !!retryAttempt || task.status === 'failed';
+  const warning = !!retryAttempt || task.status === 'failed' || task.browser?.awaitingConfirmation;
   const ready = isDownloadReady(task);
   const Icon = warning ? AlertCircle : ready ? CheckCircle2 : task.status === 'paused' ? Pause : ArrowDown;
-  return <span className={`dw-status${warning ? ' is-warning' : ''}${task.status === 'paused' ? ' is-muted' : ''}`}>
+  return <span className={`dw-status${warning ? ' is-warning' : ''}${task.status === 'paused' && !warning ? ' is-muted' : ''}`}>
     <Icon size={16} /><span>{downloadStatus(task, retryAttempt, text)}
       {task.status === 'preparing' && task.preparation?.phase === 'compressing' && ` · ${downloadPercent(task)}%`}
     </span>
@@ -56,7 +56,7 @@ function TaskNotice({ task, connected, text }: DownloadItemProps) {
     {task.message && task.status !== 'completed' && <p role="status" className="dw-notice">
       {displayError(task.message)}</p>}
     {!connected && !isDownloadReady(task) && <p className="dw-notice">
-      {text(task.source.attachment ? 'client.lounge.fileUnavailable'
+      {text(task.browser ? 'client.downloads.browser.unavailable' : task.source.attachment ? 'client.lounge.fileUnavailable'
         : 'client.downloads.reconnectToTheOriginalComputerToResume')}</p>}
   </>;
 }
@@ -65,7 +65,7 @@ export function ActiveDownloadCard(props: DownloadItemProps) {
   const { task, busy, connected, selecting, selected, toggle, retryAttempt, run, text } = props;
   const running = isDownloadRunning(task);
   const retry = !!retryAttempt || task.status === 'failed';
-  const label = retry ? 'client.downloads.workspace.retry' : running
+  const label = task.browser?.awaitingConfirmation ? 'client.downloads.keep' : retry ? 'client.downloads.workspace.retry' : running
     ? 'client.downloads.pause' : 'client.downloads.resumeDownload';
   const Icon = retry ? RotateCw : running ? Pause : Play;
   const percent = downloadPercent(task);
@@ -134,8 +134,8 @@ export function ReadyDownloadRow(props: DownloadItemProps) {
       {allowReveal && <button type="button" className="dw-button" onClick={() => run(task, 'reveal')}
         disabled={busy || task.status === 'saving'}><FolderOpen size={17} />
         {text('client.projectBrowser.openInExplorer')}</button>}
-      <button type="button" className="dw-button" onClick={() => run(task)} disabled={busy || task.status === 'saving'}>
-        <Download size={17} />{text('client.downloads.saveToDevice')}</button></>}
+      {!task.browser && <button type="button" className="dw-button" onClick={() => run(task)} disabled={busy || task.status === 'saving'}>
+        <Download size={17} />{text('client.downloads.saveToDevice')}</button>}</>}
       <TaskMenu {...props} />
     </div>
     {task.message && task.status !== 'completed'

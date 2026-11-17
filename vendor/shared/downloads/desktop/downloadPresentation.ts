@@ -17,6 +17,7 @@ const STATUS = {
 } as const;
 
 export function downloadStatus(task: DownloadTask, retryAttempt: number, text: DownloadText) {
+  if (task.browser?.awaitingConfirmation) return text('client.downloads.browser.insecure');
   if (retryAttempt) return text('client.downloads.workspace.waitingRetry');
   if (task.sync && task.status === 'verifying') return text('client.conversationSync.importing');
   if (task.sync && task.status === 'completed') return text('client.conversationSync.imported');

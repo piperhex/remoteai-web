@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { Dialog } from 'antd-mobile';
-import { t } from '../localization/browserClient';
+import { displayText, t } from '../localization/browserClient';
 import { downloadManager } from './manager';
 import type { DownloadOperation, DownloadTask } from './types';
 import { DownloadOpenError, type DownloadOpener } from './openDownload';
 import { DownloadShareError } from './shareDownload';
 import { removeDownloads } from './removeDownloads';
+import { controlBrowserDownload } from './browserTasks';
 
 function confirmRemove(count?: number) {
   return Dialog.confirm({ title: count === undefined ? t('client.downloads.deleteDownload')
@@ -46,7 +47,8 @@ export function useDownloadTasks(owner: string, options: {
     if (pending.current) return;
     pending.current = true; setBusy(task.id); setError('');
     try {
-      if (operation === 'open') await downloadManager.open(task.id, options.openDownload);
+      if (task.browser) await controlBrowserDownload(task, operation);
+      else if (operation === 'open') await downloadManager.open(task.id, options.openDownload);
       else if (operation === 'reveal') {
         if (options.revealDownload) await downloadManager.open(task.id, options.revealDownload);
       }
@@ -56,6 +58,7 @@ export function useDownloadTasks(owner: string, options: {
       else if (['queued', 'preparing', 'downloading', 'verifying'].includes(task.status)) await downloadManager.pause(task.id);
       else await downloadManager.resume(task.id);
     } catch (cause) {
+      if (task.browser) { setError(displayText('client.downloads.browser.unavailable')); return; }
       const knownError = cause instanceof DownloadOpenError || cause instanceof DownloadShareError;
       setError(knownError ? cause.message : operation === 'open' || operation === 'reveal'
         ? '打开未完成，请重试或保存到设备后打开。' : '操作未完成，请检查浏览器存储空间后重试。');
