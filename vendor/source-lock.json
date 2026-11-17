@@ -1,9 +1,16 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "3b3616054f8b28d2f7711bbbbff5139b2c0443f2",
+  "revision": "d8c45b32b099aeebc169469504824239783850d5",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "ed82045c7f22711410b08a2c4d583bf90827605c"
+    "revision": "95798ca355c9fd3f5b40f8cd1dd20479651a9b5a"
+  },
+  "retainedTestSources": {
+    "repository": "https://github.com/piperhex/remoteai",
+    "revision": "3b3616054f8b28d2f7711bbbbff5139b2c0443f2",
+    "paths": [
+      "apps/desktop/e2e/"
+    ]
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -1130,7 +1137,7 @@
     "shared/chat/previewTransferProgress.css": "6125409de6c7dc8c0dd5eb198a03ad0dbdd330d2ea1a68d4e95e54abe967c7ec",
     "shared/file-preview/workspace/websitePreview.css": "e476839f0af357cb9b4a52ae4d93e545c94e391ad21fbcb559c73fecf708f7cf",
     "shared/conversation/WebsiteIcon.tsx": "74e367d71cf711c4c077f1a8cd5346a81e9d2f1c9d4d61e6dc35eb4305f15b16",
-    "shared/conversation/WebsiteLinkMenu.tsx": "00b3b4d7ed7a7a2ef7b67ec684b54c51d4cd8a521ba2c7a73e8de31425d18d1d",
+    "shared/conversation/WebsiteLinkMenu.tsx": "bf4abe505302aa03c3e524f7296e95a8e535bb29b892646e3a3df4d1c85d15d5",
     "shared/conversation/FileApplicationIcon.tsx": "e8916537223eb17bd5288a90447befe7bd6caa187459a069a0e8020126647473",
     "shared/conversation/FileMenu.module.less": "11d3bc6bfb559d714411e01b63de42b4551826f3fceaccdd4be5cfd6d2b07c1b",
     "apps/desktop/src/pages/settings/GlobalFontSettingsCard.module.less": "c56ec378ecb89cd0306ee65d7fcfc23409fde2dad68f14117f6c58a7b5661b34",
@@ -2003,6 +2010,7 @@
     "shared/chat/useScopedDraft.ts": "fd3abae3689fc3ce72e4d4bc4ddc16befe93c4cd0e2abadafaded9ba501a0e1e",
     "shared/remote-chat/client/draftScopes.ts": "f3cacb9209c98ae2d3260bc46e5e82503cbd86728197c9d66da5c9e455804fc7",
     "apps/desktop/e2e/terminal-link-actions.ts": "86df9dbf585304dc51ff10322c84d8ab9569da0ca45dfa0a39f82d14e3a1a43d",
-    "shared/terminal/views/useTerminalLinkActions.ts": "44ada170e3f26318f5e00463297564373ff67a4f71f8bceb1847ecb9ba47b8c2"
+    "shared/terminal/views/useTerminalLinkActions.ts": "44ada170e3f26318f5e00463297564373ff67a4f71f8bceb1847ecb9ba47b8c2",
+    "shared/conversation/useWebsiteLinkActions.ts": "84baa3efb89f0f9c57d90fa7f0faafcf7f9c79ff67b3ff6c58059a2b03d4802a"
   }
 }
