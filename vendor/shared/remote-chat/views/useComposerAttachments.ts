@@ -1,6 +1,7 @@
 import { displayError } from '../../localization/browserClient';
 import { t } from '../../localization/browserClient';
 import { useEffect, useRef, useState } from 'react';
+import { useScopedDraft } from '../../chat/useScopedDraft';
 import type { AttachmentReference, ComposerPlugin } from '../../conversation/attachmentTypes';
 import { remoteAttachments } from '../composerAttachments';
 import { checkFileUploadSize } from '../policy';
@@ -22,7 +23,7 @@ export function attachmentErrorMessage(cause: unknown) {
 }
 
 export function useComposerAttachments({ threadId, sending }: { threadId: string | null; sending: boolean }) {
-  const [items, setItems] = useState<AttachmentReference[]>([]);
+  const [items, setItems] = useScopedDraft<AttachmentReference[]>(threadId, () => [], sending);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const picking = useRef(false);
@@ -35,7 +36,7 @@ export function useComposerAttachments({ threadId, sending }: { threadId: string
     const creating = scope.current === null && sending;
     scope.current = threadId;
     if (creating) return;
-    generation.current += 1; setItems([]); setError('');
+    generation.current += 1; setError('');
   }, [threadId, sending]);
   const pick = async (files: File[]) => {
     if (picking.current || sending || !files.length) return;

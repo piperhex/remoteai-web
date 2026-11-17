@@ -1,6 +1,7 @@
 import { displayError } from '../../localization/browserClient';
 import { t, useLanguage } from '../../localization/browserClient';
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import { createContext, useContext, useRef, type ReactNode } from 'react';
+import { useScopedDraft } from '../../chat/useScopedDraft';
 import { Quote, X } from 'lucide-react';
 import { Toast } from 'antd-mobile';
 import { appendQuote, clearSubmittedQuotes, quoteKey, type ChatQuote } from '../../chat/replyQuotes';
@@ -18,16 +19,9 @@ export function ChatQuotesProvider({ scope, children, sending, enabled }: {
   scope: string | null; children: ReactNode; sending: boolean; enabled: boolean;
 }) {
   useLanguage();
-  const [quotes, setQuotes] = useState<ChatQuote[]>([]);
+  const [quotes, setQuotes] = useScopedDraft<ChatQuote[]>(scope, () => [], sending);
   const current = useRef(quotes);
   current.current = quotes;
-  const previous = useRef(scope);
-  useEffect(() => {
-    if (previous.current === scope) return;
-    const creating = previous.current === null && sending;
-    previous.current = scope;
-    if (!creating) setQuotes([]);
-  }, [scope, sending]);
   const add = (quote: ChatQuote) => {
     const result = appendQuote(current.current, quote);
     if (result.error) { Toast.show({ content: displayError(result.error) }); return false; }

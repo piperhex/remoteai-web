@@ -135,8 +135,9 @@ export function useComposerState(props: ComposerProps) {
     } catch (cause) { setError(cause instanceof Error ? cause.message : t("client.chat.couldNotSendTheFilePleaseChooseItAgain")); return; }
     setError('');
     const text = replyWithQuotes(action === 'continue' ? CONTINUE_MESSAGE : draft.text, submittedQuotes);
-    if (await draft.submit({ text, attachments: submitted, goalMode: goalMode.enabled })) {
-      goalMode.exit(); attachments.clearSubmitted(submitted); quotes?.clear(submittedQuotes);
+    if (await draft.submit({ text, attachments: submitted, goalMode: goalMode.enabled,
+      onAccepted: () => { attachments.clearSubmitted(submitted); quotes?.clear(submittedQuotes); } })) {
+      goalMode.exit();
     }
   };
   const removeGoal = () => {

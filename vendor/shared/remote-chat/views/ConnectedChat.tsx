@@ -139,8 +139,7 @@ function ConnectedChatContent({ chat, device, devices, active, scope, email, cho
   const approvals = state.approvals.filter((event) => event.params.threadId === state.selected?.id);
   const newChat = (project?: ChatProject) => {
     if (cli?.state.busy) return;
-    cli?.controller.newConversation();
-    if (project?.cwd) cli?.controller.patch({ cwd: project.cwd });
+    cli?.controller.newConversation(project?.cwd);
     if (!state.sending) { controller.back(project); drawerMotion.closeDrawer(); }
   };
   useEffect(() => {
