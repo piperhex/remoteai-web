@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "c08dd277a4747b45f777cb9f9196b2056ef26eac",
+  "revision": "80189aaa10f7861d2e972e54d1d19402ac490af9",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "3467ca9b3f07d0d8251d8352f3c5113fbac577d7"
+    "revision": "8f6ca11c6cc2774362eaedf8221acffe8ecd696e"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -163,7 +163,7 @@
     "shared/chat/toolOutput.ts": "180c9d3b41493d058aa3d151abb308b1c9bfaba75aac5861aff55153a1076ac8",
     "apps/desktop/e2e/workspace-drawer-harness.tsx": "f1c8ee056f05b9125233726716f69c682a95edf656046cea715e601d2be917d1",
     "apps/desktop/e2e/workspace-start-checks.ts": "4106412d3f6cc28e6e4353ad47625c320554f33cade244a09c7c2bb70a746aea",
-    "apps/desktop/e2e/workspace-tab-menu-checks.ts": "e92ef859a79eb0f33e8949d1d3443241d0e981fe4b7cb9efe89711ca568411f5",
+    "apps/desktop/e2e/workspace-tab-menu-checks.ts": "2f8f9bea3133fa128c7a9fb1c22f11edaa5ce6fc9edd0b699bf265b0b364032f",
     "apps/desktop/e2e/message-edit-harness.html": "dc3c9907455d2b810a0fee06e35c4c171170729c562cb23dea58f883bddaf1da",
     "apps/desktop/e2e/ssh-mentions-harness.html": "44ac509d608dddf0caf1c270585c59e66cf408be9499e6b819af8f1848bf8132",
     "shared/chat/imageEditorPlugin.ts": "cf256c239cb3f45a7c80c99925e344bac3a0703cabf37cf3f83d70502ada6c97",
@@ -1219,7 +1219,7 @@
     "shared/chat/imageEditorDrawing.ts": "a10f3f1f2af57a923d6fbdf8fd0a4539f3c70b6c1ff8ff652fc40aa58d375b14",
     "shared/chat/imageEditorDialogScript.ts": "5fa2148d20db962c5a4329f3a3bf5c14f351a7c8373d1d3dc4e026422c159fee",
     "shared/chat/imageEditorViewport.ts": "0980fe4699cdfaaed7584d764eee1cefd18e6ac2c85fd53029139bb80f8bfec3",
-    "shared/chat/workspaceDrawer.css": "f6d6bdef18f1b8e35917d476522885f9f8470cc196e3316d62daefa2bc645531",
+    "shared/chat/workspaceDrawer.css": "260d1397d43fa426778f056f280b03ffd6cd849d25625fbec17d1902f59b10da",
     "shared/sheets/dragDismiss.ts": "2b2ab19c531377d64a47ab89a254e01a1b3f0d83a726aa744deb9cb12ecf797f",
     "shared/lounge/groupReceipts.ts": "c9f8f9d826b50b8442b2f1d01a833961bb0275a113c2bbd252bc527060292af6",
     "shared/lounge/LoungeFileButton.tsx": "bcf401094bd6a81920d1d125978427bf33beda5c682ff035d33af875a1e5d5d2",
@@ -1432,7 +1432,7 @@
     "shared/provider-market/browserState.ts": "b1e243f79566f77f5607a8c01b6d147cf1eb6e0d011cd5fd171578b1de2e2d12",
     "shared/provider-market/BrowserTabs.tsx": "90874a196ab2aba78a9885505d326e95bf42d1334b7ac71c53be78d1c331a082",
     "shared/provider-market/ProviderWebsiteIcon.tsx": "33bc47efad0ae8fa4860962c64ab7ec9f4a8f6c2a1b34b1183226088fa30245d",
-    "shared/provider-market/providerBrowser.css": "5b765bb5f2552cd182240cac8d30e107163aa5b8ce0fdd9906abaf28389fe44c",
+    "shared/provider-market/providerBrowser.css": "4f3be8c474176df9351259b8fd450bd5983d3a37779a2caf0d627a43d400ec24",
     "shared/browser/managed/ProviderBrowserSurface.tsx": "80715818c51b5804a6885c9d5c2f55da77860b21709cb9394769b5dccae21890",
     "shared/browser/managed/browserOverlays.ts": "7049ab695b456b6b81304be6a4d09ee9f789c3e20e5762799c86a3f56c507a4f",
     "shared/file-preview/workspace/nativeBrowserPlacement.ts": "1c92017b8a513a44853dc406d12c1213895a66842db6a3c82259dc8d81336967",

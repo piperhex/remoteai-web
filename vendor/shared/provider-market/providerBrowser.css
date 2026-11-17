@@ -17,7 +17,7 @@
 .pm-browser-titlebar { display: flex; align-items: center; gap: 6px; padding: 8px 10px 0;
   background: var(--surface-secondary, #eef1f6); }
 .pm-browser .pm-browser-tabs-bar { display: flex; flex: 0 1 auto; min-width: 0;
-  position: relative; align-items: center; }
+  position: relative; align-items: center; -webkit-user-select: none; user-select: none; caret-color: transparent; }
 .pm-browser-titlebar > .pm-browser-close { margin-inline-start: auto; }
 .pm-browser-tab-menu { max-width: min(400px, calc(100vw - 16px)); z-index: 1700; }
 .pm-browser-tabs { display: flex; align-items: end; gap: 6px; overflow-x: auto; min-width: 0; flex: 1;

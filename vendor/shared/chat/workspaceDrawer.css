@@ -3,7 +3,8 @@
 .workspace-drawer-tab-panel[hidden] { display: none; }
 .workspace-drawer-tab-panel > .chat-git { flex: 1; }
 .workspace-drawer-tab-scroll { overflow: auto; padding: 16px; overscroll-behavior: contain; }
-.workspace-drawer-tabs-bar { display: flex; flex: 1; min-width: 0; position: relative; column-gap: 2px; }
+.workspace-drawer-tabs-bar { display: flex; flex: 1; min-width: 0; position: relative; column-gap: 2px;
+  -webkit-user-select: none; user-select: none; caret-color: transparent; }
 .workspace-drawer-tabs { display: flex; align-items: center; flex: 0 1 auto; min-width: 0; gap: 4px;
   overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
 .workspace-drawer-tabs::-webkit-scrollbar { display: none; }
