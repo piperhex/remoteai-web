@@ -4,13 +4,16 @@
 .panel[hidden], .pane[hidden] { display: none; }
 .linkMenu { position: fixed; z-index: 1200; box-sizing: border-box; width: 280px; max-width: min(400px, calc(100vw - 16px));
   padding: 12px; border: 1px solid var(--line, #ddd); border-radius: 10px;
-  background: var(--panel, #fff); color: var(--ink, #242424); box-shadow: 0 6px 24px #0002;
-  font-size: 13px; overflow-wrap: anywhere; }
+  box-shadow: 0 6px 24px #0002;
+  max-height: calc(100vh - 16px); overflow: auto; overflow-wrap: anywhere; }
 .linkUrl { max-height: 72px; overflow: auto; margin-bottom: 10px; }
-.linkActions { display: flex; gap: 8px;
-  button { flex: 1; padding: 7px; border: 1px solid var(--line, #ddd); border-radius: 6px;
-    background: transparent; color: inherit; cursor: pointer; }
-  button:hover { background: #71807812; } }
+.linkActions { display: flex; flex-direction: column; gap: 6px;
+  button { display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+    border: 1px solid var(--line, #ddd); border-radius: 6px; text-align: start;
+    font: inherit; background: transparent; color: inherit; cursor: pointer;
+    svg { flex-shrink: 0; }
+    &:disabled { opacity: .45; cursor: default; } }
+  button:hover:not(:disabled) { background: #71807812; } }
 .fill { flex: 1; height: 100%; max-height: none; border-top: 0;
   .toolbar { min-height: 48px; }
   .tab button, .iconButton { min-height: 40px; min-width: 40px; }

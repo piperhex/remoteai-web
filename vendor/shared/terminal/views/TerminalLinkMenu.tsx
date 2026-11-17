@@ -1,10 +1,9 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { isTauri } from '@tauri-apps/api/core';
-import { openUrl } from '@tauri-apps/plugin-opener';
-import { DetailsContext } from '../../conversation/detailsContext';
+import { theme } from 'antd';
+import { PanelRight, AppWindow, ExternalLink } from 'lucide-react';
 import type { TerminalApi } from '../types';
-import { websiteUrl } from '../links';
+import { useTerminalLinkActions } from './useTerminalLinkActions';
 import styles from './terminal.module.less';
 
 export interface TerminalLinkTarget { url: string; x: number; y: number }
@@ -12,46 +11,48 @@ export interface TerminalLinkTarget { url: string; x: number; y: number }
 export function TerminalLinkMenu({ target, id, api, close, translate: t }: {
   target: TerminalLinkTarget; id?: string; api: TerminalApi; close: () => void; translate: (source: string) => string;
 }) {
-  const panel = useContext(DetailsContext);
+  const { token } = theme.useToken();
   const host = useRef<HTMLDivElement>(null);
-  const alive = useRef(true);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState('');
+  const { open, busy, error, sidebar, standalone } = useTerminalLinkActions({
+    url: target.url, id, api, close, translate: t,
+  });
+  useLayoutEffect(() => {
+    const position = () => {
+      const element = host.current;
+      if (!element) return;
+      const { width, height } = element.getBoundingClientRect();
+      element.style.left = `${Math.max(8, Math.min(target.x, window.innerWidth - width - 8))}px`;
+      element.style.top = `${Math.max(8, Math.min(target.y, window.innerHeight - height - 8))}px`;
+    };
+    position();
+    const observer = new ResizeObserver(position);
+    if (host.current) observer.observe(host.current);
+    window.addEventListener('resize', position);
+    return () => { observer.disconnect(); window.removeEventListener('resize', position); };
+  }, [target.x, target.y]);
   useEffect(() => {
-    alive.current = true; host.current?.querySelector('button')?.focus();
+    host.current?.querySelector<HTMLButtonElement>('button:not(:disabled)')?.focus();
     const outside = (event: PointerEvent) => { if (!host.current?.contains(event.target as Node)) close(); };
     const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') { event.stopPropagation(); close(); } };
     document.addEventListener('pointerdown', outside); document.addEventListener('keydown', escape, true);
     return () => {
-      alive.current = false;
       document.removeEventListener('pointerdown', outside); document.removeEventListener('keydown', escape, true);
     };
   }, [close]);
-  const open = async (preview: boolean) => {
-    if (busy || !websiteUrl(target.url)) return;
-    setBusy(true); setError('');
-    try {
-      if (api.resolveLink && !id) throw new Error('终端暂时无法连接，请确认电脑在线后重试。');
-      const url = api.resolveLink && id ? await api.resolveLink(id, target.url) : target.url;
-      if (!alive.current) return;
-      if (preview && panel) panel.openWebsite(url);
-      else if (isTauri()) await openUrl(url);
-      else window.open(url, '_blank', 'noopener,noreferrer');
-      if (alive.current) close();
-    } catch (failure) {
-      if (alive.current) setError(failure instanceof Error ? failure.message : '链接暂时无法打开，请稍后重试。');
-    } finally { if (alive.current) setBusy(false); }
-  };
   return createPortal(<div ref={host} className={styles.linkMenu} role="dialog" aria-modal="true"
     aria-label={t("client.terminal.openTerminalLink")}
-    style={{ left: Math.max(8, Math.min(target.x, window.innerWidth - 296)),
-      top: Math.max(8, Math.min(target.y, window.innerHeight - 170)) }}>
+    style={{ fontSize: token.fontSize, fontFamily: token.fontFamily, lineHeight: token.lineHeight,
+      background: token.colorBgElevated, color: token.colorText, borderColor: token.colorBorder }}>
     <div className={styles.linkUrl}>{target.url}</div>
     <div className={styles.linkActions}>
-      {panel && <button disabled={busy} onClick={() => { void open(true); }}>{t("client.terminal.previewInApp")}</button>}
-      <button disabled={busy} onClick={() => { void open(false); }}>{t("client.workspaceActions.openInBrowser")}</button>
+      <button disabled={busy || !sidebar} onClick={() => { void open('sidebar'); }}>
+        <PanelRight aria-hidden size="1.2em" />{t('client.terminal.openInSidebarBrowser')}</button>
+      <button disabled={busy || !standalone} onClick={() => { void open('standalone'); }}>
+        <AppWindow aria-hidden size="1.2em" />{t('client.terminal.openInStandaloneBrowser')}</button>
+      <button disabled={busy} onClick={() => { void open('external'); }}>
+        <ExternalLink aria-hidden size="1.2em" />{t('client.terminal.openInExternalBrowser')}</button>
     </div>
     {busy && <div role="status">{t("client.terminal.openingLink")}</div>}
-    {error && <div role="alert">{t(error)}</div>}
+    {error && <div role="alert">{error}</div>}
   </div>, document.body);
 }

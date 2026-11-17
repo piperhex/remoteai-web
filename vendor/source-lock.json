@@ -3,13 +3,13 @@
   "revision": "3b3616054f8b28d2f7711bbbbff5139b2c0443f2",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "4ea36539c3eec8fc1f472b45dd0b0a642fd09f9e"
+    "revision": "ed82045c7f22711410b08a2c4d583bf90827605c"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
-    "revision": "dc41b6e995f81437b5a090097d7e3fb741385e75"
+    "revision": "f6852550a65f366b7d3eda1918e3d11724408c7e"
   },
-  "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.36/remoteai-i18n-0.1.36.tgz",
+  "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.37/remoteai-i18n-0.1.37.tgz",
   "files": {
     "scripts/test-browser.mjs": "456d5b867ac937a571630f4a01cd37ded9380d519bee3011e8807480c0739733",
     "scripts/test-browser.d.mts": "0f13ced709be8e097af7d4038400129b64e5d400f62e9bea2a0371125ec4f70f",
@@ -743,9 +743,9 @@
     "shared/remote-chat/terminalReader.ts": "0f2897a02c5d26f83f19ff1c1f50754facae3b18b4285846dbb6311c59611c39",
     "shared/terminal/views/useTerminalResize.ts": "58e08685a3c75851b5154c7005ad37b55a51817ee3cde1df6fba3b323a519195",
     "shared/terminal/views/useTerminalSession.ts": "f04c412adf9709514e288968fc460fc150c093eddb4b7462f57fabb36db40e67",
-    "shared/terminal/views/terminal.module.less": "41c06fed2d33000d14980976c2430e7f719f838a289f4f9a0b740938b23ca3b7",
+    "shared/terminal/views/terminal.module.less": "7bb28b3b7160610b19e573fe8fc40491ca3497285848fa9463513d23995a4f82",
     "shared/terminal/views/TerminalKeys.tsx": "5263492277f84a0a34ba5c4826ac7adef87e76c1d6450313c6799ea66a4051d3",
-    "shared/terminal/views/TerminalLinkMenu.tsx": "17a5c533b5542def4557c9c70b51ca60550ab38564ef2d9e5ecf4fe76f39ab63",
+    "shared/terminal/views/TerminalLinkMenu.tsx": "a5c39a9ab8740db3b4bc654589a9862559115ccff545202d01cc566bc8fd4f69",
     "shared/terminal/SshMenu.tsx": "a43fb6df7b4c97cbfd5cecf97ea548ae1ccc6c6a519f5d781cb812a88517cefe",
     "shared/terminal/SshFiles.tsx": "c67be601bc96266ac6aa6fa7ba2e968b744a9439618a5f99328c4a6305c85758",
     "shared/terminal/SshProjectBrowser.tsx": "e8fab13a8f3b9747be191527614f038d9af2fde450c626e585e61365370a3093",
@@ -2001,6 +2001,8 @@
     "shared/browser/overlays/popupPlacement.ts": "dc9cee8ecdfd6305606b36417b1fc8dadcc4f17ff69870b76bca01e0405b2580",
     "shared/browser/overlays/popupRegions.ts": "7a354a9224b1f6097be4a591229b07cb35ce08afe1448fc4fba5aacdedf913ee",
     "shared/chat/useScopedDraft.ts": "fd3abae3689fc3ce72e4d4bc4ddc16befe93c4cd0e2abadafaded9ba501a0e1e",
-    "shared/remote-chat/client/draftScopes.ts": "f3cacb9209c98ae2d3260bc46e5e82503cbd86728197c9d66da5c9e455804fc7"
+    "shared/remote-chat/client/draftScopes.ts": "f3cacb9209c98ae2d3260bc46e5e82503cbd86728197c9d66da5c9e455804fc7",
+    "apps/desktop/e2e/terminal-link-actions.ts": "86df9dbf585304dc51ff10322c84d8ab9569da0ca45dfa0a39f82d14e3a1a43d",
+    "shared/terminal/views/useTerminalLinkActions.ts": "44ada170e3f26318f5e00463297564373ff67a4f71f8bceb1847ecb9ba47b8c2"
   }
 }
