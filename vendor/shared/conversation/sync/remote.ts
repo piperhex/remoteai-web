@@ -4,6 +4,7 @@ import { SYNC_OPERATION, type SyncHost, type SyncRequest } from './types';
 /** A separate, lazy connection keeps synchronization independent of the visible conversation. */
 export function remoteSyncHost(options: {
   id: string; name: string; connect: (events: ConnectionEvents) => ChatConnection;
+  transfer?: SyncHost['transfer'];
 }): SyncHost {
   let connection: ChatConnection | undefined;
   let ready: Promise<void> | undefined;
@@ -22,6 +23,7 @@ export function remoteSyncHost(options: {
     });
   };
   return { id: options.id, name: options.name, mode: () => mode,
+    transfer: options.transfer, nativeLink: () => connection?.nativeSync,
     request: async <T>(request: SyncRequest) => {
       if (ended) throw new Error('CONVERSATION_SYNC_CLOSED');
       if (!ready) start();

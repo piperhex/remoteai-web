@@ -47,6 +47,9 @@ export async function uploadPreparedSync(options: {
   const remote = prepared.remote;
   if (!remote) return;
   const { host, bundle } = remote;
+  const transfer = destination.transfer ?? host.transfer;
+  if (transfer && await transfer({ source: host, destination, sourceBundle: bundle, destinationBundle: prepared.bundle,
+    offset: options.offset ?? 0, signal, progress })) return;
   const chunkBytes = Math.min(bundle.chunkBytes ?? SYNC_LEGACY_CHUNK_BYTES,
     prepared.bundle.chunkBytes ?? SYNC_LEGACY_CHUNK_BYTES, SYNC_CHUNK_BYTES);
   // Bounded read-ahead hides the source round trip behind the destination write.
