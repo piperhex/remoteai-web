@@ -7,6 +7,7 @@ export function useThreadListScroll(state: ChatState, controller: ChatController
     loading: state.loading,
     scope: JSON.stringify([state.archived, state.search, state.ready]),
     cursor: state.cursor,
+    requireGesture: state.directorySync,
     loadMore: () => controller.list({ more: true }),
   });
 }

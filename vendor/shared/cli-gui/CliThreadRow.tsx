@@ -23,7 +23,8 @@ export function CliThreadRow({ session, onSelect, web = false }: {
       aria-label={title} aria-current={selected ? 'page' : undefined}
       onClick={() => { cli.controller.open(session); onSelect(); }}>
       <span className={web ? 'chat-grow chat-ellipsis' : styles.threadTitle}>{title}</span>
-      <ThreadStatus running={session.status === 'running'} needsInput={session.permissions.length > 0} unread={false} />
+      <ThreadStatus running={session.status === 'running'}
+        needsInput={(session.permissionCount ?? session.permissions.length) > 0} unread={false} />
     </button>
   </div></ThreadContextMenu>;
 }

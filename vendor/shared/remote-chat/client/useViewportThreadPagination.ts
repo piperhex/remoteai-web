@@ -9,6 +9,7 @@ interface Options {
   cursor: string | null;
   loadMore: () => Promise<void>;
   retryOnScroll?: boolean;
+  requireGesture?: boolean;
 }
 
 /** Keep a screen ahead, then refill after 70% of that screen has been consumed. */
@@ -35,7 +36,9 @@ export function useViewportThreadPagination(options: Options) {
     finally { pending.current = false; setLoadingMore(false); }
   };
 
-  const check = (retry = false) => {
+  const check = (retry = false, gesture = false) => {
+    // Folded groups can hide hundreds of loaded rows. Refilling their short viewport would drain every page.
+    if (options.requireGesture && !gesture) return;
     const node = list.current;
     if (!node || node.clientHeight <= 0 || node.scrollHeight <= 0) return;
     if (buffer.current.viewportHeight !== node.clientHeight) {
@@ -60,10 +63,10 @@ export function useViewportThreadPagination(options: Options) {
     const onScroll = () => {
       const down = node.scrollTop > previousTop;
       previousTop = node.scrollTop;
-      latest.current.check(down && latest.current.retryOnScroll);
+      latest.current.check(down && latest.current.retryOnScroll, down);
     };
     const onWheel = (event: WheelEvent) => {
-      if (event.deltaY > 0) latest.current.check(latest.current.retryOnScroll);
+      if (event.deltaY > 0) latest.current.check(latest.current.retryOnScroll, true);
     };
     const observer = new ResizeObserver(() => latest.current.check());
     observer.observe(node);

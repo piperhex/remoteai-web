@@ -23,6 +23,8 @@ import { remoteSidebarDrag } from '../client/sidebarDrag';
 import { CliThreadRow } from '../../cli-gui/CliThreadRow';
 import { useCliSidebar } from '../../cli-gui/useCliSidebar';
 import { useCliGui } from '../../cli-gui/context';
+import { CliListMore } from '../../cli-gui/CliListMore';
+import { GroupPageButton } from '../../chat/directory/GroupPageButton';
 
 interface Props {
   state: ChatState; controller: ChatController; newChat: (project?: ChatProject) => void; onClose: () => void;
@@ -48,7 +50,7 @@ function ChatThreadsContent({ state, controller, newChat, onClose, openSearch, p
   const sidebar = useCliSidebar({ threads: searching ? search.threads : state.threads,
     archived: state.archived, query });
   const { groups, toggle, toggleCollapse } = useThreadGroups({ ...state,
-    threads: sidebar.threads, selected: sidebar.selected ?? state.selected });
+    threads: sidebar.threads, selected: sidebar.selected ?? state.selected }, sidebar.hasMore);
   const pagination = useThreadListScroll(state, controller, !searching);
   const ready = state.ready;
   const actions = useThreadActions(state, controller);
@@ -112,8 +114,19 @@ function ChatThreadsContent({ state, controller, newChat, onClose, openSearch, p
             onFork={() => { void controller.forkConversation(thread).then(opened => { if (opened) onClose(); }); }}
             onOpenProject={cwd ? () => openProject(cwd) : undefined} />;
           })}
+          {group.expanded && !group.collapsed && <CliListMore className="chat-group-more" threads={group.data} />}
+          {group.expanded && group.kind === 'group' && !group.collapsed && <GroupPageButton className="chat-group-more"
+            enabled={state.directorySync && ready} cursor={state.groupCursors?.[group.id.slice(6)]}
+            busy={state.groupLoading?.[group.id.slice(6)]}
+            load={more => controller.loadGroup(group.id.slice(6), more)} />}
           {group.canToggle && <button type="button" className="chat-group-more" aria-expanded={group.expanded}
-            aria-label={`${group.expanded ? t("client.chat.collapse") : t("client.chat.showMore.83ad87")}：${group.label}`} onClick={() => toggle(group.id)}>
+            aria-label={`${group.expanded ? t("client.chat.collapse") : t("client.chat.showMore.83ad87")}：${group.label}`}
+            onClick={() => {
+              toggle(group.id);
+              if (!group.expanded && group.kind === 'group' && state.groupCursors?.[group.id.slice(6)] === undefined) {
+                void controller.loadGroup(group.id.slice(6));
+              }
+            }}>
             {group.expanded ? t("client.chat.collapse") : t("client.chat.showMore.83ad87")}</button>}
           </div>
         </section>)}

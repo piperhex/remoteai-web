@@ -10,6 +10,7 @@ import { createPreviewDownloads } from '../downloads/previews';
 import { downloadOwner } from '../../../../shared/downloads/manager';
 import { useActiveChatPolicy } from '../../../../shared/remote-chat/useActiveChatPolicy';
 import { createWebSshProfiles } from '../sshProfiles';
+import { browserDirectoryStorage } from '../../../../shared/chat/directory/storage';
 
 const HISTORY_REFRESH_MS = 15_000;
 
@@ -36,6 +37,7 @@ function createController(session: AuthSession, deviceId: string) {
     createPeer: (options) => new RtcPeer(options, () => new RTCPeerConnection({ iceServers: options.iceServers })),
   }), undefined, undefined, createWebSshProfiles(session));
   controller.deferToolDetails = true;
+  controller.directoryStorage = browserDirectoryStorage(JSON.stringify([session.baseUrl, session.email]), deviceId);
   controller.deferProcessDetails = true;
   controller.previewDownloads = createPreviewDownloads({ owner: downloadOwner(session), deviceId });
   return controller;
