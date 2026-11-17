@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "d8c45b32b099aeebc169469504824239783850d5",
+  "revision": "a86822350f113258342e1f5624d124591c8712f6",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "93ebddd0f661aa64240e176241ec0fc963e66bfb"
+    "revision": "b4631f9a58a7a7479a0cb12bc13eecfcbbab008e"
   },
   "retainedTestSources": {
     "repository": "https://github.com/piperhex/remoteai",
@@ -2006,7 +2006,7 @@
     "shared/browser/overlays/usePopupAnchor.ts": "250eae332d41b818c50593c029b4e52b20e8b9789bbac3298254033766652c32",
     "shared/browser/overlays/popupDocument.ts": "334e4e1097634089331e68a651c544390789a868b2c652a43e746571abdfe06e",
     "shared/browser/overlays/popupPlacement.ts": "dc9cee8ecdfd6305606b36417b1fc8dadcc4f17ff69870b76bca01e0405b2580",
-    "shared/browser/overlays/popupRegions.ts": "7a354a9224b1f6097be4a591229b07cb35ce08afe1448fc4fba5aacdedf913ee",
+    "shared/browser/overlays/popupRegions.ts": "6f66b09535e8c144205a6b22ab629862f7792bcfaebc335dd55c8bf2571b0d18",
     "shared/chat/useScopedDraft.ts": "fd3abae3689fc3ce72e4d4bc4ddc16befe93c4cd0e2abadafaded9ba501a0e1e",
     "shared/remote-chat/client/draftScopes.ts": "f3cacb9209c98ae2d3260bc46e5e82503cbd86728197c9d66da5c9e455804fc7",
     "apps/desktop/e2e/terminal-link-actions.ts": "86df9dbf585304dc51ff10322c84d8ab9569da0ca45dfa0a39f82d14e3a1a43d",

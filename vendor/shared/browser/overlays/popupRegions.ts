@@ -1,5 +1,7 @@
 const SHADOW_MARGIN = 14;
-const POPUPS = '.ant-popover,.ant-dropdown,.ant-select-dropdown,.ant-tooltip,.ant-modal-wrap,'
+// Ant Design portals nested menus beside the root dropdown, with their own popup classes.
+const POPUPS = '.ant-popover,.ant-dropdown,.ant-dropdown-menu-submenu-popup,.ant-menu-submenu-popup,'
+  + '.ant-select-dropdown,.ant-tooltip,.ant-modal-wrap,'
   + '.ant-modal-mask,.ant-drawer-mask,.ant-drawer-content-wrapper,[data-browser-popup]';
 
 /** The portal document does not scroll. Use layout coordinates, never animated transform bounds:
