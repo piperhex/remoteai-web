@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "21ab1344833a9feb8115570cdaaf70cd2780feb9",
+  "revision": "98bc2c161c40280ff19fb199a8f64f92ede0115f",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "455db98d396375eb812fcb830a10fa9c49a69b12"
+    "revision": "41432b85fe4df67237bcd763362e2649b5fbad9b"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -1998,6 +1998,7 @@
     "shared/browser/overlays/nativePopup.ts": "99bc1cc1be83df6606b76c72708e3e2bc86f71242e0434b959eac53f89a94598",
     "shared/browser/overlays/usePopupAnchor.ts": "250eae332d41b818c50593c029b4e52b20e8b9789bbac3298254033766652c32",
     "shared/browser/overlays/popupDocument.ts": "334e4e1097634089331e68a651c544390789a868b2c652a43e746571abdfe06e",
-    "shared/browser/overlays/popupPlacement.ts": "399f2df0e31e4f716138a4cff87e7a8a83068d9407359feba96d3890b66393e0"
+    "shared/browser/overlays/popupPlacement.ts": "dc9cee8ecdfd6305606b36417b1fc8dadcc4f17ff69870b76bca01e0405b2580",
+    "shared/browser/overlays/popupRegions.ts": "7a354a9224b1f6097be4a591229b07cb35ce08afe1448fc4fba5aacdedf913ee"
   }
 }

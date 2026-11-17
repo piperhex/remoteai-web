@@ -1,8 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
-
-const SHADOW_MARGIN = 14;
-const POPUPS = '.ant-popover,.ant-dropdown,.ant-select-dropdown,.ant-tooltip,.ant-modal-wrap,'
-  + '.ant-modal-mask,.ant-drawer-mask,.ant-drawer-content-wrapper,[data-browser-popup]';
+import { popupRegions } from './popupRegions';
 
 /** The native window covers only live popup regions; uncovered pixels retain native page input. */
 export function trackPopupPlacement(popup: Window, failed: () => void) {
@@ -10,14 +7,8 @@ export function trackPopupPlacement(popup: Window, failed: () => void) {
   const sync = async () => {
     if (stopped || popup.closed) return;
     if (flight) { pending = true; return; }
-    const regions = [...popup.document.querySelectorAll<HTMLElement>(POPUPS)].flatMap(element => {
-      const style = popup.getComputedStyle(element), rect = element.getBoundingClientRect();
-      if (style.display === 'none' || style.visibility === 'hidden' || !rect.width || !rect.height) return [];
-      const x = Math.max(0, rect.left - SHADOW_MARGIN), y = Math.max(0, rect.top - SHADOW_MARGIN);
-      return [{ x, y, width: Math.max(0, Math.min(innerWidth, rect.right + SHADOW_MARGIN) - x),
-        height: Math.max(0, Math.min(innerHeight, rect.bottom + SHADOW_MARGIN) - y) }];
-    });
-    const placement = { regions: regions.slice(0, 128), scale: devicePixelRatio };
+    const regions = popupRegions(popup);
+    const placement = { regions, scale: popup.devicePixelRatio };
     const signature = JSON.stringify(placement);
     if (signature === previous && !focusRequested) return;
     const focus = focusRequested; focusRequested = false;
