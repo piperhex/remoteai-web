@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { ChatTerminalHostContext } from '../../../../shared/remote-chat/views/ChatTerminalLayout';
 import { Drawer, Spin } from 'antd';
 import { PanelToggleButton } from '../../../../shared/chat/PanelToggleButton';
-import { PanelBottom, SquareTerminal } from 'lucide-react';
+import { ChevronDown, PanelBottom, SquareTerminal } from 'lucide-react';
 import type { GuiToolsClient } from '../../../../shared/remote-chat/guiTools';
 import { useRemoteTerminalLauncher } from '../../../../shared/remote-chat/useRemoteTerminalLauncher';
 import { remoteTerminalApi } from '../../../../shared/remote-chat/terminalApi';
@@ -26,7 +26,9 @@ interface Props {
   client: GuiToolsClient['terminal']; cwd: string; active: boolean; connected: boolean; deviceName?: string;
   launchId?: number; hideTrigger?: boolean;
 }
-export type ChatTerminalPanel = ReturnType<typeof useRemoteTerminalLauncher>;
+type Launcher = ReturnType<typeof useRemoteTerminalLauncher>;
+type RetentionActions = 'opened' | 'anyOpened' | 'show' | 'close';
+export type ChatTerminalPanel = Omit<Launcher, RetentionActions> & Partial<Pick<Launcher, RetentionActions>>;
 
 /** Switching projects detaches the view; each PC retains the project's terminal sessions. */
 export function ChatTerminal(props: Props & { panel?: ChatTerminalPanel }) {
@@ -48,7 +50,7 @@ function TerminalView({ client, active, connected, deviceName, launchId = 0, hid
   const host = useContext(ChatTerminalHostContext);
   const api = useMemo(() => remoteTerminalApi(client), [client]);
   const visible = active && panel.open;
-  useToolLaunch(launchId, panel.toggle, connected && !panel.busy);
+  useToolLaunch(launchId, panel.show ?? panel.toggle, connected && !panel.busy);
   const label = visible ? t("client.chat.hideRemoteTerminal") : t("client.chat.openRemoteTerminal");
   const empty = <div className="chat-terminal-empty">
     {panel.busy ? <div className="chat-terminal-loading"><Spin />{t("client.chat.openingTerminal")}</div>
@@ -59,21 +61,28 @@ function TerminalView({ client, active, connected, deviceName, launchId = 0, hid
   const content = <Suspense
     fallback={<div className="chat-terminal-loading"><Spin />{t("client.chat.openingTerminal")}</div>}>
     <TerminalPanel panel={panel} api={api} active={visible} fill={!docked} translate={displayText}
-      notice={panel.tabs.length ? panel.error : undefined} empty={empty} />
+      notice={panel.tabs.length ? panel.error : undefined} empty={empty} onClose={panel.close} />
   </Suspense>;
   return <>
     {!hideTrigger && (desktop ? <PanelToggleButton icon={<PanelBottom size={16} />} label={label}
-      expanded={Boolean(visible)} active={panel.tabs.length > 0}
+      expanded={Boolean(visible)} active={panel.anyOpened ?? panel.tabs.length > 0}
       disabled={panel.busy || (!connected && !panel.tabs.length && !panel.error)}
       onClick={panel.toggle} /> : <button type="button" className="chat-terminal-toggle" aria-label={label} data-error={!!panel.error}
       aria-expanded={visible} disabled={panel.busy || (!connected && !panel.tabs.length && !panel.error)}
       onClick={panel.toggle}>
       <SquareTerminal size={22} /></button>)}
-    {(panel.open || panel.tabs.length > 0) && (docked ? host && createPortal(content, host)
+    {(panel.opened ?? (panel.open || panel.tabs.length > 0)) && (docked ? host && createPortal(content, host)
       : <Drawer open={visible} placement="bottom" height="90%"
-      title={t("client.chat.remoteTerminal")} extra={<span className="chat-terminal-device">{deviceName}</span>}
-      rootClassName="chat-terminal-drawer" onClose={panel.hide}
-      closable={{ 'aria-label': t("client.chat.hideTerminal"), placement: 'end' }}>
+      title={t("client.chat.remoteTerminal")} extra={<>
+        <span className="chat-terminal-device">{deviceName}</span>
+        <button type="button" className="chat-terminal-toggle" aria-label={t('client.chat.hideTerminal')}
+          onClick={panel.hide}><ChevronDown size={20} /></button>
+      </>}
+      rootClassName="chat-terminal-drawer" onClose={event => {
+        if (event.target instanceof Element && event.target.closest('.ant-drawer-close')) (panel.close ?? panel.hide)();
+        else panel.hide();
+      }}
+      closable={{ 'aria-label': t('client.projectBrowser.close'), placement: 'end' }}>
       {content}
     </Drawer>)}
   </>;

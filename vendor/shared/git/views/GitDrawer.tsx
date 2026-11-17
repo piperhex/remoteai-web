@@ -9,8 +9,9 @@ import { t } from '../../localization/browserClient';
 
 const GIT_ICON = <GitBranch size={16} />;
 
-export function GitDrawer({ active, desktopDiffs, cwd = '', onClose, onVisibilityChange, children }: {
+export function GitDrawer({ active, desktopDiffs, cwd = '', onClose, onHide, onVisibilityChange, children }: {
   active: boolean; desktopDiffs?: boolean; cwd?: string; onClose: () => void;
+  onHide?: () => void;
   onVisibilityChange: (visible: boolean) => void;
   children: (visible: boolean) => ReactNode;
 }) {
@@ -28,11 +29,14 @@ export function GitDrawer({ active, desktopDiffs, cwd = '', onClose, onVisibilit
     return () => document.removeEventListener('visibilitychange', update);
   }, []);
   if (internal) return <WorkspaceDrawerTab active={active} onVisibilityChange={setTabVisible}
-    tab={{ id: workspaceTabId.git(cwd), title: 'Git', icon: GIT_ICON }}
+    tab={{ id: workspaceTabId.git(cwd), title: 'Git', icon: GIT_ICON, closeOnDismiss: Boolean(onHide) }}
     className="chat-git-drawer" style={theme}>
     {() => children(visible)}
   </WorkspaceDrawerTab>;
-  return <Drawer open={active} title="Git" placement="bottom" height="90%" onClose={onClose}
+  return <Drawer open={active} title="Git" placement="bottom" height="90%" onClose={event => {
+    if (event.target instanceof Element && event.target.closest('.ant-drawer-close')) onClose();
+    else (onHide ?? onClose)();
+  }}
     rootStyle={theme} rootClassName="chat-terminal-drawer chat-git-drawer"
     closable={{ 'aria-label': t("client.git.closeGit"), placement: 'end' }}>{children(visible)}</Drawer>;
 }

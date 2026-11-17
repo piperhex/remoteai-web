@@ -1,7 +1,7 @@
 import { displayText, displayError } from '../../localization/browserClient';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Clipboard, Grid2X2, Hand, Keyboard, Maximize, Monitor, Mouse, Settings2, Shield, Volume2, VolumeX, X } from 'lucide-react';
+import { Clipboard, Grid2X2, Hand, Keyboard, Maximize, Minus, Monitor, Mouse, Settings2, Shield, Volume2, VolumeX, X } from 'lucide-react';
 import type { DesktopClient } from '../protocol';
 import type { LocalDesktopClipboard } from '../clipboard';
 import { useDesktopSession } from '../useDesktopSession';
@@ -44,6 +44,7 @@ interface Props {
   connected?: boolean;
   nativeWindow?: boolean;
   windowState?: DesktopWindowState;
+  keepAlive?: boolean;
 }
 
 export function RemoteDesktop(props: Props) {
@@ -53,12 +54,12 @@ export function RemoteDesktop(props: Props) {
 }
 
 function DesktopViewer({ client, active, visible = true, connected = true, close, localClipboard, nativeWindow = false,
-  windowState }: Props) {
+  windowState, keepAlive = false }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const windowControls = useDesktopWindow(root, active, windowState);
   const shown = active && visible && !windowControls.minimized;
   const pageVisible = usePageVisibility();
-  const session = useDesktopSession({ client, active: active && pageVisible, connected, createPeer });
+  const session = useDesktopSession({ client, active: active && (keepAlive || pageVisible), connected, createPeer });
   const statusAction = desktopStatusAction(session);
   const viewOnly = session.capabilities.control === false;
   const [display, setDisplay] = useState(false);
@@ -185,6 +186,8 @@ function DesktopViewer({ client, active, visible = true, connected = true, close
       {!desktopWindow && document.fullscreenEnabled
         && <button onClick={fullscreen}><Maximize /><span>{t("client.runtimeErrors.fullscreen")}</span></button>}
       {!desktopWindow && <button onClick={close}><X /><span>{t("client.projectBrowser.close")}</span></button>}
+      {!desktopWindow && windowState && <button onClick={() => { void windowControls.minimize(); }}>
+        <Minus /><span>{t('client.remoteDesktop.minimize')}</span></button>}
     </nav>
     </div>
     {keyboard && <DesktopKeyboard input={session.input} close={() => setKeyboard(false)}

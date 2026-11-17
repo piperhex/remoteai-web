@@ -1,13 +1,13 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "b91a839d7808708248e214d79849fd835d3da68b",
+  "revision": "c08dd277a4747b45f777cb9f9196b2056ef26eac",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "01b0caadba916a57faf3205925e8fdcdc9291be3"
+    "revision": "3467ca9b3f07d0d8251d8352f3c5113fbac577d7"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
-    "revision": "2a59916644e93ddae2a4fd1cdd09e1a28a0debed"
+    "revision": "dac5efa8f507363e5e7c54b60d9f9fb7b78eae21"
   },
   "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.37/remoteai-i18n-0.1.37.tgz",
   "files": {
@@ -134,7 +134,7 @@
     "apps/desktop/e2e/command-group-history-checks.ts": "6850fec8010de34a9d4167de5442841796c088a3eff1660817b595e26b09edaa",
     "shared/remote-desktop/clipboard.ts": "0752cb32445471277a6c4cd25e0d7a2d48185fc61cd8dc80d29c9988d9628c42",
     "apps/desktop/src/remoteDesktop/host.ts": "e1a698b21c534818d7ad64c91f6cec362f1270d540b7c9123e78c520c088aa41",
-    "shared/conversation/GuiRemoteDesktop.tsx": "f9901eee331a534ad06f9ede60004b9f074cfa9fc1c588ab50d1ad8f4ba4b29f",
+    "shared/conversation/GuiRemoteDesktop.tsx": "67821c1dbffc9a4646b81e200be78f2cc93e2da1e854c970bed5ee640aae03f9",
     "shared/remote-desktop/fileClipboard.ts": "37eb273feb90cbfee59773c334dec50c113739a18c0b74ff435c8b694764a447",
     "shared/remote-desktop/security.ts": "5056b94ec2ef9e45a71aa5bff9d6f64436851bfce20c4ef62a4234adebbe24f7",
     "shared/remote-desktop/protocol.ts": "8ca32bd2bc2cd0f8025101f2814686bf95416cfc7c993aad55654194c160465a",
@@ -193,7 +193,7 @@
     "shared/remote-chat/useRetainedChatDevices.ts": "b9dfe82e83d0b5df3b10a7656bf3f5cd1310d54685d50093db1517f6945accaa",
     "shared/remote-chat/ComputerSearchBar.tsx": "b10e8f111c7974063ba49b5b406760aa5c2b98f124d5822a9210d268620e9801",
     "shared/remote-chat/useRemoteCliInstaller.ts": "f02243e8437064513e90203c347fc9f424c5eed9e6052d53ae0a2cf2ad9313a7",
-    "shared/remote-chat/useRemoteTerminalLauncher.ts": "dcf7ac0fb92f69d4dcac9c2f75696909931b5f60416bab4905c49576c40bc63b",
+    "shared/remote-chat/useRemoteTerminalLauncher.ts": "3ac6335d8d0fd7fcb53ea5fd556d042288215950435adfc2d5719ea29fe8a491",
     "shared/terminal/TerminalWorkspaceProvider.tsx": "a19229596e8d0bfdda1d671403b65a925e497220744cde08e21a7d64d6780ab1",
     "shared/conversation/remote/RemoteGuiTools.tsx": "1de63366289267bebd3ded4c7dc27030647247fa0c6e0d0c8604b85dcc6e126a",
     "shared/conversation/remote/RemoteGuiProject.tsx": "a808255c065f494ca0cb9857490456aa99107a51d30104c9d7699aba2a241a49",
@@ -202,20 +202,20 @@
     "shared/remote-chat/terminalApi.ts": "5b3d8acb832ff1de39aca308b7286ffd420b324e0ee1d3af754816b3c73b5905",
     "shared/remote-chat/views/terminal.css": "cd0af2694963d751616eaf417862c1f1516cb4207ca7e6a53fe662518f15895c",
     "shared/remote-chat/useToolLaunch.ts": "bde7048507977139fc3f3c3c4fb0a267784492a12ea59faeb553673702df22a6",
-    "shared/terminal/views/TerminalPanel.tsx": "f7bebbf876702799f01c9f563b54141258f7e95f529bea45ae38c017b0c393b1",
+    "shared/terminal/views/TerminalPanel.tsx": "0225523abb94978a31fdf8a85f1c37f55b79d44a8fe1ad9b964cd0f8040d1d5a",
     "shared/token-usage/quotaHistoryData.ts": "b65edc5eedd6a1032a5b6404e53445e61c7d9d3d295935f8d16818f5e1cc14d1",
     "shared/token-usage/quotaChartLabels.ts": "2a7f82d5e2231a0ed51d0a94e412c8ae2ef6aafc3527c83892419c40a8750bb4",
     "shared/remote-chat/usage.ts": "f754d482e581c544e3eef749323cbe571437b695368eaefa98159d82a72d8c50",
     "shared/remote-chat/client/useTokenSummary.ts": "4f2d9841c786f15cb7c0e98fdbea131067b7fb9f1ff6626e64f56681611cf7a0",
     "shared/token-usage/useWindowVisible.ts": "db0fd6ca05e2c7e24fdd9ec8dbb17339f54abfd4f58ec589ec75375e0ffaec60",
     "shared/remote-chat/tokenSummaryLabels.ts": "38f6182443f23d66f4ec7283f3cf09915328bcc2614602c508830f7204c64e4a",
-    "shared/chat/workspaceDrawer.ts": "bd43d67a2e348c1a365fdd3f2022f3dfb47486723987de1360ece77fc6585bc4",
+    "shared/chat/workspaceDrawer.ts": "a2b6ecc8723f4207956022793bc97a558c3dae32f19d1da16bdeaea73b792043",
     "shared/chat/workspaceLaunchers.ts": "7cbccdc1193c6835e07ae663824167aa60c991338c5cbf780687121ff3edb6ee",
-    "shared/remote-desktop/useDesktopLauncher.ts": "6802c8a5d0827786b1b30185617a7de4e65ea5f63ec18fbb3422aa633041134c",
-    "shared/git/views/ChatGit.tsx": "8af56a49eee54db1008c406bc736d07d8be5d996a8aea63d59bacf417034a29b",
-    "shared/remote-desktop/views/RemoteDesktop.tsx": "e98a4de75430d36edff039516397f9806ce36ac305e2b0b2d2abcf2608837d2c",
+    "shared/remote-desktop/useDesktopLauncher.ts": "8b312acf073fbec0cafc7c6780c133219ae20e13dabbdbd23ad060497aaeb22e",
+    "shared/git/views/ChatGit.tsx": "d3f9185ccff2c5cb267a645671bc3c6adc8ef69c836aba0630c84d1758347527",
+    "shared/remote-desktop/views/RemoteDesktop.tsx": "f3c9e477a032fb607df7529af566722fb032b0e68116c9afdb59f21474954427",
     "shared/git/views/git.css": "8a300638a59d6cb65696e5a6b502d6ac6b3e6bf427dbf661f12ab3caf4c56ce1",
-    "shared/project-browser/views/ProjectBrowserDrawer.tsx": "b98caf9532574a244297c956d03c874f3f5de48492cb3512a575c6a799ca029d",
+    "shared/project-browser/views/ProjectBrowserDrawer.tsx": "e64da4120f531037ea117f33980f1cec12c023a6ef697540c713c72ec54fb450",
     "shared/project-browser/useProjectBrowsers.ts": "223bff35060248e5edf65033d362034fad1b6329119eeef51600b36fe7d203a8",
     "shared/remote-chat/views/EditableChatMessage.tsx": "96c444c645911a8aa49ac0f93b7b32e146f22aafefc781a03206fa28172b09ee",
     "shared/token-usage/OfficialUsageChart.tsx": "0427a79ebe8c207a86b17b94f3ea7e493e907761fabe6651009226888be2ba06",
@@ -292,7 +292,7 @@
     "shared/testing/chatSessions.mjs": "fbbfb77091bce0ff9c4b0b004db75217b80ec2fe0bc7f427316434985823c173",
     "shared/appearance/useApplicationFontSize.ts": "f8c092118926743d8d358947ed8aa59e7c3ab38a044aaf89dc5f2526212bdcf9",
     "shared/appearance/typography.css": "c335d601d6c57242dd3e060e4f9f25c6c72056752a0113daf72fb81072a76368",
-    "shared/conversation/DetailsWorkspace.tsx": "f5e7f4cef4d05397324b7aaad7594fb7043f20809fba1e26205f39c8902a767e",
+    "shared/conversation/DetailsWorkspace.tsx": "a06ddbf5106136bc307d8a3d7fe20d21a71ac4a074070d00d1a852684db88b9c",
     "shared/chat/diffText.ts": "1efbb76ded85191c822acc98c4e2ffe645e271de933417cb4c214b6fc4e7227d",
     "shared/remote-chat/views/ChatRemoteFilePreview.tsx": "06f49334c18e3b8adc034a91459c6631980038b55f984fea7f5b9a6800432d7c",
     "shared/remote-chat/views/detailsWorkspace.css": "332f80e4b5cb492fda88a54b1d43dd3030658c60eeea96f15766b21b8a28279c",
@@ -563,7 +563,7 @@
     "apps/desktop/e2e/process-merge-fixture.ts": "76e522b756c9a7f99143a44b45642c948be9ed73fe0d64d03561db83254d935f",
     "apps/desktop/src/remoteDesktop/hostRegistry.ts": "d094a933052a47c506216f2b44a16b16b8f17e6a4b51cd8e65f644e2e1b58897",
     "shared/remote-desktop/local/localClipboard.ts": "d6c480ae28561c51ae409b20f7439415db886bc4ce02c5d83980766cba126a35",
-    "shared/conversation/GuiRemoteDesktop.module.less": "8504fecd9621bc28b4ad19291b3c5f4c1baf46d73d5e81679f02fc62d5368c01",
+    "shared/conversation/GuiRemoteDesktop.module.less": "93a23e1ec3fa4eddce7fc8100f1d02a40aebfaf19165691b6c679e40bab10baf",
     "apps/desktop/src/remoteDesktop/nativeSession.ts": "86ca7c169eb53db13d51d56eaf2aeee3541841e3d9dd848e7b07bfc6437ad907",
     "shared/remote-desktop/diagnostics.ts": "b0d49e8879dfa648d380b82f7df1b666acb837b2188bbb6811bf70bd7249f802",
     "apps/desktop/src/remoteDesktop/displays.ts": "aa0d1cf5a611845a0af402ba392494c781ff7f5bc1da1ffab4e4c725a708692f",
@@ -729,7 +729,7 @@
     "shared/cli-gui/CliConversationPane.tsx": "80b96b386e5365c5c7fa146d9c35f381e272c5e0963d419617fbbbcb92e00fae",
     "shared/conversation/ProjectBar.tsx": "2dc9dda7c31ac3330a551405ef2c2548d7ead5cf2761dbba24049768d4767b0f",
     "shared/remote-chat/ComputerSearchBar.module.less": "09c264b087c0bdf28631b321aff10b6afbdcfc5196faf3ea719b453f5c8fcadd",
-    "shared/remote-chat/useRemoteTerminalPanel.ts": "7296dac71de1171c5a2bc047f4442b319420c31d62dcb8e57bf44eb0756a53c8",
+    "shared/remote-chat/useRemoteTerminalPanel.ts": "a3714b59e3b876fdc7e46fb64903ec2ca20ffa4a66a8e7365726202dfffb168b",
     "shared/remote-chat/terminalProject.ts": "ec714291a79387460dcc9e43982e676ca4082d845af192cae7cfe0c22510af69",
     "shared/terminal/TerminalLaunchContext.ts": "57f4d7bb84efed0d43235c37e8ebf9f332b4abc20f235e65bea2d9835aed57e7",
     "shared/terminal/views/useTerminalPanel.ts": "b83761191ff8443552fee345b79c3b33d4388677ef73976619d607ba67cc0763",
@@ -772,7 +772,7 @@
     "shared/git/views/GitRevisionDialog.tsx": "cd861000cfffefe7345226e500a443a6c21c3d3dcc1fe8ea209963bb7289b2af",
     "shared/downloads/gitPatch.ts": "7ead276ad266826768e3305f4c916befdc9d87b218de5725bb940e9e1c71d1be",
     "shared/git/views/GitDiff.tsx": "0eeec9e25b529fb4bd929077825346e6bd8a2670fddc3052b178bdaa05626294",
-    "shared/git/views/GitDrawer.tsx": "16004a5b1625d7e6a332e2ac1cc5f40b4faac41ea88cb8bfe72d8d18b55c0c4e",
+    "shared/git/views/GitDrawer.tsx": "24487487bcee7b309c516ab6f8200db284320320b4e950eeb8f1a22eb1ea46f4",
     "shared/remote-desktop/useDesktopSession.ts": "0a7f8fbdcdd917050fe47fc87672a689f0094d4dcdeb5594fa66074d9fe864ca",
     "shared/remote-desktop/views/DisplaySettings.tsx": "c9cc27546cf38bea6433a38dafd08832788c8acf75b1393f9d1716f7e592c4b5",
     "shared/remote-desktop/views/SecuritySettings.tsx": "16a5081c2de2b1f088b47148cdbbc142db694b0d4708a2c1e2c1505dc40f66c1",
@@ -2019,6 +2019,7 @@
     "shared/chat/directory/replica.ts": "5cd0a9b559019fee0eb50653d344c9f49ef16006adb3665c7f440c03b42007c6",
     "shared/chat/directory/journal.ts": "8c4db9f06404f6eb7620a3947ddf292e98b102ea6148ec09b66f67fc7cdf1443",
     "shared/cli-gui/directory.ts": "c48e49a890e392e870565a17511459f0b35c6d45778d325bcfeaa36aa5d5462b",
-    "shared/cli-gui/summary.ts": "83575fb3df144fbfb90b4d624cbf1866bf63068a4ee473d7c0c95ac94ab0a631"
+    "shared/cli-gui/summary.ts": "83575fb3df144fbfb90b4d624cbf1866bf63068a4ee473d7c0c95ac94ab0a631",
+    "shared/remote-chat/useRetainedProjects.ts": "00f52e925be2cb4bc223844e5c74bd2f9e52f7930cec8eda0bce200b9f59739e"
   }
 }

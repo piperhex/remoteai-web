@@ -6,6 +6,7 @@ import { GuiRemoteDesktop } from '../../../shared/conversation/GuiRemoteDesktop'
 import { client, desktopTest } from './remote-desktop-fixture';
 import { RemoteDesktopComputersHarness } from './remote-desktop-computers-harness';
 import { DeviceScreenHarness } from './remote-desktop-device-screen-harness';
+import { RetainedToolsHarness } from './remote-desktop-retained-tools-harness';
 import '../src/styles.css';
 import '../../../shared/remote-chat/views/chat.css';
 import '../../desktop/src/pages/codexGui/remote/remoteGui.less';
@@ -43,4 +44,5 @@ function Harness() {
 }
 const params = new URLSearchParams(location.search);
 createRoot(document.getElementById('root')!).render(params.has('device-screen') ? <DeviceScreenHarness />
+  : params.has('retained-tools') ? <RetainedToolsHarness />
   : params.has('computers') ? <RemoteDesktopComputersHarness /> : <Harness />);

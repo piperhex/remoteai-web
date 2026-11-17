@@ -19,7 +19,6 @@ import { useDesktopLayout } from '../../../../shared/layout/useDesktopLayout';
 import { useRemoteCliInstaller } from '../../../../shared/remote-chat/useRemoteCliInstaller';
 import { useRemoteTerminalLauncher } from '../../../../shared/remote-chat/useRemoteTerminalLauncher';
 import { TerminalWorkspaceProvider } from '../../../../shared/terminal/TerminalWorkspaceProvider';
-import { GuiRemoteDesktop } from '../../../../shared/conversation/GuiRemoteDesktop';
 import { RemoteGuiTools } from '../../../../shared/conversation/remote/RemoteGuiTools';
 import { RemoteGuiProject } from '../../../../shared/conversation/remote/RemoteGuiProject';
 import './desktopTools.css';
@@ -106,9 +105,8 @@ function WebChat({ session, device, selected, ...props }: Props & {
         active={props.active && chat.foreground}
         onSynced={() => { void chat.controller.list(); }} />}
       <ChatTools client={chat.controller.guiTools} active={props.active} terminal={terminal}
-        desktopActions={<><GuiRemoteDesktop client={chat.controller.guiTools.desktop} active={props.active}
-          connected={chat.state.mode === 'direct' || chat.state.mode === 'relay'} />
-          <RemoteGuiTools controller={chat.controller} state={chat.state} installer={installer} active={props.active} /></>}
+        desktopActions={<RemoteGuiTools controller={chat.controller} state={chat.state}
+          installer={installer} active={props.active} />}
         connected={chat.state.ready} deviceName={device?.name}
         cwd={cwd} />
     </div>}

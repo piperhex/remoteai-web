@@ -22,6 +22,7 @@ import { t } from '../../localization/browserClient';
 interface Props {
   client: GitClient; cwd: string; connected: boolean; active: boolean; onClose: () => void;
   desktopDiffs?: boolean;
+  onHide?: () => void;
 }
 
 export function ChatGit(props: Props) {

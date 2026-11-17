@@ -114,7 +114,10 @@ export function DetailsWorkspace({ selected, active, children, enabled = true, c
               {expanded ? <Minimize2 size={16} /> : <Maximize2 size={16} />}</button>
             <button aria-label={t("client.chat.minimizeDetailsPanel")} onClick={() => { panel.context.close(); drawer.minimize(); }}>
               <Minus size={16} /></button>
-            <button ref={closeButton} aria-label={t("client.chat.closeDetailsPanel")} onClick={panel.context.close}><X size={17} /></button>
+            <button ref={closeButton} aria-label={t("client.chat.closeDetailsPanel")} onClick={() => {
+              if (tool?.closeOnDismiss) drawer.tabs.close(tool.id, tabs.map(tab => tab.id));
+              else panel.context.close();
+            }}><X size={17} /></button>
           </div>
         </header>
         {showingStart && <WorkspaceStartPage launchers={launchers.launchers} openBrowser={panel.openBrowser} />}

@@ -1,6 +1,6 @@
 import { displayText } from "../../localization/uiText";
 import { useCallback, useContext, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
-import { ChevronDown, FolderSearch, Plus } from "lucide-react";
+import { ChevronDown, FolderSearch, Plus, X } from "lucide-react";
 import { Drawer, Tooltip } from "antd";
 import { MAX_TERMINAL_TABS, type TerminalPanelState, type TerminalTab } from "./useTerminalPanel";
 import { useTerminalResize } from "./useTerminalResize";
@@ -26,11 +26,12 @@ import { enqueueSshDownload } from '../../downloads/sshDownload';
 
 const nativeDrop = { subscribe: subscribeSshFileDrop, read: nativeSshUploadBatch };
 
-export default function TerminalPanel({ panel, active, api, fill = false, translate = displayText, notice, empty }: {
+export default function TerminalPanel({ panel, active, api, fill = false, translate = displayText, notice, empty, onClose }: {
   panel: TerminalPanelState; active: boolean; api: TerminalApi; fill?: boolean;
   translate?: (source: string, values?: { number: number }) => string;
   notice?: string;
   empty?: ReactNode;
+  onClose?: () => void;
 }) {
   useGuiLanguage();
   const host = useRef<HTMLElement>(null);
@@ -69,6 +70,8 @@ export default function TerminalPanel({ panel, active, api, fill = false, transl
       {!fill && <button className={`${styles.iconButton} ${styles.close}`}
         style={selectedSession?.ssh ? { marginLeft: 0 } : undefined}
         aria-label={translate("client.chat.hideTerminal")} onClick={panel.hide}><ChevronDown size={17} /></button>}
+      {!fill && onClose && <button className={styles.iconButton}
+        aria-label={translate('client.projectBrowser.close')} onClick={onClose}><X size={17} /></button>}
     </div>
     {notice && <div className={styles.status} role="alert">{translate(notice)}</div>}
     {!panel.tabs.length && empty}

@@ -21,9 +21,10 @@ const Browser = lazy(() => import('../ProjectBrowser')
 const FILES_ICON = <FolderSearch size={16} />;
 
 export function ProjectBrowserDrawer({ client, cwd, connected, active, onClose,
-  desktopStyle = false, host: suppliedHost }: {
+  desktopStyle = false, host: suppliedHost, closeOnDismiss = false }: {
   client: ProjectBrowserClient; cwd: string; connected: boolean; active: boolean;
   onClose: () => void; desktopStyle?: boolean; host?: BrowserHost;
+  closeOnDismiss?: boolean;
 }) {
   useLanguage();
   const theme = useGitTheme(desktopStyle);
@@ -50,7 +51,8 @@ export function ProjectBrowserDrawer({ client, cwd, connected, active, onClose,
     },
   }), [suppliedHost, client, reference, quoteSelection, hide, launchTerminal]);
   return <WorkspaceDrawerTab active={active}
-    tab={{ id: workspaceTabId.files(cwd), title: t("client.projectBrowser.browseFiles"), icon: FILES_ICON, save }}
+    tab={{ id: workspaceTabId.files(cwd), title: t("client.projectBrowser.browseFiles"),
+      icon: FILES_ICON, save, closeOnDismiss }}
     className="project-browser-drawer" style={theme}>
     {visible => <Suspense fallback={<p className="project-browser-loading" role="status">{t("client.projectBrowser.loading")}</p>}>
       <Browser ref={browser} client={client} cwd={cwd} connected={connected} t={displayText} active={visible}

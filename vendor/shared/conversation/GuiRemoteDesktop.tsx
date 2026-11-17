@@ -11,23 +11,25 @@ import styles from './GuiRemoteDesktop.module.less';
 const RemoteDesktop = lazy(() => import('../remote-desktop/views/RemoteDesktop')
   .then(module => ({ default: module.RemoteDesktop })));
 
-export function GuiRemoteDesktop({ client, active, connected }: {
+export function GuiRemoteDesktop({ client, active, connected, launcher, hideTrigger = false, keepAlive = false }: {
   client: DesktopClient; active: boolean; connected: boolean;
+  launcher?: ReturnType<typeof useDesktopLauncher>; hideTrigger?: boolean; keepAlive?: boolean;
 }) {
-  const { opened, minimized, setMinimized, open, close } =
-    useDesktopLauncher();
+  const internalLauncher = useDesktopLauncher();
+  const { opened, minimized, setMinimized, open, close } = launcher ?? internalLauncher;
   const background = opened && minimized && active;
   const label = uiText(background ? "client.remoteDesktop.restoreRemoteDesktop" : "client.remoteDesktop.openRemoteDesktop");
   return <>
-    <Tooltip title={label} styles={{ root: { maxWidth: 400 } }}>
+    {!hideTrigger && <Tooltip title={label} styles={{ root: { maxWidth: 400 } }}>
       <button type="button" className={styles.launcher} disabled={!active || (!opened && !connected)}
-        aria-label={label} aria-expanded={opened && !minimized} onClick={open}>
+        aria-label={label} aria-expanded={opened && !minimized} data-opened={keepAlive ? opened : undefined} onClick={open}>
         <Monitor size={14} aria-hidden="true" /><span>{uiText("client.remoteDesktop.remoteDesktop")}</span>
         {background && connected && <span className={styles.status} role="status" aria-label={uiText("client.remoteDesktop.runningInTheBackground")} />}
       </button>
-    </Tooltip>
+    </Tooltip>}
     <Suspense fallback={null}>
       {opened && <RemoteDesktop client={client} active visible={active} connected={connected} close={close}
+        keepAlive={keepAlive}
         windowState={{ minimized, setMinimized }} nativeWindow={isTauri()}
         localClipboard={isTauri() ? localDesktopClipboard : undefined} />}
     </Suspense>

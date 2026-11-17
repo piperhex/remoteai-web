@@ -5,6 +5,8 @@ export interface WorkspaceTab {
   title: string;
   icon?: ReactNode;
   save?: () => void;
+  /** Tool windows distinguish the X button from minimizing or pressing Escape. */
+  closeOnDismiss?: boolean;
 }
 
 export interface WorkspaceTabs {
@@ -46,7 +48,7 @@ export function useWorkspaceDrawerTab({ tab, active, present = true, autoOpen = 
   const opened = useRef<string | null>(null);
   useEffect(() => {
     if (present) return register?.(tab);
-  }, [register, present, tab.id, tab.title, tab.icon, tab.save]);
+  }, [register, present, tab.id, tab.title, tab.icon, tab.save, tab.closeOnDismiss]);
   useEffect(() => {
     // Project tools open from their launch buttons; remounting a retained tab must not reveal the drawer.
     if (autoOpen && present && active && opened.current !== tab.id) {

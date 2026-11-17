@@ -14,3 +14,4 @@
 @media (min-width: 861px) and (max-width: 1150px) {
   .chat-page:not(.gui-remote-workspace) .gui-remote-project { padding-inline: 16px; }
 }
+.chat-tools-menu button[data-opened="true"] > svg { color: var(--green); }
