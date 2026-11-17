@@ -1,16 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "8772711469d0382a6983a55ea3b489b4c8a78d4d",
+  "revision": "c61b7871241630a8bf3f093d961c9c3556cd7eaf",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
     "revision": "48c63f879bfd37fcc1082ff957503c90b58c2743"
-  },
-  "retainedTestSources": {
-    "repository": "https://github.com/piperhex/remoteai",
-    "revision": "80189aaa10f7861d2e972e54d1d19402ac490af9",
-    "paths": [
-      "apps/desktop/e2e/"
-    ]
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -291,7 +284,7 @@
     "shared/remote-chat/cipher.ts": "8cc44112674e59c29ef0a9acd270b09b9f9e1d96c7011b785b3115e2d5c82a41",
     "shared/remote-chat/link.ts": "786f94e1011501ced65a43129a59b18ff06164d4481896c6d358d04238427037",
     "shared/remote-chat/rpc.ts": "8851ea63a2305d1bd211493eee1eae6488326944bab74f7d26f776366f2f86f3",
-    "apps/desktop/e2e/demo-conversation.ts": "d3d57e01d5f9c7bdd8bc4a782e851c6685de530917140372b2de8554843ffa8e",
+    "apps/desktop/e2e/demo-conversation.ts": "e13cdafe8990aef0c95393d6798f5d6dd9f5504b158ee3172676b35b3d6a8901",
     "apps/desktop/e2e/demo-task-review.ts": "442e67c7138a610081f6b134093b33149aa0c00467f22c9ed4438cca6d5c8318",
     "apps/desktop/e2e/demo-composer.ts": "6a5fb2d44bdaebaaa12332b887ff47e0f9d9214db0c7e0df763e35b356ba5a44",
     "apps/desktop/e2e/demo-skills.ts": "740e28e52a33bfbc4db852cbe1ef98274fa75f1026bc6e43dbe3d8dc5123687b",
