@@ -64,6 +64,8 @@ export function conversationSyncFixture(parameters: URLSearchParams) {
   const directory = (source: boolean) => ({ name: source ? 'Office PC' : 'My PC', homes: [
     ...(!source && remote ? [] : [{ id: 'default', path: source ? 'D:/work/.codex' : 'C:/Users/demo/.codex',
       enabled: true }]),
+    ...(parameters.has('previousHome') ? [{ id: 'previous:fixture',
+      path: 'D:/AgentHub/Archive/.codex', enabled: false }] : []),
     { id: parameters.has('guiPath') ? 'custom-gui' : 'codex-gui', path: parameters.has('guiPath')
       ? 'C:/Users/demo/AppData/Roaming/dev.codex.switch/.codex'
       : source ? 'D:/Remote AI/.codex' : 'C:/Remote AI/.codex', enabled: false },

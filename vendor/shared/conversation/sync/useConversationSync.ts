@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from '
 import { closePreparedSync, prepareSync, type PreparedSync } from './transfer';
 import { SYNC_HOME_ID, type SyncDirectory, type SyncHost, type SyncResult, type SyncSource,
   type SyncThread, type SyncProvider } from './types';
+import { useGuiLanguage } from '../../localization/useGuiLanguage';
 import { uiText } from '../../localization/uiText';
 import { downloadManager } from '../../downloads/manager';
 import { enqueueSyncDownload, syncTransferMode } from './downloads';
@@ -9,6 +10,7 @@ import { orderSyncSources, syncSourceLabel } from './sourceLabel';
 import { uniqueSyncThreads } from './threadGroups';
 
 export function useSyncSources(hosts: SyncHost[], destination: SyncHost) {
+  const language = useGuiLanguage();
   const [sources, setSources] = useState<SyncSource[]>([]);
   const [failures, setFailures] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +31,7 @@ export function useSyncSources(hosts: SyncHost[], destination: SyncHost) {
       setLoading(false);
     });
     return () => { cancelled = true; };
-  }, [hosts, destination.id, attempt]);
+  }, [hosts, destination.id, attempt, language]);
   return { sources, failures, loading, retry: () => retry(value => value + 1) };
 }
 

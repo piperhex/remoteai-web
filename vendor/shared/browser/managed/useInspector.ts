@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { listen } from '@tauri-apps/api/event';
 import { browserOverlayAttributes, hasBrowserOverlay } from './browserOverlays';
-import { inspectorCommand, inspectorSession, type InspectorDock, type InspectorTarget } from './inspectorSession';
+import { inspectorCommand, inspectorSession, type InspectorDock, type InspectorStatus,
+  type InspectorTarget } from './inspectorSession';
 
 export function useInspector({ id, kind, enabled, active }: InspectorTarget & { enabled: boolean; active: boolean }) {
-  const [open, setOpen] = useState(false);
+  const [{ open, mobile }, setStatus] = useState<InspectorStatus>({ open: false, mobile: false });
+  const [switching, setSwitching] = useState(false);
+  const [deviceFailed, setDeviceFailed] = useState(false);
   const [dock, setDock] = useState<InspectorDock>('right');
   const [failed, setFailed] = useState(false);
   const host = useRef<HTMLDivElement>(null);
@@ -14,14 +17,14 @@ export function useInspector({ id, kind, enabled, active }: InspectorTarget & { 
     if (!enabled) return;
     let stopped = false;
     let received = false;
-    const listener = listen<{ label: string; open: boolean }>('browser-inspector', ({ payload }) => {
+    const listener = listen<InspectorStatus & { label: string }>('browser-inspector', ({ payload }) => {
       if (stopped || payload.label !== `${kind}-browser-${id}`) return;
-      received = true; setOpen(payload.open); setFailed(false);
+      received = true; setStatus(payload); setFailed(false); setDeviceFailed(false);
       if (!payload.open) setDock('right');
     });
     // Managed tabs can keep their inspector while the conversation surface unmounts.
     void listener.then(() => inspectorCommand({ id, kind }, { action: 'status' })).then(value => {
-      if (!stopped && !received) setOpen(value);
+      if (!stopped && !received) setStatus(value);
     }).catch(() => { /* A new native tab may not have been created yet; its open event is authoritative. */ });
     return () => { stopped = true; void listener.then(stop => stop()).catch(() => {}); };
   }, [enabled, id, kind]);
@@ -60,8 +63,15 @@ export function useInspector({ id, kind, enabled, active }: InspectorTarget & { 
   }, [enabled, open, id, kind]);
   useEffect(() => { refresh.current?.(); }, [active, dock]);
   const close = () => {
-    void inspectorCommand({ id, kind }, { action: 'close' }).then(() => { setOpen(false); setDock('right'); })
+    void inspectorCommand({ id, kind }, { action: 'close' }).then(status => { setStatus(status); setDock('right'); })
       .catch(() => setFailed(true));
   };
-  return { open: enabled && open, dock, setDock, failed, close, host };
+  const toggleMobile = () => {
+    if (switching) return;
+    setSwitching(true);
+    setDeviceFailed(false);
+    void inspectorCommand({ id, kind }, { action: 'setMobile', enabled: !mobile })
+      .catch(() => setDeviceFailed(true)).finally(() => setSwitching(false));
+  };
+  return { open: enabled && open, mobile, switching, deviceFailed, toggleMobile, dock, setDock, failed, close, host };
 }

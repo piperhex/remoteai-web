@@ -36,7 +36,7 @@ export function RemoteGuiTools({ controller, state, installer, terminal, active,
     finally { setReconnecting(false); }
   };
   return <div className="gui-remote-tools">
-    {settings === undefined ? <GuiChatSettingsButton active={active} /> : settings}
+    {settings === undefined ? <GuiChatSettingsButton active={active} home={controller.guiTools.settings.home} /> : settings}
     {external ? <CliRuntimeTools refreshModels={controller.refreshModels} /> : <><Tooltip title={uiText("client.workspaceActions.reconnectRemoteCodex")} styles={{ root: { maxWidth: 400 } }}>
       <Button type="text" className="gui-remote-secondary-tool"
         icon={<RefreshCw size={16} />} aria-label={uiText("client.workspaceActions.reconnectRemoteCodex")}

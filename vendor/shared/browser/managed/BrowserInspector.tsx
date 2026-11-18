@@ -1,5 +1,5 @@
 import { useRef, useState, type PointerEvent, type ReactNode } from 'react';
-import { PanelBottom, PanelRight, ExternalLink, X } from 'lucide-react';
+import { MonitorSmartphone, PanelBottom, PanelRight, ExternalLink, X } from 'lucide-react';
 import type { MarketKey, MarketText } from '../../provider-market/i18n';
 import { useInspector } from './useInspector';
 import type { InspectorDock, InspectorTarget } from './inspectorSession';
@@ -36,7 +36,9 @@ export function BrowserInspector(props: InspectorTarget & {
     { dock: 'window', icon: ExternalLink, key: 'market.inspectorWindow' },
   ];
   return <div ref={layout} className="browser-inspector-layout" data-dock={open ? dock : 'closed'}>
-    {props.children}
+    <div className={open && inspector.mobile ? 'browser-inspector-phone' : 'browser-inspector-page'}>
+      {props.children}
+    </div>
     {embedded && <div className="browser-inspector-splitter" role="separator" tabIndex={0}
       aria-label={props.t('market.inspectorResize')} aria-orientation={dock === 'right' ? 'vertical' : 'horizontal'}
       aria-valuemin={MIN_SHARE} aria-valuemax={MAX_SHARE} aria-valuenow={Math.round(share)}
@@ -56,7 +58,10 @@ export function BrowserInspector(props: InspectorTarget & {
     {open && <section className="browser-inspector-panel" aria-label={props.t('market.inspectorTitle')}
       style={embedded ? { flexBasis: `${share}%` } : undefined}>
       <div className="browser-inspector-toolbar">
-        <span>{props.t('market.inspectorTitle')}</span>
+        <button type="button" title={props.t('market.inspectorMobile')} aria-label={props.t('market.inspectorMobile')}
+          aria-pressed={inspector.mobile} disabled={inspector.switching} onClick={inspector.toggleMobile}>
+          <MonitorSmartphone size="1.2em" aria-hidden="true" />
+        </button>
         <div role="group" aria-label={props.t('market.inspectorPlacement')}>
           {options.map(option => <button key={option.dock} type="button" title={props.t(option.key)}
             aria-label={props.t(option.key)} aria-pressed={dock === option.dock}
@@ -65,6 +70,8 @@ export function BrowserInspector(props: InspectorTarget & {
             onClick={close}><X size="1.2em" /></button>
         </div>
       </div>
+      {inspector.deviceFailed && <p className="browser-inspector-device-error" role="status">
+        {props.t('market.inspectorDeviceFailed')}</p>}
       <div ref={host} className="browser-inspector-native">
         {failed && <p role="status">{props.t('market.inspectorFailed')}</p>}
       </div>

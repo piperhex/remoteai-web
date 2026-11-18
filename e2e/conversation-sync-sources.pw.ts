@@ -22,3 +22,13 @@ for (const enlarged of [false, true]) {
       : 'font14-light-wide'}.png`, animations: 'disabled' });
   });
 }
+
+test('web: select a previous Agent Hub folder for synchronization', async ({ page }, info) => {
+  await page.goto('e2e/conversation-sync-harness.html?previousHome=1&dialog=1');
+  await page.getByRole('button', { name: '对话同步', exact: true }).click();
+  const pane = page.getByRole('region', { name: '对话同步', exact: true });
+  await pane.getByRole('combobox', { name: '来源目录' }).press('ArrowDown');
+  await page.locator('.ant-select-item-option').filter({ hasText: 'Office PC · 旧目录 · 当前未使用' }).click();
+  await expect(pane.locator('.ant-select-selection-item').first()).toContainText('D:/AgentHub/Archive/.codex');
+  await page.screenshot({ path: info.outputPath('web-previous-source.png'), animations: 'disabled' });
+});

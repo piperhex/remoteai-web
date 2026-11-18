@@ -6,16 +6,17 @@ export interface InspectorPlacement {
   action: 'place'; dock: InspectorDock; visible: boolean;
   bounds: { x: number; y: number; width: number; height: number };
 }
-type Command = InspectorPlacement | { action: 'status' | 'close' };
-const operations = new Map<string, Promise<boolean>>();
+export interface InspectorStatus { open: boolean; mobile: boolean }
+type Command = InspectorPlacement | { action: 'status' | 'close' } | { action: 'setMobile'; enabled: boolean };
+const operations = new Map<string, Promise<InspectorStatus>>();
 const owners = new Map<string, symbol>();
 const targetKey = (target: InspectorTarget) => `${target.kind}:${target.id}`;
 
 export function inspectorCommand(target: InspectorTarget, command: Command) {
   const key = targetKey(target);
-  const previous = operations.get(key) ?? Promise.resolve(false);
-  const operation = previous.catch(() => false)
-    .then(() => invoke<boolean>('browser_inspector', { request: { ...target, command } }));
+  const previous = operations.get(key) ?? Promise.resolve();
+  const operation = previous.catch(() => undefined)
+    .then(() => invoke<InspectorStatus>('browser_inspector', { request: { ...target, command } }));
   operations.set(key, operation);
   const cleanup = () => { if (operations.get(key) === operation) operations.delete(key); };
   void operation.then(cleanup, cleanup);
@@ -44,7 +45,7 @@ export function inspectorSession(target: InspectorTarget, onError: () => void) {
       const scale = pendingScale;
       // Compare after the previous command finishes: a queued resize may return to an earlier position.
       if (samePlacement(last, request) && lastScale === scale) continue;
-      try { last = await inspectorCommand(target, request) ? request : undefined; lastScale = scale; }
+      try { last = (await inspectorCommand(target, request)).open ? request : undefined; lastScale = scale; }
       catch { last = undefined; if (!stopped) onError(); }
     }
   };

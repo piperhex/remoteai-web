@@ -77,6 +77,7 @@ function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, ob
     };
     refresh.current = sync;
     const observer = new ResizeObserver(sync); observer.observe(element);
+    if (element.parentElement) observer.observe(element.parentElement);
     const overlays = new MutationObserver(sync);
     overlays.observe(document.body, { childList: true, subtree: true, attributes: true,
       attributeFilter: browserOverlayAttributes });

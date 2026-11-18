@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { openChatList, connect, send, state, fixtureUrl, operationCount, login } from './chat-helpers';
+import { openChatList, connect, send, state, fixtureUrl, operationCount, login, navigate } from './chat-helpers';
 
 test('shows local messages and clears the composer while acknowledgements are delayed', async ({ page, request }, info) => {
   await request.post(`${fixtureUrl}/test/reset`);
@@ -123,3 +123,23 @@ test('queues supplements on the PC, sends one immediately and restores the rest 
     await expect.poll(async () => (await state(request)).operations.filter((entry) => entry.operation === 'send')
       .at(-1)?.text).toBe('自动发送的后续消息');
   });
+
+test('desktop web changes the Agent Hub home on the connected computer', async ({ page, request }, info) => {
+  test.skip(info.project.name !== 'desktop');
+  await request.post(fixtureUrl + '/test/reset');
+  await login(page);
+  await navigate(page, '聊天');
+  await page.getByRole('button', { name: 'Agent Hub 设置', exact: true }).click();
+  await page.getByRole('tab', { name: '数据目录' }).click();
+  await expect(page.getByText('D:/AgentHub/.codex', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: '选择新目录' }).click();
+  const picker = page.getByRole('dialog', { name: '选择新目录', exact: true });
+  await picker.getByRole('option', { name: /WorkData/ }).click();
+  await picker.getByRole('button', { name: '选择文件夹', exact: true }).click();
+  await page.getByRole('radio', { name: '从空目录开始' }).check();
+  await page.screenshot({ path: info.outputPath('web-home-confirm.png'), animations: 'disabled' });
+  await page.getByRole('button', { name: '确认更换' }).click();
+  await expect(page.getByText('下次启动时使用：D:/AgentHub/WorkData')).toBeVisible();
+  await page.getByRole('button', { name: '撤销更换' }).click();
+  await expect(page.getByRole('button', { name: '撤销更换' })).toHaveCount(0);
+});

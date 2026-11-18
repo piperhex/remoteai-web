@@ -69,6 +69,8 @@ export function ProviderBrowserSurface(props: BrowserSurfaceProps) {
       });
     void unlisten.catch(() => setFailed(true));
     const observer = new ResizeObserver(sync); observer.observe(element);
+    // A centered phone viewport can move without changing its own width.
+    if (element.parentElement) observer.observe(element.parentElement);
     const checkModal = () => {
       const visible = hasBrowserOverlay(element, Boolean(hideForModal));
       if (visible !== modalVisible) { modalVisible = visible; sync(); }

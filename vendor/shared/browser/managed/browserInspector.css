@@ -1,10 +1,14 @@
 .browser-inspector-layout { display: flex; flex: 1; min-width: 0; min-height: 0; overflow: hidden; }
+.browser-inspector-page { display: contents; }
+.browser-inspector-phone { display: flex; justify-content: center; flex: 1; min-width: 0; min-height: 0;
+  background: var(--surface-secondary, #eef1f6); }
+.browser-inspector-phone > .pm-browser-surface { max-width: 390px; }
+.browser-inspector-device-error { margin: 4px 8px; max-width: 400px; }
 .browser-inspector-layout[data-dock='bottom'], .browser-inspector-layout[data-dock='window'] { flex-direction: column; }
 .browser-inspector-panel { display: flex; flex-direction: column; flex-shrink: 0; min-width: 0; min-height: 0;
   background: var(--panel-bg, #fff); color: var(--text, #182230); }
 .browser-inspector-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 8px;
   padding: 3px 6px; border-bottom: 1px solid var(--border, #dce1e8); flex-shrink: 0; }
-.browser-inspector-toolbar > span { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .browser-inspector-toolbar > div { display: flex; gap: 2px; }
 .browser-inspector-toolbar button { font: inherit; }
 .browser-inspector-toolbar button[aria-pressed='true'] { color: var(--accent, #6175db);
