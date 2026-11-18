@@ -8,7 +8,8 @@ import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
-import { mathOptions, normalizeMathDelimiters } from '../../chat/mathMarkdown';
+import { mathOptions } from '../../chat/mathMarkdown';
+import { StreamingMarkdown } from '../../chat/StreamingMarkdown';
 import { installTouchTextSelection } from '../../chat/touchTextSelection';
 import 'katex/dist/katex.min.css';
 import './math.css';
@@ -64,11 +65,11 @@ const MarkdownContent = memo(function MarkdownContent({ text, desktop }: { text:
       if (/^https?:\/\//i.test(url)) return url;
       if (key === 'href' && parseFileReference(url)) return url;
       return key === 'src' && (isInlineImage(url) || localImageSource(url)) ? url : '';
-    }}>{normalizeMathDelimiters(text)}</ReactMarkdown>;
+    }}>{text}</ReactMarkdown>;
 });
 
-export const ChatMarkdown = memo(function ChatMarkdown({ text, process = false, desktop = false }: {
-  text: string; process?: boolean; desktop?: boolean;
+export const ChatMarkdown = memo(function ChatMarkdown({ text, process = false, desktop = false, streaming = false }: {
+  text: string; process?: boolean; desktop?: boolean; streaming?: boolean;
 }) {
   useLanguage();
   const environment = useContext(FileEnvironmentContext);
@@ -76,9 +77,13 @@ export const ChatMarkdown = memo(function ChatMarkdown({ text, process = false, 
   const root = useRef<HTMLDivElement>(null);
   useEffect(() => root.current ? installTouchTextSelection(root.current) : undefined, []);
   if (environment && !files?.basePath) {
-    return <div className={process ? 'chat-process-prose' : undefined}><RichText text={text} /></div>;
+    return <div className={process ? 'chat-process-prose' : undefined}>
+      <RichText text={text} streaming={streaming} />
+    </div>;
   }
   return <div ref={root} className={`chat-markdown${process ? ' chat-process-prose' : ''}`}>
-    <MarkdownContent text={text} desktop={desktop || Boolean(environment)} />
+    <StreamingMarkdown text={text} streaming={streaming}>
+      {part => <MarkdownContent text={part} desktop={desktop || Boolean(environment)} />}
+    </StreamingMarkdown>
   </div>;
 });

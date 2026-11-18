@@ -5,7 +5,8 @@ import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
-import { mathOptions, normalizeMathDelimiters } from "../chat/mathMarkdown";
+import { mathOptions } from "../chat/mathMarkdown";
+import { StreamingMarkdown } from '../chat/StreamingMarkdown';
 import "katex/dist/katex.min.css";
 import { CodeBlock } from "./CodeBlock";
 import { MessageImage } from "./MessageImage";
@@ -33,16 +34,20 @@ const MarkdownSection = memo(function MarkdownSection({ text }: { text: string }
       if (key === "src" && (isInlineImage(url) || localImageSource(url))) return url;
       if (key === "href" && (isFileReference(url) || localImageSource(url))) return url;
       return defaultUrlTransform(url);
-    }}>{normalizeMathDelimiters(text)}</Markdown>;
+    }}>{text}</Markdown>;
 });
 
-export const RichText = memo(function RichText({ text, trailing }: { text: string; trailing?: ReactNode }) {
+export const RichText = memo(function RichText({ text, trailing, streaming = false }: {
+  text: string; trailing?: ReactNode; streaming?: boolean;
+}) {
   useGuiLanguage();
   const sections = useMemo(() => messageSections(text), [text]);
   return <div className={styles.markdown}>
     {sections.map((section, index) => section.type === "review"
       ? <CodeReviewComment key={index} comment={section.comment} />
-      : <MarkdownSection key={index} text={section.text} />)}
+      : <StreamingMarkdown key={index} text={section.text} streaming={streaming && index === sections.length - 1}>
+        {part => <MarkdownSection text={part} />}
+      </StreamingMarkdown>)}
     {trailing && <div className={styles.messageCopy} data-quote-exclude>{trailing}</div>}
   </div>;
 });

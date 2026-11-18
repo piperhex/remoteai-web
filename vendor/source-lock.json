@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "8fe766a14ff2915607ad879202984885365609f9",
+  "revision": "25f8921fb2d1078c9e7d7f343d5b16532806a1d9",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "2e06b825eebed613fa4f258dab3a471803c15254"
+    "revision": "7ba1f1f22261374880e1c20d969dd502907ff36e"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -26,7 +26,7 @@
     "apps/desktop/e2e/browser-loading-checks.ts": "5f4de7daccff9a8ba701c9fc451b67a078c780e8beb6dd9f1cec909efe3fa759",
     "shared/appearance/ApplicationTypography.tsx": "330285d301442e3bb33557bb54862ad36619b26d59a0e989f52865475f6ce86e",
     "shared/remote-chat/views/ChatDetailsWorkspace.tsx": "e1a12887ce7607188dcf61742e0a9184545789ddb6011a6784260ac24be6be0d",
-    "shared/remote-chat/views/ChatMarkdown.tsx": "0410e8473384d0362054f556d44bcddaed5dec73893cfb0cbbb97240107fb67f",
+    "shared/remote-chat/views/ChatMarkdown.tsx": "003331cd2f694be6ed6b2b7809c6d5fc5aa4d57e3ddce6ab44f72afce354b208",
     "shared/localization/browserLanguage.ts": "890f9fc9442e132ff333e4321070b6071269dafed72c85c1641a2da01caa566b",
     "shared/remote-chat/views/chat.css": "b261b859d53cf380b4714eec8515c0d0121dd08a28b0aae3c22c490ca6da2717",
     "apps/desktop/e2e/project-browser-touch.ts": "3472c558a7d07b2d7a0cc85068365a4ad9d7358d8209dc6c109147a1e78d77ee",
@@ -299,7 +299,7 @@
     "shared/file-preview/workspace/browserResources.tsx": "75e863d951657ca8ddb16913cddc85d40be8421a58b42751ae534bc838e9ed18",
     "shared/remote-chat/views/chatBrowserResource.tsx": "da44a0db0880fa99da59e160c18f6a2093eafed96fed3a35870e6e98a161cb6f",
     "shared/file-preview/workspace/usePreviewHistory.ts": "0dc9b8d850c16c9acc79e01f932962d8390300c732ebcca08996d38529ea4019",
-    "shared/conversation/RichText.tsx": "83cde4136be881d224a0e086dc7b9234c4113d483b8dd943fef31407ced15b24",
+    "shared/conversation/RichText.tsx": "c3013e99982537e3088703435e12b46c16f24042a486eeaf17aed5bce919e53c",
     "shared/file-preview/workspace/references.ts": "375a490382cf99253040caeb6af90c5ed4062ae2c1f68e6e1e36875001e28734",
     "shared/chat/mathMarkdown.ts": "8c02442fbd0b4933273ca7bff39fca49a1f9fd9f8fbce8e24ef404327dcc4164",
     "shared/chat/touchTextSelection.ts": "f14b3ab47f9284d6b57cdf27464df24c53f9075dfc1021ccdcb7e3665ae82ac5",
@@ -358,8 +358,8 @@
     "shared/conversation/turnTiming.ts": "de8270c15839dc02c294bc320184590c05e390d63a316945cbeb82e1ac4ec034",
     "shared/remote-chat/views/formatters.ts": "08d5df888b77a41286d60632e70a4b0bc5d835a9bd611597709ff721aa0509d1",
     "shared/remote-chat/views/ChatWorkDrawer.tsx": "4697ae7e10fc0ada355e3fceefcdff5fd09037e99f804811eeca08c24e02f789",
-    "shared/remote-chat/views/useHistoryScroll.ts": "25cafd4b2341fee8258cd6afdc20d9f920baeeffb46cc47dba02e00a37e7f281",
-    "shared/remote-chat/views/ChatMessage.tsx": "4bf48025a06a3c23b19bc9e5279a4efa5d97518759e9aefe1939311d1bf9e24b",
+    "shared/remote-chat/views/useHistoryScroll.ts": "099d0e2eb0d2b9f0f2dd6787b3ee1bbf988d660527394d2f5d6ebfd4c5a53825",
+    "shared/remote-chat/views/ChatMessage.tsx": "9350379f95c6b71ad46874caa8cba09ef8b6b4bfa19c2d697a0067693b7e4feb",
     "shared/remote-chat/views/ChatTurnDetails.tsx": "1022150def5a585fb05477ac84f3571f11417a93ebf17114f3b2c81d70935e33",
     "shared/remote-chat/views/ChatTurnSummary.tsx": "e8ba91c3f9b59a1301720edb1b76e1bac1d70b6f615a0e6afe95674a86aae691",
     "shared/remote-chat/views/useHistoryDrawers.tsx": "b6e38f53922ad04e5a7b52aa8578c37780a48ca7bb5df89841ecfc13e3dcf3c3",
@@ -1163,7 +1163,7 @@
     "shared/chat/groups/GroupIcon.tsx": "90e503d74d8e12f1f136722e62363f03aed1f6f705d5d6e3631d254064d87fc2",
     "shared/remote-chat/views/ChatThreadContextMenu.tsx": "0b845f73221fdf8f437bf816a3979c7916f4fc97464e68485bb282d440456e6c",
     "shared/chat/threadGroupPreview.ts": "c2c804deb7128ff8465023606245998c23829bfa0b28c20bb70706e5f9c1733c",
-    "shared/remote-chat/client/useViewportThreadPagination.ts": "98c6e9115f8413dc8fa67626709a2be1c0211751772172ff64e33a8ee54ea5ad",
+    "shared/remote-chat/client/useViewportThreadPagination.ts": "8913a9bbb4b8ec9c8c85f8a15defdb7bf85e3d46f342fc6a27e7f858aaaa2132",
     "shared/chat/SidebarSearchInput.module.less": "b6e5e6c1ec28dc15d3a45f8c96a1ef1a322bf35423b0369977b74adfca6d8475",
     "shared/chat/groups/GroupManager.tsx": "7ef53229184d1649a29d2383e05ebdc15dbb7a99b1e16d4ee4abe7a0519ff018",
     "shared/chat/groups/groups.css": "d9c2a62acbd8580a1495ba5405aec9f38f409ebdd1871c1b01f8e037b61bcfa1",
@@ -1443,7 +1443,7 @@
     "shared/conversation/CodeReviewComment.module.less": "052889345ec785f10e332bb087ebbe3c48ed7a96e144e86163b55a2e7729bb77",
     "shared/conversation/MarkdownTable.module.less": "e9e97469b369acbaf08dd51319861bd97c1f5b68d04ff6883d2968a14b447ae6",
     "shared/chat/mermaidRenderer.ts": "2973219020edf737c2646dfe1a222d27ac6233018aa79aac143a9e2816670fb9",
-    "apps/desktop/src/pages/codexGui/MessageItem.tsx": "d0a024e075e2541f56ca8ae021c58076a99d56977fbf927dd230310947d75044",
+    "apps/desktop/src/pages/codexGui/MessageItem.tsx": "7f703b0ae4c687c62dd86240287fe077927b37cb4aea13bcec9fc097053c6fc3",
     "apps/desktop/src/pages/codexGui/TurnDuration.tsx": "3d3fdd51ebb94fb22486aa81736dda2c1cc712a70669862f1a0ef3ba2d6d44e2",
     "apps/desktop/src/pages/codexGui/TurnPlan.tsx": "adb17dc181032b787f788c39ebd7aa579aadf2bbe722d08611fdcf9be8f6901d",
     "apps/desktop/src/pages/codexGui/TurnDiff.tsx": "4d8df035454602933723b375bd94de987c815e0b2d909e1005907e4c7b7d9583",
@@ -2026,6 +2026,7 @@
     "shared/browser/extensions/remotePanelPreview.ts": "6f0a5a623d6d9adec79383ea6ed9468dc29365c67b2913d5aeb4c45d0fc67019",
     "shared/browser/extensions/watchPanelLayout.ts": "af7331a25e1950e8df1d83c1bd2142d2becaea14e5163524ac026a80cefc0f12",
     "shared/conversation/AgentHubHomeSettings.tsx": "c264e29fc964c04348e060a85aee438a83713f18ef5809b79ada5754ece25f1b",
-    "shared/conversation/AgentHubHomeSettings.module.less": "9ab82bc4a0507588550cd40477d1a261b83550d7b7c8bd5de5241ac22ec3f667"
+    "shared/conversation/AgentHubHomeSettings.module.less": "9ab82bc4a0507588550cd40477d1a261b83550d7b7c8bd5de5241ac22ec3f667",
+    "shared/chat/StreamingMarkdown.tsx": "5f96b6616cd6b04ea379f4dd8b260d2aefd37ab280f5fc48e2678266187fb39f"
   }
 }

@@ -30,7 +30,10 @@ export function useHistoryScroll(
     following.current = true;
     fetching.current = false;
     anchor.current = undefined;
-    movement.remember(list.current);
+    const node = list.current;
+    if (node) node.scrollTop = node.scrollHeight;
+    movement.remember(node);
+    setShowBottom(false);
   }, [thread?.id, movement]);
   const updateScrollButton = useCallback(() => {
     const node = list.current;
@@ -71,12 +74,13 @@ export function useHistoryScroll(
   const onTouchMove = (event: TouchEvent<HTMLDivElement>) => pull.move(touchPoint(event));
   useLayoutEffect(() => {
     const node = list.current;
-    if (!node) return;
-    if (anchor.current?.element.isConnected) {
-      node.scrollTop += anchor.current.element.getBoundingClientRect().top - anchor.current.top;
-    } else if (following.current) node.scrollTop = node.scrollHeight;
-    movement.remember(node);
-    updateScrollButton();
+    const reading = anchor.current;
+    if (!node || !reading) return;
+    if (reading.element.isConnected) {
+      node.scrollTop += reading.element.getBoundingClientRect().top - reading.top;
+      movement.remember(node);
+      updateScrollButton();
+    }
     if (!loadingMore && !windowed) anchor.current = undefined;
   }, [thread, loadingMore, updateScrollButton, movement, windowed]);
   const onScroll = useCommittedCallback(() => {
@@ -96,6 +100,7 @@ export function useHistoryScroll(
   });
   useLayoutEffect(() => {
     const follow = () => {
+      // Follow content size changes after layout instead of measuring on every streamed text commit.
       // Lazy measurements can arrive before the browser dispatches a pending reader scroll.
       if (windowed) onScroll();
       if (following.current && list.current) {

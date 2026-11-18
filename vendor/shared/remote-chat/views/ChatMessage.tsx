@@ -51,7 +51,7 @@ export const ChatMessage = memo(function ChatMessage({ item, onOpen, process = f
       {!desktop && images.length > 0 && <div className="chat-sent-image-previews">
         {images.map((source, index) => <ChatImage key={index} source={source} />)}
       </div>}
-    </div> : <ChatMarkdown text={text} process={process} desktop={desktop} />}
+    </div> : <ChatMarkdown text={text} process={process} desktop={desktop} streaming={running} />}
     {(!!text.trim() || onEdit) && !running && !(desktop && process)
       && <div className="chat-message-actions" data-quote-exclude>
       <ChatCopyButton text={text} label={user ? t("client.chat.copyMessage") : t("client.chat.copyReply")} iconOnly={!user} />
