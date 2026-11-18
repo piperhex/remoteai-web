@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "62d8fc829da683aec579da02192e3afba0a415e4",
+  "revision": "d0dc18146c173a36064eddab0a1f9afe8af41634",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "c2254f78bb6ba8090e548ed6d6d2cc35b3c5b400"
+    "revision": "583ac510100f88f3643e2975080beb056dc2f1a6"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -647,7 +647,7 @@
     "apps/desktop/src/pages/codexGui/queueJournal.ts": "e9111e9f4d1001ab7dc03deff5de64354a40f37c0eab676c4593084c62da76c9",
     "shared/conversation/asyncQuestionState.ts": "e74c063c620cf07b6580ebcbb75cf901d682e9823d712858168337504f0ca4f7",
     "apps/desktop/src/pages/codexGui/composerOptions.ts": "7d830254c333283bdc607da88a2e0d325e576adf21dcd3948e974bbf5cd2dda6",
-    "shared/conversation/turnDetailsStorage.ts": "564a713f33cf7fc03abbad235fbd3ce07a0884c56b1fb5d7cc11af7754598225",
+    "shared/conversation/turnDetailsStorage.ts": "0c03efce578a3e63fb19706d52bc216e76be49c9b72ff94e1a3c7e3857c8b5f6",
     "shared/conversation/processingApprovals.ts": "e553613214e43aec718cd31ed5cf86dc1791401dcfa1a26ab314f2ff33166f31",
     "apps/desktop/src/pages/codexGui/preferences.ts": "2b39062685b2ea12cacef568326a8ed27d4feda462ef61c422e5fd1787f989ba",
     "apps/desktop/src/pages/codexGui/threadModelSettings.ts": "981b962d7b73e6e37afd331d5b753f6912718644f1089b7b2b802da660c33519",
