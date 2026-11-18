@@ -3,7 +3,7 @@
   "revision": "c61b7871241630a8bf3f093d961c9c3556cd7eaf",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "48c63f879bfd37fcc1082ff957503c90b58c2743"
+    "revision": "5fd5c122046bf72e6d685ebe55aeb2369f1cd795"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -1853,10 +1853,10 @@
     "shared/browser/bookmarks/store.ts": "c9501be61d70ff74e07d2f89a79c25fa807cb1bead8a307b208ff6643202403e",
     "shared/browser/bookmarks/useBrowserBookmarks.tsx": "ddedd3fb5b919f1f93a4351c424474c987ca5344ab6456a9c0eacd59c1f0f394",
     "shared/browser/bookmarks/model.ts": "a7fda5c0828d5dfe778fcfa7ac5a9caec898a81ecb0024221aab1ba8d95b8116",
-    "shared/browser/bookmarks/BookmarkBar.tsx": "e626fc413a593d61803b104b4636c7644ba786af68963df4ff61c54bc74289ad",
+    "shared/browser/bookmarks/BookmarkBar.tsx": "47a2c96f1c78a689b76f73d6e75486f0b7732816439c505786d518fa7c8f9245",
     "shared/browser/bookmarks/BookmarkEditor.tsx": "a0f00afc1b5d0c1480e880cf734e56c07dc4a93e7afed3237f034ba1c6a4786f",
     "shared/browser/bookmarks/BookmarkManager.tsx": "4daac1c4563ba00fd40218bd39342b92f35eaaa19e47101f105bfc67485e59d5",
-    "shared/browser/bookmarks/bookmarks.css": "d5b8c4a28ab401cafcae82ff64a666ca9318cf1f0c53f960f8bea17033aa5c5d",
+    "shared/browser/bookmarks/bookmarks.css": "8272ffaceb12258e290c42e291cd4e66d17f5cf234200d04925c85e93f02fcc1",
     "apps/desktop/e2e/nested-scroll-checks.ts": "d069d4904859fd6d130d21f6d8169cdd17e45e65c6ffa7d443d3dbfd8f06dbb4",
     "shared/chat/canScrollWithin.ts": "8d95c7965ce767bd659b54250f5d97462b6337596f5ad87930bf6fc00004318d",
     "shared/browser/bookmarks/BookmarkContextMenu.tsx": "82d4a7b62ca0893e94c346bf28a48bc8f8d98166f0335732a65c62b260b910e1",
@@ -2020,6 +2020,7 @@
     "shared/chat/directory/journal.ts": "8c4db9f06404f6eb7620a3947ddf292e98b102ea6148ec09b66f67fc7cdf1443",
     "shared/cli-gui/directory.ts": "c48e49a890e392e870565a17511459f0b35c6d45778d325bcfeaa36aa5d5462b",
     "shared/cli-gui/summary.ts": "83575fb3df144fbfb90b4d624cbf1866bf63068a4ee473d7c0c95ac94ab0a631",
-    "shared/remote-chat/useRetainedProjects.ts": "00f52e925be2cb4bc223844e5c74bd2f9e52f7930cec8eda0bce200b9f59739e"
+    "shared/remote-chat/useRetainedProjects.ts": "00f52e925be2cb4bc223844e5c74bd2f9e52f7930cec8eda0bce200b9f59739e",
+    "shared/testing/bookmarkOverflow.mts": "82bca736ea0b3240f63d16e1384a693abb7abbdf474cfb2c304988b6354640d3"
   }
 }

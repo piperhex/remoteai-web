@@ -1,7 +1,9 @@
 .browser-bookmark-bar { display: flex; align-items: center; gap: 6px; min-width: 0; padding: 3px 10px;
   border-bottom: 1px solid var(--border, #dce1e8); }
-.browser-bookmark-items { display: flex; align-items: center; gap: 3px; flex: 1; min-width: 0; overflow-x: auto;
-  scrollbar-width: thin; }
+.browser-bookmark-strip, .browser-bookmark-items { display: flex; align-items: center; gap: 3px; flex: 1; min-width: 0; }
+.browser-bookmark-items { overflow: clip; }
+/* Keep overflowed buttons measurable as the panel, font size or bookmark titles change. */
+.browser-bookmark-context:has(> .browser-bookmark-item[data-overflow-hidden=true]) { visibility: hidden; }
 .browser-bookmark-context { display: inline-flex; min-width: 0; }
 .browser-bookmark-items > .browser-bookmark-context { flex-shrink: 0; }
 .browser-bookmark-menu .browser-bookmark-context { display: flex; }

@@ -1,4 +1,10 @@
 import { expect, test } from '@playwright/test';
+import { verifyBookmarkOverflow } from '../../../shared/testing/bookmarkOverflow.mts';
+
+test('web bookmark overflow follows the sidebar width', async ({ page }, info) => {
+  await verifyBookmarkOverflow(page, info, { scope: 'web-bookmarks', label: 'web-desktop',
+    harness: 'e2e/web-browser-bookmarks-harness.html?sidebar=1' });
+});
 
 for (const enlarged of [false, true]) {
   test(`web bookmarks ${enlarged ? 'dark narrow enlarged' : 'light wide'}`, async ({ page }, info) => {
