@@ -38,7 +38,8 @@ function Harness() {
             connected={connected} />
         </header>
       </section>
-      : <ChatTools client={client} cwd="C:/workspace" active connected={connected} deviceName="Windows 测试电脑" />}
+      : <ChatTools client={client} cwd="C:/workspace" active connected={connected} deviceName="Windows 测试电脑"
+        desktopActions={params.has('wide-tools') ? <span /> : undefined} />}
     <input aria-label="本机聊天消息" />
   </main>;
 }

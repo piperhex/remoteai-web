@@ -5,17 +5,17 @@ import { command } from './transfer';
 
 export function usePanelTransport(extension: string | undefined) {
   const client = useContext(BrowserClientContext);
-  const [state, setState] = useState({ session: '', ready: false, failed: false });
+  const [state, setState] = useState({ session: '', ready: false, panelActivity: false, failed: false });
   const current = useRef<{ session: string; open: Promise<unknown>; closed: boolean }>();
   const queue = useRef(Promise.resolve());
   useEffect(() => {
     const session = crypto.randomUUID();
-    setState({ session, ready: false, failed: false });
+    setState({ session, ready: false, panelActivity: false, failed: false });
     const open = command(client, { action: 'panel', session, command: { action: 'open', extension } });
     const instance = { session, open, closed: false }; current.current = instance;
-    void open.then(() => {
-      if (!instance.closed) setState({ session, ready: true, failed: false });
-    }).catch(() => { if (!instance.closed) setState({ session, ready: false, failed: true }); });
+    void open.then(reply => {
+      if (!instance.closed) setState({ session, ready: true, panelActivity: reply.panelActivity === true, failed: false });
+    }).catch(() => { if (!instance.closed) setState({ session, ready: false, panelActivity: false, failed: true }); });
     return () => {
       instance.closed = true;
       // Close even after an uncertain open response; the session ID is unique to this panel.

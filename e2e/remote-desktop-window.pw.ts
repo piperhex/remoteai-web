@@ -8,9 +8,8 @@ test.beforeEach(({ isMobile }) => {
 });
 
 async function openDesktop(page: Page, native = false, query = '') {
-  await page.goto(`e2e/remote-desktop-harness.html?displays${native ? '&native-clipboard' : ''}${query}`);
-  if (!native) await page.getByRole('button', { name: '打开工具', exact: true }).click();
-  await page.getByRole('button', { name: native ? '打开远程桌面' : '远程桌面', exact: true }).click();
+  await page.goto(`e2e/remote-desktop-harness.html?displays${native ? '&native-clipboard' : '&wide-tools'}${query}`);
+  await page.getByRole('button', { name: '打开远程桌面', exact: true }).click();
   await expect.poll(() => page.locator('video').evaluate(video => video.videoWidth)).toBeGreaterThan(0);
   await expect(page.getByText('正在连接桌面…', { exact: true })).not.toBeVisible();
 }
@@ -50,8 +49,10 @@ for (const native of [false, true]) {
         expect((await status.boundingBox())!.x).toBeGreaterThan((await restore.locator('svg').boundingBox())!.x);
         await expect(page.locator('.rd-restore')).toHaveCount(0);
       } else {
-        expect(launcher.x + launcher.width).toBe(1416);
-        expect(launcher.y + launcher.height).toBe(876);
+        await expect(restore).toBeInViewport();
+        await expect(restore).toHaveAttribute('data-opened', 'true');
+        await expect(restore).toHaveAttribute('aria-expanded', 'false');
+        await expect(restore.getByRole('status', { name: '正在后台运行' })).toBeVisible();
       }
       await page.screenshot({ path: info.outputPath('remote-desktop-minimized.png') });
       await page.getByRole('textbox', { name: '本机聊天消息' }).click();
