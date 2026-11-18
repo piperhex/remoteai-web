@@ -4,6 +4,7 @@ import type { AuthSession } from '../types';
 import { ChatConnection } from '../../../../shared/remote-chat/client/connection';
 import { createBrowserPacketCompression } from '../../../../shared/remote-chat/browserPacketCompression';
 import { ChatController } from '../../../../shared/remote-chat/client/controller';
+import { createBrowserHistoryVersions } from '../../../../shared/remote-chat/browserHistory';
 import { RtcPeer } from '../../../../shared/remote-chat/rtcPeer';
 import { browserTrustStore, trustedHost, trustScope } from '../../../../shared/remote-chat/trustedHost';
 import { createPreviewDownloads } from '../downloads/previews';
@@ -35,7 +36,7 @@ function createController(session: AuthSession, deviceId: string) {
       return current;
     },
     createPeer: (options) => new RtcPeer(options, () => new RTCPeerConnection({ iceServers: options.iceServers })),
-  }), undefined, undefined, createWebSshProfiles(session));
+  }), undefined, createBrowserHistoryVersions(), createWebSshProfiles(session));
   controller.deferToolDetails = true;
   controller.directoryStorage = browserDirectoryStorage(JSON.stringify([session.baseUrl, session.email]), deviceId);
   controller.deferProcessDetails = true;

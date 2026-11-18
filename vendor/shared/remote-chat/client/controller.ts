@@ -784,13 +784,15 @@ export class ChatController {
     try {
       await this.viewSync;
       const result = await this.historyReader.read(selected,
-        { start: this.historyPages.get(selected.id)?.start, older });
+        { start: this.historyPages.get(selected.id)?.start, older }, () => generation === this.readGeneration);
       // The response may already contain buffered deltas; reconcile them before installing the snapshot.
       this.stream.flush();
       if (generation === this.readGeneration && this.state.selected?.id === selected.id) {
         this.loadedThreadId = selected.id;
         if (result.page) this.historyPages.set(selected.id, result.page);
-        this.update({ selected: mergeHistory(result.thread, this.state.selected, selected, this.state.historyOffline),
+        const live = this.state.selected;
+        this.update({ selected: result.thread === live && !this.state.historyOffline
+          ? live : mergeHistory(result.thread, live, selected, this.state.historyOffline),
           ...this.recoveredRead('history'), historyOffline: false,
           historyHasMore: result.page.hasMore,
           ...(older && { historyLoad: historyLoadResult(selected, result.thread, startedAt) }) });
