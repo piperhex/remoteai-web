@@ -36,7 +36,13 @@ export function PreviewContent({ data, source }: { data: FilePreviewData; source
     if (isJsonPath(data.path)) return <JsonPreview text={data.text} size={data.size} line={data.line} />;
     return <PreviewCode text={data.text} path={data.path} line={data.line} />;
   }
-  if (data.kind === "html") return <ResourceHtmlPreview data={data} />;
+  if (data.kind === "html") {
+    if (!source) return <ResourceHtmlPreview data={data} />;
+    const url = new URL(data.url);
+    url.searchParams.set('__preview_source', '1');
+    return <iframe title={uiText("client.downloads.source")} className={styles.frame}
+      src={url.href} sandbox="" referrerPolicy="no-referrer" />;
+  }
   if (data.kind === "markdown") return <PreviewMarkdown text={data.text ?? ""} path={data.path} url={data.url} />;
   return <MediaPreview key={data.url} data={data} />;
 }

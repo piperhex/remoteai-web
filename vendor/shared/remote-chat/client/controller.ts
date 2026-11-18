@@ -2,6 +2,8 @@ import type { ChatConnection, ConnectionEvents } from './connection';
 import { createRecoveryClient } from '../../conversation/recovery/types';
 import { modelSelectionError } from '../../conversation/modelSelection';
 import { openPreparedDownload } from '../archiveDownload';
+import { filePreviewKind } from '../../file-preview/kinds';
+import { canCacheHtmlPreview, readHtmlDocument } from '../htmlDocument';
 import { mergeTaskDelivery } from '../taskDelivery';
 import type { RemoteComposerCatalog } from '../composerCatalog';
 import type { ProjectFilesRequest, ProjectFilesResponse } from '../projectFiles';
@@ -517,6 +519,8 @@ export class ChatController {
       await this.syncConversationView();
       this.previewDownloadSupported = !!response && typeof response === 'object'
         && 'filePreviewsV1' in response && response.filePreviewsV1 === true;
+      this.htmlStreamsSupported = !!response && typeof response === 'object'
+        && 'htmlFileStreamsV1' in response && response.htmlFileStreamsV1 === true;
       this.connection.setBulkSupport?.(response);
       if (response && typeof response === 'object' && 'desktopOnly' in response && response.desktopOnly === true) {
         this.update({ desktopOnly: true, approvals: [], selected: null, threads: [], queue: emptyQueue(),
@@ -990,6 +994,7 @@ export class ChatController {
 
   previewDownloads?: import('../previewDownloads').PreviewAdapter;
   private previewDownloadSupported = true;
+  private htmlStreamsSupported = false;
   get managedPreviews() { return Boolean(this.previewDownloads && this.previewDownloadSupported); }
   savePreviewImage = (url: string) => {
     if (!this.previewDownloads) return Promise.reject(new Error('请更新应用后保存图片。'));
@@ -1022,11 +1027,18 @@ export class ChatController {
     close: (transferId, id) => this.files.close(transferId, id),
   };
 
-  textPreview = (threadId: string, path: string, options?: import('../previewProgress').PreviewLoadOptions) =>
-    this.managedPreviews ? this.previewDownloads!.text(threadId, path, options)
+  textPreview = async (threadId: string, path: string, options?: import('../previewProgress').PreviewLoadOptions) => {
+    if (this.state.ready && this.htmlStreamsSupported && filePreviewKind(path) === 'html') {
+      const file = await this.guiTools.files.perform({ threadId, path }, { type: 'metadata' });
+      if (!this.managedPreviews || !canCacheHtmlPreview(file.metadata?.size, this.state.mode)) {
+        return readHtmlDocument(this.files, threadId, file.path, options);
+      }
+    }
+    return this.managedPreviews ? this.previewDownloads!.text(threadId, path, options)
       : this.connection.request<import('../textPreview').TextPreview>('request', {
         operation: 'textPreview', threadId, path,
       });
+  };
 
   loadSkills = async (cwd: string) => {
     const generation = this.skillGeneration;

@@ -7,6 +7,7 @@ export interface TokenCostPreset {
   longContextPricing: boolean;
   longContextThresholdTokens?: number | null;
   fastModeMultiplier: number | null;
+  ultrafastModeMultiplier?: number | null;
   sourceUrl: string;
 }
 
@@ -43,15 +44,18 @@ function validSource(value: unknown): value is string {
   } catch { return false; }
 }
 
+function validMultiplier(value: unknown): boolean {
+  return typeof value === "number" && Number.isFinite(value) && value > 0 && value <= MAX_PRESET_MULTIPLIER;
+}
+
 function validPreset(value: unknown): value is TokenCostPreset {
   if (!record(value) || !validName(value.model) || !validSource(value.sourceUrl)) return false;
   const rates = [value.input, value.cachedInput, value.output];
   return rates.every((rate) => typeof rate === "number" && Number.isFinite(rate) && rate >= 0 && rate <= MAX_TOKEN_PRICE)
     && typeof value.longContextPricing === "boolean"
     && (value.longContextThresholdTokens == null || isValidLongContextThreshold(value.longContextThresholdTokens))
-    && (value.fastModeMultiplier === null || (typeof value.fastModeMultiplier === "number"
-      && Number.isFinite(value.fastModeMultiplier)
-      && value.fastModeMultiplier > 0 && value.fastModeMultiplier <= MAX_PRESET_MULTIPLIER))
+    && (value.fastModeMultiplier === null || validMultiplier(value.fastModeMultiplier))
+    && (value.ultrafastModeMultiplier == null || validMultiplier(value.ultrafastModeMultiplier))
     && (value.aliases === undefined || (Array.isArray(value.aliases)
       && value.aliases.length <= MAX_ALIASES && value.aliases.every(validName)));
 }
