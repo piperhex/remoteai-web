@@ -15,7 +15,21 @@ test('mobile browser sends readable website downloads to the app manager', async
     accounts: [], providers: [], devices: [], email: 'download@example.test', id: 'download', ticket: 'fixture',
   } }));
   await page.route('**/website-download-page', route => route.fulfill({ contentType: 'text/html',
-    body: '<a download="website-report.txt" href="/website-download-file">Download report</a>' }));
+    body: `
+      <a download="website-report.txt" href="/website-download-file">Download report</a>
+      <button onclick="exportReport()">Export generated report</button>
+      <a download="inline.txt" href="data:text/plain;base64,AAH+/w==">Export inline file</a>
+      <script>
+        function exportReport() {
+          const url = URL.createObjectURL(new Blob(['generated report'], { type: 'text/plain' }));
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'generated-report.txt';
+          link.click();
+          URL.revokeObjectURL(url);
+        }
+      </script>
+    ` }));
   await page.route('**/website-download-file', route => route.fulfill({ contentType: 'text/plain', body: 'website report' }));
   await page.goto('./');
   await page.locator('.mobile-tabbar').getByRole('tab', { name: '浏览器', exact: true }).click();
@@ -44,6 +58,27 @@ test('mobile browser sends readable website downloads to the app manager', async
   await page.locator('.downloads-page').getByRole('button', { name: '返回', exact: true }).click();
   await expect(link).toBeVisible();
 
+  const iframe = browser.locator('iframe').first().contentFrame();
+  await iframe.getByRole('button', { name: 'Export generated report' }).click();
+  await iframe.getByRole('link', { name: 'Export inline file' }).click();
+  await browser.getByRole('button', { name: '浏览器设置', exact: true }).click();
+  await downloads.click();
+  for (const [name, expected] of [
+    ['generated-report.txt', Buffer.from('generated report')],
+    ['inline.txt', Buffer.from([0, 1, 254, 255])],
+  ] as const) {
+    const generated = page.getByRole('article', { name, exact: true });
+    await expect(generated.getByText('文件已就绪')).toBeVisible();
+    const saved = page.waitForEvent('download');
+    await generated.getByRole('button', { name: '保存到设备' }).click();
+    const savedFile = await saved;
+    expect(savedFile.suggestedFilename()).toBe(name);
+    expect(await readFile(await savedFile.path())).toEqual(expected);
+  }
+  await expect(added).toBeHidden();
+  await page.screenshot({ path: info.outputPath('web-mobile-generated-downloads.png'), animations: 'disabled' });
+  await page.locator('.downloads-page').getByRole('button', { name: '返回', exact: true }).click();
+
   const outside = new URL(info.project.use.baseURL!);
   outside.port = '1580';
   await page.route(`${outside.origin}/foreign-download-page`, route => route.fulfill({ contentType: 'text/html',
@@ -57,7 +92,7 @@ test('mobile browser sends readable website downloads to the app manager', async
   expect((await browserSaved).suggestedFilename()).toBe('foreign.txt');
   await browser.getByRole('button', { name: '浏览器设置', exact: true }).click();
   await downloads.click();
-  await expect(page.locator('.download-tasks article')).toHaveCount(1);
+  await expect(page.locator('.download-tasks article')).toHaveCount(3);
 });
 
 for (const dark of [false, true]) test(`mobile browser retains pages and opens bookmark drawer ${dark}`, async ({ page }, info) => {

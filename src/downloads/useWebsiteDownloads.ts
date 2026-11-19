@@ -7,7 +7,7 @@ export function useWebsiteDownloads(owner: string | undefined, open: () => void)
   return useMemo(() => owner ? {
     open,
     enqueue: (url: URL, name: string) => {
-      void Promise.resolve().then(() => enqueueWebsiteDownload(owner, url, name))
+      void enqueueWebsiteDownload(owner, url, name)
         .then(() => Toast.show({ position: 'top', icon: 'success', content: t('client.downloads.browser.added') }))
         .catch(() => Toast.show({ position: 'top', icon: 'fail', content: t('client.downloads.browser.failed') }));
     },

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import type { BrowserSurfaceProps } from '../../provider-market/ProviderBrowser';
 import { readPageIcons } from '../icons/pageIcons';
 import { rememberWebsiteIcons } from '../icons/websiteIcons';
@@ -13,9 +13,19 @@ export function BrowserFrame({ tab, active, command, onLoadingChange, onVisit, t
   const downloads = useContext(WebsiteDownloadsContext);
   const current = useRef({ onLoadingChange, downloads, active }); current.current = { onLoadingChange, downloads, active };
   const stopObserving = useRef<() => void>();
+  const observeDownloads = useCallback(() => {
+    stopObserving.current?.();
+    stopObserving.current = current.current.downloads ? observeFrameDownloads(frame.current, (url, name) => {
+      current.current.downloads?.enqueue(url, name);
+    }, () => Boolean(current.current.downloads && current.current.active)) : undefined;
+  }, []);
   const lastCommand = useRef(command?.sequence ?? 0);
   const [attempt, setAttempt] = useState(0);
-  useEffect(() => () => stopObserving.current?.(), []);
+  const managed = Boolean(downloads);
+  useEffect(() => {
+    observeDownloads();
+    return () => stopObserving.current?.();
+  }, [managed, observeDownloads]);
   useEffect(() => {
     current.current.onLoadingChange?.(true);
     return () => current.current.onLoadingChange?.(false);
@@ -34,14 +44,11 @@ export function BrowserFrame({ tab, active, command, onLoadingChange, onVisit, t
   }, [command]);
   return <iframe ref={frame} key={attempt} src={tab.url} title={tab.title || t('market.browserNewTab')}
     allow="microphone; camera; geolocation"
-    sandbox={`allow-scripts allow-forms allow-same-origin${downloads ? ' allow-downloads' : ''}`}
+    sandbox={`allow-scripts allow-forms allow-same-origin${managed ? ' allow-downloads' : ''}`}
     referrerPolicy="no-referrer"
     onLoad={() => {
       current.current.onLoadingChange?.(false);
-      stopObserving.current?.();
-      stopObserving.current = observeFrameDownloads(frame.current, (url, name) => {
-        current.current.downloads?.enqueue(url, name);
-      }, () => Boolean(current.current.downloads && current.current.active));
+      observeDownloads();
       try {
         const page = frame.current?.contentWindow;
         if (page) rememberWebsiteIcons(page.location.href, readPageIcons(page.document));

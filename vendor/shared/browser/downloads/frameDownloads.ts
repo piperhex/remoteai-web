@@ -12,10 +12,23 @@ export function observeFrameDownloads(frame: HTMLIFrameElement | null, enqueue: 
     if (!anchor?.href) return;
     let url: URL;
     try { url = new URL(anchor.href); } catch { return; }
-    if (!/^https?:$/.test(url.protocol) || url.origin !== window.location.origin || url.username || url.password) return;
+    const fromPage = url.protocol === 'data:' || url.origin === window.location.origin;
+    if (!fromPage || !/^(?:https?|blob|data):$/.test(url.protocol) || url.username || url.password) return;
     event.preventDefault();
     enqueue(url, anchor.download);
   };
   page.addEventListener('click', click);
-  return () => page.removeEventListener('click', click);
+  const prototype: HTMLAnchorElement = Object.getPrototypeOf(page.createElement('a'));
+  const original = prototype.click;
+  const observeDetached = function (this: HTMLAnchorElement) {
+    if (this.isConnected) return original.call(this);
+    this.addEventListener('click', click);
+    try { original.call(this); }
+    finally { this.removeEventListener('click', click); }
+  };
+  prototype.click = observeDetached;
+  return () => {
+    page.removeEventListener('click', click);
+    if (prototype.click === observeDetached) prototype.click = original;
+  };
 }
