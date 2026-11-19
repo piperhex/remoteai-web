@@ -6,6 +6,8 @@ import type { AttachmentReference, ComposerPlugin } from '../../conversation/att
 import { remoteAttachments } from '../composerAttachments';
 import { checkFileUploadSize } from '../policy';
 import { readFileBase64 } from '../../chat/fileData';
+import { appendDownloadedFile } from '../../chat/DownloadedFileContext';
+import type { ConnectionMode } from '../protocol';
 
 /** Validation copy may already be localized when thrown, so trust it by origin rather than by wording. */
 export class AttachmentRejection extends Error {}
@@ -63,7 +65,11 @@ export function useComposerAttachments({ threadId, sending }: { threadId: string
       return true;
     } catch { setError(t("client.chat.eachMessageCanHaveUpTo8AttachmentsOrConversation")); return false; }
   };
-  return { items, busy, error, pick, add,
+  const addDownloadedFile = (file: AttachmentReference, mode: ConnectionMode) => {
+    setItems(existing => appendDownloadedFile(existing, file, mode));
+    setError('');
+  };
+  return { items, busy, error, pick, add, addDownloadedFile,
     addPlugin: (plugin: ComposerPlugin) => add({ kind: 'plugin', name: plugin.interface?.displayName || plugin.name,
       path: `plugin://${plugin.id}` }),
     restore: setItems, remove: (item: AttachmentReference) => setItems(current => current.filter(entry => entry !== item)),

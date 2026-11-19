@@ -28,10 +28,11 @@ interface Props {
   session: AuthSession; devices: RemoteDevice[]; active: boolean; openAccounts?: () => void;
   tokenSummary: boolean; closeTokenSummary: () => void;
   sshDiscovery?: boolean; closeSshDiscovery?: () => void;
+  acceptDownload?: boolean;
 }
 
 export function ChatPage({ session, devices, active, openAccounts,
-  tokenSummary, closeTokenSummary, sshDiscovery, closeSshDiscovery }: Props) {
+  tokenSummary, closeTokenSummary, sshDiscovery, closeSshDiscovery, acceptDownload }: Props) {
   useLanguage();
   const preview = usePagePreview() === 'chat';
   const dispatch = useAppDispatch();
@@ -60,6 +61,7 @@ export function ChatPage({ session, devices, active, openAccounts,
       return <div className="chat-device-session" hidden={!selected}
         key={JSON.stringify([scope, chatDevice?.deviceId])}>
         <WebChat session={session} device={chatDevice} devices={devices} selected={selected}
+          acceptDownload={acceptDownload && selected}
           tokenSummary={tokenSummary && selected} closeTokenSummary={closeTokenSummary}
           sshDiscovery={sshDiscovery && selected} closeSshDiscovery={closeSshDiscovery}
           openAccounts={openAccounts}

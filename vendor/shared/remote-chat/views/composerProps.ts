@@ -15,6 +15,7 @@ import type { RemoteComposerCatalog } from '../composerCatalog';
 import type { ProjectFilesRequest, ProjectFilesResponse } from '../projectFiles';
 import type { ConversationSearch } from '../../chat/useConversationCandidates';
 import type { SubscribeFileDrop } from '../../chat/useFileDrop';
+import type { ConnectionMode } from '../protocol';
 
 export interface NativeFileDrop {
   subscribe: SubscribeFileDrop;
@@ -22,6 +23,7 @@ export interface NativeFileDrop {
 }
 
 export interface ComposerProps {
+  downloadAttachmentMode?: ConnectionMode;
   sshProfiles?: import('../../chat/useSshCandidates').ComposerSshProfiles;
   dictation?: import('../../chat/dictation/client').DictationClient;
   recoveredEdit?: import('../queue').QueueDraft;

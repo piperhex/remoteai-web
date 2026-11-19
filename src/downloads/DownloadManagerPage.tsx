@@ -12,9 +12,10 @@ import { DownloadWorkspace } from '../../../../shared/downloads/desktop/Download
 import { useDesktopLayout } from '../../../../shared/layout/useDesktopLayout';
 import '../../../../shared/downloads/styles.css';
 import { downloadManager } from '../../../../shared/downloads/manager';
+import { DownloadFileMenu } from './DownloadFileMenu';
 
-export function DownloadManagerPage({ owner, onBack, fromBrowser }: {
-  owner: string; onBack: () => void; fromBrowser?: boolean;
+export function DownloadManagerPage({ owner, onBack, fromBrowser, onReference }: {
+  owner: string; onBack: () => void; fromBrowser?: boolean; onReference?: () => void;
 }) {
   useLanguage();
   const desktop = useDesktopLayout();
@@ -59,6 +60,8 @@ export function DownloadManagerPage({ owner, onBack, fromBrowser }: {
       selected={selected.has(task.id)} toggleSelection={() => toggle(task.id)}
       connected={downloadManager.taskConnected(task)}
       action={() => { void run(task); }} open={() => { void run(task, 'open'); }}
+      openMenu={<DownloadFileMenu task={task} busy={!!busy || task.status === 'saving'}
+        onOpen={() => { void run(task, 'open'); }} onReference={onReference} />}
       share={() => { void run(task, 'share'); }}
       remove={() => { void run(task, 'remove'); }} />)}</div>
     {!tasks.length && <div className="download-empty"><Download size={38} /><h3>{t("client.downloads.noDownloadsYet")}</h3>

@@ -86,6 +86,7 @@ export interface ConnectedChatProps {
   openAccounts?: () => void;
   workspacePage?: { title: string; content: ReactNode; onClose: () => void };
   onWorkspaceChange?: (cwd: string) => void;
+  acceptDownload?: boolean;
 }
 
 export interface ChatSidebarActions {
@@ -106,7 +107,7 @@ function ConnectedChatContent({ chat, device, devices, active, scope, email, cho
   chooseLocal, accountPicker, headerActions, headerConnectionActions, headerEnd, renderSidebar, composerHeader,
   conversationFooter, renderUserMessage, draggableHeader, scrollableComposer,
   readClipboardImages, nativeFileDrop, desktopDiffs, deviceRefresh, cliVersion, openAccounts,
-  workspacePage, onWorkspaceChange }: ConnectedChatProps) {
+  workspacePage, onWorkspaceChange, acceptDownload }: ConnectedChatProps) {
   useLanguage();
   const cli = useCliGui();
   const external = Boolean(cli && cli.state.engine !== 'codex' && !workspacePage);
@@ -162,6 +163,7 @@ function ConnectedChatContent({ chat, device, devices, active, scope, email, cho
         || state.compacting === state.selected?.id} answer={controller.answerAsyncQuestion} />
     {!external && composerHeader}
     <ChatComposer suggestions={remotePromptSuggestion(state, controller.suggestNextPrompt, { scope })}
+      downloadAttachmentMode={acceptDownload && !external && !workspacePage ? state.mode : undefined}
       dictation={controller.dictation}
       cliVersion={cliVersion === undefined ? installer.version : cliVersion}
       readServiceStatus={controller.guiTools.serviceStatus}

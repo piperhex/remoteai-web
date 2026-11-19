@@ -4,6 +4,7 @@ import type { DownloadTask } from './types';
 import { archivePercent, archiveStatus } from '../remote-chat/archiveDownload';
 import { canShareDownload } from './shareDownload';
 import { downloadCompletionDetails } from './completion';
+import type { ReactNode } from 'react';
 
 export function formatBytes(value: number) {
   if (value < 1024) return `${value} B`;
@@ -14,10 +15,11 @@ const STATUS = { queued: "client.downloads.queued", preparing: "client.downloads
   ready: "client.downloads.readyToSave", saving: "client.downloads.saving", paused: "client.downloads.paused", completed: "client.chat.completed", failed: "client.downloads.downloadFailed" };
 
 export function DownloadCard({ task, busy, connected, action, open, share, remove,
-  selected = false, toggleSelection, text = displayText }: {
+  selected = false, toggleSelection, text = displayText, openMenu }: {
   task: DownloadTask; busy: boolean; connected: boolean; action: () => void; remove: () => void;
   open: () => void; share?: () => void; text?: typeof displayText;
   selected?: boolean; toggleSelection?: () => void;
+  openMenu?: ReactNode;
 }) {
   const running = ['downloading', 'queued', 'preparing', 'verifying'].includes(task.status);
   const completed = ['completed', 'ready', 'saving'].includes(task.status);
@@ -58,8 +60,8 @@ export function DownloadCard({ task, busy, connected, action, open, share, remov
       ? 'client.downloads.browser.unavailable' : task.source.attachment
       ? 'client.lounge.fileUnavailable' : 'client.downloads.reconnectToTheOriginalComputerToResume')}</p>}
     <div className="download-actions">
-      {completed && !task.sync && <button type="button" className="download-button" onClick={open}
-        disabled={busy || task.status === 'saving'}><ExternalLink size={17} />{text("client.portForwarding.open")}</button>}
+      {completed && !task.sync && (openMenu ?? <button type="button" className="download-button" onClick={open}
+        disabled={busy || task.status === 'saving'}><ExternalLink size={17} />{text("client.portForwarding.open")}</button>)}
       {completed && !task.sync && !task.browser && share && canShareDownload(task) && <button type="button" className="download-button"
         onClick={share} disabled={busy || task.status === 'saving'}><Share2 size={17} />{text("client.downloads.share")}</button>}
       {!(completed && (task.sync || task.browser)) && <button type="button" className="download-button" onClick={action}

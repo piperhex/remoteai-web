@@ -45,6 +45,7 @@ import { Globe } from 'lucide-react';
 import { LoungeAvatar } from '../../../shared/lounge/LoungeAvatar';
 import { accountLabel } from '../../../shared/lounge/accountLabel';
 import { downloadOwner } from '../../../shared/downloads/manager';
+import { DownloadedFileProvider } from '../../../shared/chat/DownloadedFileContext';
 import { useSyncDownloadAccount } from '../../../shared/conversation/sync/useSyncDownloadAccount';
 import { WebSyncDownloads } from './chat/useWebSyncHosts';
 import { loadRefreshMinutes, REFRESH_INTERVAL_EVENT } from "./settings/refreshInterval";
@@ -388,7 +389,8 @@ function AppShell() {
       onBack={() => dispatch(pageChanged('discover'))} />,
     discover: discoveryPage, 'token-summary': discoveryPage, ssh: null,
     downloads: session && <><WebSyncDownloads session={session} devices={devices} />
-      <DownloadManagerPage owner={downloadOwner(session)} fromBrowser={downloadsBack.current === 'browser'} onBack={() => {
+      <DownloadManagerPage owner={downloadOwner(session)} fromBrowser={downloadsBack.current === 'browser'}
+        onReference={() => { dispatch(pageChanged('chat')); downloadsBack.current = 'discover'; }} onBack={() => {
         dispatch(pageChanged(downloadsBack.current)); downloadsBack.current = 'discover';
       }} /></>,
     accounts: session && <AccountsPage session={session} />, devices: <DevicesPage />,
@@ -404,7 +406,8 @@ function AppShell() {
   const MenuToggleIcon = menuVisible ? PanelLeftClose : PanelLeftOpen;
   return <ExtensionMarketContext.Provider value={session?.baseUrl}><BookmarkProvider scope={session ? JSON.stringify([session.baseUrl, session.email]) : 'guest'}
     channel={session ? lounge.controller.bookmarks : undefined}>
-    <BrowserNavigationProvider onOpen={() => dispatch(pageChanged('browser'))}><div className={shellClass}>
+    <BrowserNavigationProvider onOpen={() => dispatch(pageChanged('browser'))}>
+    <DownloadedFileProvider owner={downloadScope ?? ''}><div className={shellClass}>
     <aside className="desktop-sidebar">
       <div className="desktop-sidebar-heading">
         <div className="brand-lockup"><BrandMark />
@@ -465,6 +468,7 @@ function AppShell() {
       <main className="main-content">
         <PrimaryPagePager page={page} onChange={changePrimaryPage} pages={{
           chat: session && <ChatPage key={session.baseUrl + session.email} session={session} devices={devices}
+            acceptDownload={page === 'downloads' && !desktopLayout}
             openAccounts={openAccounts}
             active={page === 'chat' || page === 'ssh'} tokenSummary={page === 'token-summary'}
             sshDiscovery={page === 'ssh'} closeSshDiscovery={() => dispatch(pageChanged('discover'))}
@@ -496,7 +500,7 @@ function AppShell() {
         </button>)}
       </div><SafeArea position="bottom" />
     </div>
-  </div></BrowserNavigationProvider></BookmarkProvider></ExtensionMarketContext.Provider>;
+  </div></DownloadedFileProvider></BrowserNavigationProvider></BookmarkProvider></ExtensionMarketContext.Provider>;
 }
 
 export default function App() {

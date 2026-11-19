@@ -16,6 +16,7 @@ import { pickChatImages } from './pickChatImages';
 import { useComposerPaste } from './useComposerPaste';
 import { fileDropError, useFileDrop } from '../../chat/useFileDrop';
 import { useComposerFileReferences } from '../../chat/ChatFileReferences';
+import { useDownloadedFileReceiver } from '../../chat/DownloadedFileContext';
 import { useComposerImageAnnotations } from '../../chat/ImageAnnotations';
 
 export function useComposerState(props: ComposerProps) {
@@ -77,6 +78,8 @@ export function useComposerState(props: ComposerProps) {
     enabled: active && !disabled && !busy && !goalMode.enabled, add: attachments.add,
     addQuote: quote => quotes?.add({ ...quote, role: 'tool' }) ?? false,
     focus: () => menu.input.current?.focus() });
+  useDownloadedFileReceiver({ scope: JSON.stringify([draftScope, props.cwd]), add: attachments.addDownloadedFile,
+    mode: !disabled && !busy && !goalMode.enabled ? props.downloadAttachmentMode : undefined });
   const compact = !goalMode.enabled && !props.goal && !draft.text.length && !hasContent && !busy;
   const action = composerAction({ running: running && !hasContent,
     interrupted: !!props.interrupted && !goalMode.enabled, hasDraft: hasContent });

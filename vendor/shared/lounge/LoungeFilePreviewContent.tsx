@@ -14,7 +14,9 @@ const PdfPreview = lazy(() => import('../file-preview/PdfPreview'));
 // Attachments grant access to this file only, never to another path on either participant's computer.
 const unavailableAsset: PreviewLoader = async () => { throw new Error('client.filePreview.unavailable'); };
 
-export function LoungeFilePreviewContent({ file, bytes }: { file: LoungeAttachment; bytes: Uint8Array }) {
+export function LoungeFilePreviewContent({ file, bytes }: {
+  file: Pick<LoungeAttachment, 'name' | 'mime' | 'size'>; bytes: Uint8Array;
+}) {
   const [source, setSource] = useState(false);
   const [url, setUrl] = useState('');
   const [linkError, setLinkError] = useState(false);

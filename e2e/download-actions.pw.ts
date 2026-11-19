@@ -1,7 +1,16 @@
 import { clickDownloadAction } from './download-test-actions';
 import { expect, test, type Page } from '@playwright/test';
+import { connect, fixtureUrl, login, navigate, screenshot, send, state } from './chat-helpers';
 
 const card = (page: Page) => page.getByRole('article', { name: 'sample.md', exact: true });
+async function openExternal(page: Page) {
+  const trigger = card(page).getByRole('button', { name: '打开', exact: true });
+  const dropdown = await trigger.getAttribute('aria-haspopup') === 'menu';
+  await trigger.click();
+  if (dropdown) {
+    await page.getByRole('menuitem', { name: '在浏览器中打开', exact: true }).click();
+  }
+}
 async function enqueue(page: Page) {
   await page.getByRole('button', { name: '当前项目', exact: true }).click();
   await page.getByRole('button', { name: '下载：sample.md', exact: true }).click();
@@ -12,6 +21,62 @@ test.beforeEach(async ({ page }) => {
   await page.goto('e2e/downloads-harness.html');
   await page.evaluate(() => { window.downloadFixture.size = 512; window.downloadFixture.delay = 0; });
 });
+
+for (const largeFont of [false, true]) {
+  test(`mobile download menu previews and sends the original file (large font ${largeFont})`,
+    async ({ page, request }, info) => {
+      test.skip(info.project.name !== 'mobile');
+      await request.post(`${fixtureUrl}/test/reset`);
+      await page.setViewportSize({ width: largeFont ? 360 : 390, height: 844 });
+      await page.addInitScript(large => {
+        localStorage.setItem('codex-switch.web.theme.v1', large ? 'dark' : 'light');
+        localStorage.setItem('codex-switch:global-font-size', large ? '20' : '14');
+      }, largeFont);
+      const name = '下载说明.md';
+      const content = '# 已下载的说明\n\n这段文字来自已保存的 Markdown 文件。';
+      await page.route('**/download-reference-page', route => route.fulfill({ contentType: 'text/html',
+        body: `<meta charset="utf-8"><a download="${name}" href="/download-reference-file">Download Markdown</a>` }));
+      await page.route('**/download-reference-file', route => route.fulfill({
+        contentType: 'text/markdown; charset=utf-8', body: content,
+      }));
+      await login(page);
+      await connect(page);
+      await page.getByRole('textbox', { name: '聊天消息' }).fill('请阅读这份下载文件');
+      await navigate(page, '浏览器');
+      const browser = page.locator('.browser-main-page');
+      const address = browser.getByLabel('页面地址', { exact: true });
+      await address.fill(new URL('/download-reference-page', page.url()).href);
+      await address.press('Enter');
+      await browser.locator('iframe').first().contentFrame().getByRole('link', { name: 'Download Markdown' }).click();
+      await expect(page.getByText('已加入下载管理。')).toBeVisible();
+      await navigate(page, '发现');
+      const openDownloads = () => page.getByRole('button', { name: '下载管理', exact: true }).click();
+      await openDownloads();
+      const task = page.getByRole('article', { name, exact: true });
+      await expect(task).toContainText('文件已就绪');
+      const openMenu = () => task.getByRole('button', { name: '打开', exact: true }).click();
+      await openMenu();
+      await expect(page.getByRole('menuitem')).toHaveText(['在浏览器中打开', '在内置浏览器中打开', '引用文件']);
+      await screenshot(page, info, 'download-menu');
+      await page.getByRole('menuitem', { name: '在内置浏览器中打开', exact: true }).click();
+      await expect(browser.getByRole('heading', { name: '已下载的说明' })).toBeVisible();
+      await screenshot(page, info, 'download-preview');
+      await navigate(page, '发现');
+      await openDownloads();
+      await openMenu();
+      await page.getByRole('menuitem', { name: '引用文件', exact: true }).click();
+      const textbox = page.getByRole('textbox', { name: '聊天消息' });
+      await expect(textbox).toHaveValue('请阅读这份下载文件');
+      await expect(page.getByRole('button', { name: `移除附件：${name}` })).toBeVisible();
+      expect((await state(request)).operations.some(entry => entry.operation === 'send')).toBe(false);
+      await screenshot(page, info, 'download-chat-draft');
+      await send(page, '请阅读这份下载文件');
+      await expect.poll(async () => (await state(request)).operations.findLast(entry => entry.operation === 'send'))
+        .toMatchObject({ text: '请阅读这份下载文件', attachments: [
+          { kind: 'file', name, path: '', data: Buffer.from(content).toString('base64') },
+        ] });
+    });
+}
 
 test('automatically retries exactly five times and a manual resume starts a fresh run', async ({ page }) => {
   await page.clock.install();
@@ -39,7 +104,7 @@ test('opens verified cached text offline without executing HTML and keeps Save a
   await expect(card(page)).toContainText('文件已就绪');
   await page.getByRole('button', { name: '断开电脑', exact: true }).click();
   const opened = page.waitForEvent('popup');
-  await card(page).getByRole('button', { name: '打开', exact: true }).click();
+  await openExternal(page);
   const popup = await opened;
   await expect(popup.locator('body')).toContainText(content);
   expect(await popup.evaluate(() => window.opener)).toBeNull();
@@ -54,7 +119,7 @@ test('a blocked popup leaves the file ready and shows an actionable message', as
   await enqueue(page);
   await expect(card(page)).toContainText('文件已就绪');
   await page.evaluate(() => { window.open = () => null; });
-  await card(page).getByRole('button', { name: '打开', exact: true }).click();
+  await openExternal(page);
   await expect(page.getByRole('alert')).toContainText('允许弹出窗口');
   await expect(card(page)).toContainText('文件已就绪');
 });
@@ -76,7 +141,7 @@ test('missing cached bytes cannot be opened or marked as saved', async ({ page }
       tx.onerror = () => reject(tx.error);
     };
   }));
-  await card(page).getByRole('button', { name: '打开', exact: true }).click();
+  await openExternal(page);
   await expect(card(page)).toContainText('下载失败');
   await expect(card(page).getByRole('button', { name: '打开', exact: true })).toHaveCount(0);
   await expect(card(page)).not.toContainText('已保存到设备');
