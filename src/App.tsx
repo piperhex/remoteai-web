@@ -37,6 +37,8 @@ import { useWebLounge } from './lounge/useWebLounge';
 import { ExtensionMarketContext } from "../../../shared/browser/extensions/market";
 import { BookmarkProvider } from '../../../shared/browser/bookmarks/context';
 import { BrowserPage } from '../../../shared/browser/BrowserPage';
+import { WebsiteDownloadsContext } from '../../../shared/browser/downloads/context';
+import { useWebsiteDownloads } from './downloads/useWebsiteDownloads';
 import { BrowserNavigationProvider } from '../../../shared/browser/BrowserNavigationProvider';
 import { RetainedView } from '../../../shared/RetainedView';
 import { Globe } from 'lucide-react';
@@ -300,6 +302,13 @@ function AppShell() {
   const { page, profile, devices, refreshing, error } = useAppSelector((state) => state.data);
   useSyncDownloadAccount(session ? downloadOwner(session) : '');
   const desktopLayout = useDesktopLayout();
+  const downloadsBack = useRef<'discover' | 'browser'>('discover');
+  const openBrowserDownloads = useCallback(() => {
+    downloadsBack.current = 'browser';
+    dispatch(pageChanged('downloads'));
+  }, [dispatch]);
+  const websiteDownloads = useWebsiteDownloads(!desktopLayout && session ? downloadOwner(session) : undefined,
+    openBrowserDownloads);
   useChatViewport(page === 'lounge' && !desktopLayout);
   const lastRefreshRef = useRef(Date.now());
   const totpManager = useTotpVault(session);
@@ -372,14 +381,16 @@ function AppShell() {
   };
   const downloadScope = session ? downloadOwner(session) : undefined;
   const discoveryPage = <DiscoveryPage owner={downloadScope} loungeUnread={lounge.state.unread}
-    onOpen={destination => dispatch(pageChanged(destination))} />;
+    onOpen={destination => { downloadsBack.current = 'discover'; dispatch(pageChanged(destination)); }} />;
   const otherPages = {
     browser: null,
     lounge: <LoungePage controller={lounge.controller} mobile={!desktopLayout}
       onBack={() => dispatch(pageChanged('discover'))} />,
     discover: discoveryPage, 'token-summary': discoveryPage, ssh: null,
     downloads: session && <><WebSyncDownloads session={session} devices={devices} />
-      <DownloadManagerPage owner={downloadOwner(session)} onBack={() => dispatch(pageChanged('discover'))} /></>,
+      <DownloadManagerPage owner={downloadOwner(session)} fromBrowser={downloadsBack.current === 'browser'} onBack={() => {
+        dispatch(pageChanged(downloadsBack.current)); downloadsBack.current = 'discover';
+      }} /></>,
     accounts: session && <AccountsPage session={session} />, devices: <DevicesPage />,
     totp: <TotpPage manager={totpManager} onBack={() => dispatch(pageChanged('discover'))} />,
     settings: <SettingsPage totpManager={totpManager} loungeController={lounge.controller} />,
@@ -464,9 +475,11 @@ function AppShell() {
           && !['downloads', 'token-summary', 'lounge', 'totp', 'devices', 'ssh', 'browser'].includes(page)
           && <DiscoveryBackButton onBack={() => dispatch(pageChanged('discover'))} />}
         <RetainedView active={page === 'browser'}>
-          <BrowserPage language={language} active={page === 'browser'}
-            homeBaseUrl={session?.baseUrl}
-            onClose={() => dispatch(pageChanged('discover'))} />
+          <WebsiteDownloadsContext.Provider value={websiteDownloads}>
+            <BrowserPage language={language} active={page === 'browser'}
+              homeBaseUrl={session?.baseUrl}
+              onClose={() => dispatch(pageChanged('discover'))} />
+          </WebsiteDownloadsContext.Provider>
         </RetainedView>
         {page !== 'chat' && page !== 'accounts' && page !== 'discover' && page !== 'settings' && otherPages[page]}
         </PrimaryPagePager>

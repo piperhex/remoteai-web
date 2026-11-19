@@ -1,5 +1,64 @@
 import { expect, test } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 import { verifyFullscreenControl } from './browser-fullscreen-checks';
+
+test('mobile browser sends readable website downloads to the app manager', async ({ page }, info) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => {
+    Object.defineProperty(window, 'showSaveFilePicker', { value: undefined, configurable: true });
+    localStorage.setItem('codex-switch.web.session.v1', JSON.stringify({
+      baseUrl: `${location.origin}/website-download-fixture`, email: 'download@example.test',
+      accessToken: 'fixture', refreshToken: 'fixture',
+    }));
+  });
+  await page.route('**/website-download-fixture/**', route => route.fulfill({ json: {
+    accounts: [], providers: [], devices: [], email: 'download@example.test', id: 'download', ticket: 'fixture',
+  } }));
+  await page.route('**/website-download-page', route => route.fulfill({ contentType: 'text/html',
+    body: '<a download="website-report.txt" href="/website-download-file">Download report</a>' }));
+  await page.route('**/website-download-file', route => route.fulfill({ contentType: 'text/plain', body: 'website report' }));
+  await page.goto('./');
+  await page.locator('.mobile-tabbar').getByRole('tab', { name: '浏览器', exact: true }).click();
+  const browser = page.locator('.browser-main-page');
+  const address = browser.getByLabel('页面地址', { exact: true });
+  await address.fill(`${new URL(info.project.use.baseURL!).origin}/website-download-page`);
+  await address.press('Enter');
+  const link = browser.locator('iframe').first().contentFrame().getByRole('link', { name: 'Download report' });
+  await link.click();
+  const added = page.getByText('已加入下载管理。');
+  await expect(added).toBeVisible();
+  await expect(added).toBeHidden();
+  await browser.getByRole('button', { name: '浏览器设置', exact: true }).click();
+  const downloads = page.locator('.browser-bookmark-settings-popup').getByRole('button', { name: '下载管理' });
+  await expect(downloads).toBeVisible();
+  await page.screenshot({ path: info.outputPath('web-mobile-browser-download-menu.png'), animations: 'disabled' });
+  await downloads.click();
+  const task = page.getByRole('article', { name: 'website-report.txt' });
+  await expect(task.getByText('文件已就绪')).toBeVisible();
+  await page.screenshot({ path: info.outputPath('web-mobile-browser-download-ready.png'), animations: 'disabled' });
+  const saved = page.waitForEvent('download');
+  await task.getByRole('button', { name: '保存到设备' }).click();
+  const file = await saved;
+  expect(file.suggestedFilename()).toBe('website-report.txt');
+  expect(await readFile(await file.path(), 'utf8')).toBe('website report');
+  await page.locator('.downloads-page').getByRole('button', { name: '返回', exact: true }).click();
+  await expect(link).toBeVisible();
+
+  const outside = new URL(info.project.use.baseURL!);
+  outside.port = '1580';
+  await page.route(`${outside.origin}/foreign-download-page`, route => route.fulfill({ contentType: 'text/html',
+    body: '<a href="/foreign-download-file">Download from another site</a>' }));
+  await page.route(`${outside.origin}/foreign-download-file`, route => route.fulfill({ body: 'browser-owned file',
+    headers: { 'Content-Type': 'text/plain', 'Content-Disposition': 'attachment; filename="foreign.txt"' } }));
+  await address.fill(`${outside.origin}/foreign-download-page`);
+  await address.press('Enter');
+  const browserSaved = page.waitForEvent('download');
+  await browser.locator('iframe').first().contentFrame().getByRole('link', { name: 'Download from another site' }).click();
+  expect((await browserSaved).suggestedFilename()).toBe('foreign.txt');
+  await browser.getByRole('button', { name: '浏览器设置', exact: true }).click();
+  await downloads.click();
+  await expect(page.locator('.download-tasks article')).toHaveCount(1);
+});
 
 for (const dark of [false, true]) test(`mobile browser retains pages and opens bookmark drawer ${dark}`, async ({ page }, info) => {
   await page.setViewportSize({ width: 390, height: 844 });

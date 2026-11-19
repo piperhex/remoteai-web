@@ -13,7 +13,9 @@ import { useDesktopLayout } from '../../../../shared/layout/useDesktopLayout';
 import '../../../../shared/downloads/styles.css';
 import { downloadManager } from '../../../../shared/downloads/manager';
 
-export function DownloadManagerPage({ owner, onBack }: { owner: string; onBack: () => void }) {
+export function DownloadManagerPage({ owner, onBack, fromBrowser }: {
+  owner: string; onBack: () => void; fromBrowser?: boolean;
+}) {
   useLanguage();
   const desktop = useDesktopLayout();
   const { connection, tasks, error, busy, run, removeTasks } = useDownloadTasks(owner);
@@ -31,7 +33,8 @@ export function DownloadManagerPage({ owner, onBack }: { owner: string; onBack: 
     </>} />;
   return <section className="downloads-page">
     <header className="downloads-header"><button type="button" className="download-icon-button"
-      aria-label={t("client.discovery.back")} onClick={onBack}><ArrowLeft size={22} /></button><h2>{t("client.downloads.downloads")}</h2></header>
+      aria-label={t(fromBrowser ? 'client.mobile.back' : 'client.discovery.back')} onClick={onBack}>
+      <ArrowLeft size={22} /></button><h2>{t('client.downloads.downloads')}</h2></header>
     <div className="download-source-heading">
       <span>{t("client.mobile.addDownload")}</span>
       <div className="download-connection" role="status">

@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { ExternalLink, History, KeyRound, Maximize2, Plus, X } from 'lucide-react';
+import { Download, ExternalLink, History, KeyRound, Maximize2, Plus, X } from 'lucide-react';
 import { marketText, type MarketText } from './i18n';
 import type { Language } from '@remoteai/i18n';
 import { useSearchEngine } from '../browser/useSearchEngine';
@@ -32,6 +32,7 @@ import { BrowserExtensions } from '../browser/extensions/BrowserExtensions';
 import { BrowserSidePanel, type BrowserPanelSelection } from '../browser/extensions/BrowserSidePanel';
 import { Settings } from 'lucide-react';
 import { BrowserOverlayProvider, useBrowserOverlay } from '../browser/overlays/BrowserOverlayProvider';
+import { WebsiteDownloadsContext } from '../browser/downloads/context';
 
 export interface BrowserSurfaceProps {
   tab: BrowserTab; active: boolean; command: { sequence: number; action: BrowserAction } | null;
@@ -63,6 +64,7 @@ export function BrowserContents(props: BrowserWindowProps & {
 
 function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
   const nativeOverlay = useBrowserOverlay();
+  const downloads = useContext(WebsiteDownloadsContext);
   const { tabs, activeId, open } = props;
   const t = marketText(props.language);
   const tab = tabs.find((entry) => entry.id === activeId);
@@ -111,6 +113,8 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
       <div className="browser-settings-divider" />
       <BrowserSettingsAction icon={History} onClick={() => { dismiss(); setDataPanel('history'); }}>
         {t('market.browserHistory')}</BrowserSettingsAction>
+      {downloads && <BrowserSettingsAction icon={Download} onClick={() => { dismiss(); downloads.open(); }}>
+        {uiText('client.downloads.downloads', {}, props.language)}</BrowserSettingsAction>}
       <BrowserSettingsAction icon={KeyRound} onClick={() => { dismiss(); setDataPanel('passwords'); }}>
         {t('market.browserPasswords')}</BrowserSettingsAction>
       <BrowserSearchSetting t={t} search={search} />
