@@ -9,12 +9,13 @@ const SCREEN_CONFIRMATION_Z_INDEX = 1100;
 interface Props {
   device: RemoteDevice;
   open: boolean;
+  canTurnOff: boolean;
   onClose: () => void;
   onConfirm: () => void;
 }
 
 /** A compact bottom drawer keeps the confirmation beside the device controls. */
-export function DeviceScreenSheet({ device, open, onClose, onConfirm }: Props) {
+export function DeviceScreenSheet({ device, open, canTurnOff, onClose, onConfirm }: Props) {
   useLanguage();
   return <Drawer open={open} placement="bottom" height="auto" zIndex={SCREEN_CONFIRMATION_Z_INDEX}
     rootClassName="device-screen-sheet" onClose={onClose} destroyOnHidden
@@ -22,7 +23,7 @@ export function DeviceScreenSheet({ device, open, onClose, onConfirm }: Props) {
     title={<div className="device-screen-heading">
       <strong>{t('client.deviceScreen.confirmTitle')}</strong><span>{device.name}</span>
     </div>}
-    footer={<Button type="primary" block size="large" disabled={!device.online} onClick={onConfirm}>
+    footer={<Button type="primary" block size="large" disabled={!canTurnOff} onClick={onConfirm}>
       {t('client.deviceScreen.turnOff')}
     </Button>}>
     <p className="device-screen-explanation">{t('client.deviceScreen.confirmMessage')}</p>

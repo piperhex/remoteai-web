@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "ad119a44f445deec060d369c41afd39bc26c2d6d",
+  "revision": "84e08525c7a00d359c63eccdd8ba71d9b2bcbe8e",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "6bbc6805f9a102bb2f3689cba1cc1eccb9d3f6ec"
+    "revision": "92d3dfb050f7f7ce290169f82a42a91d7c62e4c6"
   },
   "retainedTestSources": {
     "repository": "https://github.com/piperhex/remoteai",
@@ -14,7 +14,7 @@
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
-    "revision": "5497ee1fdc8af78223bf136854e4a5a8d541e6ad"
+    "revision": "12ee806053d2784f4a229522c176c253a63f6c51"
   },
   "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.40/remoteai-i18n-0.1.40.tgz",
   "files": {
@@ -237,8 +237,8 @@
     "shared/conversation/sync/remote.ts": "4aae71577e1031194edc00eb06963baae53e1ad703cfaca2f887d3c24e6e0471",
     "shared/conversation/sync/downloads.ts": "033f5996f986d305e92aa6bdb46ffeacd06ce84ca5fdf4ed4cab0948eb411f2b",
     "shared/totp/entryList.ts": "c831f5edc2618d038a31c35070e22b5c2f7de889fdfa56b9237801b90b7b6664",
-    "shared/remote-desktop/screenControl.ts": "149576a864c6e69ecdda1af596507df6fdae84c127e3fd8ac5db99a201def2d8",
-    "shared/remote-desktop/useDeviceScreenControl.ts": "7fbec6beebc3f4d3e7197c371d090e82340167ae3ade0bcca9748113bb041992",
+    "shared/remote-desktop/screenControl.ts": "a31f3502b7f4493c754cda3bb32fb103fca3e69f6a0e39003085fdee65ba0f58",
+    "shared/remote-desktop/useDeviceScreenControl.ts": "b42cf3cbe4cc8fc935b715ba9c88477b57a51c6dd8cea695a27483ff37f88f7d",
     "shared/terminal/useSshDiscovery.ts": "e5a5c312fb95d34a19480f4f7b4875a09ad5fa8e6d5b7cac6ffdaa6a681b9d23",
     "shared/terminal/SshQuickConnectDialog.tsx": "27ba2b1e4dfd5069ae5907d1af809d3e8fb7c2b34999e690c24ecec4b34f4ae3",
     "shared/terminal/SshConnectionDialog.tsx": "632436f9e625219f698b3dd6a77e41f94acfac2ca10ae78d391483a622142d5f",
@@ -2043,6 +2043,7 @@
     "shared/browser/downloads/websiteDownloads.ts": "305eaae87f033dc00fb46e14c2f840e676d70b308d74b7a9ba69179054c6c114",
     "shared/browser/downloads/frameDownloads.ts": "38280c24a29dcbf43928c1ecbd68efaff2684cb32049e4c7c594969201bf1c37",
     "shared/chat/DownloadedFileContext.tsx": "a16cc68f65403eca9d0cbf417b92e470359240879e4f97ba9cf47ed2ec0ce941",
-    "shared/downloads/previewCompletedDownload.ts": "730e94bfddb69b57b780a8c71f6b57a5c2e0e7cc7e5acbbbf9540494634e416b"
+    "shared/downloads/previewCompletedDownload.ts": "730e94bfddb69b57b780a8c71f6b57a5c2e0e7cc7e5acbbbf9540494634e416b",
+    "shared/remote-desktop/useScreenPowerStatus.ts": "58e3cb258910dd6dde15a855e0a8c59acb8e5c871f4eed22fd93725a50718e97"
   }
 }

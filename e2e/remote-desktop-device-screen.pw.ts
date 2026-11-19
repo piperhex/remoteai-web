@@ -3,11 +3,27 @@ import { expect, test, type Page } from '@playwright/test';
 const openMenu = (page: Page, name = '工作电脑') => page.getByRole('button', { name: `${name} 的更多操作` }).click();
 const deviceAction = (page: Page, name: string) => page.getByRole('menuitem', { name, exact: true })
   .or(page.getByRole('button', { name, exact: true }));
+const displayRow = (page: Page) => page.getByRole('menuitem', { name: /^显示器/ })
+  .or(page.getByRole('button', { name: /^显示器/ }));
+
+async function closeMenu(page: Page) {
+  if (await page.locator('.device-menu-trigger').count()) {
+    await page.getByRole('heading', { name: '设备管理', exact: true }).click();
+    await expect(page.getByRole('menu')).toBeHidden();
+  } else {
+    await page.locator('.device-bottom-sheet .ant-drawer-close').click();
+    await expect(page.locator('.device-bottom-sheet .ant-drawer-content')).toBeHidden();
+  }
+}
 
 test('screen off and restore stay in device management without opening a desktop', async ({ page }, info) => {
   const requests: unknown[] = [];
+  let state = 'on';
   await page.route('**/devices/*/screen-power', route => {
-    requests.push(route.request().postDataJSON());
+    if (route.request().method() === 'GET') return route.fulfill({ json: { state } });
+    const command = route.request().postDataJSON();
+    requests.push(command);
+    state = command.action;
     return route.fulfill({ status: 204 });
   });
   const sockets: string[] = [];
@@ -18,6 +34,9 @@ test('screen off and restore stay in device management without opening a desktop
   await page.goto('e2e/remote-desktop-harness.html?device-screen');
   const url = page.url();
   await openMenu(page);
+  await expect(deviceAction(page, '关闭电脑屏幕')).toBeEnabled();
+  await expect(deviceAction(page, '恢复电脑屏幕')).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath('display-on.png'), animations: 'disabled' });
   await deviceAction(page, '关闭电脑屏幕').click();
   await expect(page.getByText('暂时关闭电脑屏幕？')).toBeVisible();
   await expect(page.getByRole('menu')).not.toBeVisible();
@@ -45,6 +64,9 @@ test('screen off and restore stay in device management without opening a desktop
   await expect(page.getByRole('heading', { name: '设备管理', exact: true })).toBeVisible();
   await expect(page.locator('video')).toHaveCount(0);
   await openMenu(page);
+  await expect(deviceAction(page, '恢复电脑屏幕')).toBeEnabled();
+  await expect(deviceAction(page, '关闭电脑屏幕')).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath('display-off.png'), animations: 'disabled' });
   await deviceAction(page, '恢复电脑屏幕').click();
   await expect(page.getByText('已发送恢复显示指令')).toBeVisible();
   expect(requests).toEqual([{ action: 'off' }, { action: 'on' }]);
@@ -54,25 +76,32 @@ test('screen off and restore stay in device management without opening a desktop
   await page.screenshot({ path: info.outputPath('screen-restored.png') });
 });
 
-test('offline and unsupported devices cannot send screen commands', async ({ page }) => {
+test('offline, older and unsupported devices cannot send screen commands', async ({ page }, info) => {
+  const requests: string[] = [];
+  await page.route('**/devices/*/screen-power', route => {
+    requests.push(route.request().method());
+    return route.abort();
+  });
   await page.goto('e2e/remote-desktop-harness.html?device-screen');
   await openMenu(page, '离线电脑');
-  await expect(deviceAction(page, '关闭电脑屏幕')).toBeDisabled();
-  await expect(deviceAction(page, '恢复电脑屏幕')).toBeDisabled();
-  if (await page.locator('.device-menu-trigger').count()) {
-    await page.getByRole('heading', { name: '设备管理', exact: true }).click();
-  } else {
-    await page.locator('.device-bottom-sheet .ant-drawer-close').click();
-  }
+  await expect(displayRow(page)).toBeDisabled();
+  await expect(displayRow(page)).toContainText('离线');
+  await page.screenshot({ path: info.outputPath('device-offline.png'), animations: 'disabled' });
+  await closeMenu(page);
+  await openMenu(page, '旧版电脑');
+  await expect(displayRow(page)).toBeDisabled();
+  await expect(displayRow(page)).toContainText('请先更新电脑上的 Remote AI。');
+  await closeMenu(page);
   await openMenu(page, 'Mac');
-  await expect(deviceAction(page, '关闭电脑屏幕')).toHaveCount(0);
-  await expect(deviceAction(page, '恢复电脑屏幕')).toHaveCount(0);
+  await expect(displayRow(page)).toHaveCount(0);
+  expect(requests).toEqual([]);
 });
 
 test('failures remain on the device page and allow retry', async ({ page }) => {
   let fail = true;
-  await page.route('**/devices/*/screen-power', route => route.fulfill(fail
-    ? { status: 409, json: { message: 'client.deviceScreen.updateRequired' } } : { status: 204 }));
+  await page.route('**/devices/*/screen-power', route => route.fulfill(route.request().method() === 'GET'
+    ? { json: { state: 'off' } }
+    : fail ? { status: 409, json: { message: 'client.deviceScreen.updateRequired' } } : { status: 204 }));
   await page.goto('e2e/remote-desktop-harness.html?device-screen');
   await openMenu(page);
   await deviceAction(page, '恢复电脑屏幕').click();
@@ -83,4 +112,18 @@ test('failures remain on the device page and allow retry', async ({ page }) => {
   await deviceAction(page, '恢复电脑屏幕').click();
   await expect(page.getByText('已发送恢复显示指令')).toBeVisible();
   await expect(page.locator('video')).toHaveCount(0);
+});
+
+test('open menu follows external changes and disables the action when Windows cannot report its state', async ({ page }, info) => {
+  let state = 'on';
+  await page.route('**/devices/*/screen-power', route => route.fulfill({ json: { state } }));
+  await page.goto('e2e/remote-desktop-harness.html?device-screen');
+  await openMenu(page);
+  await expect(deviceAction(page, '关闭电脑屏幕')).toBeEnabled();
+  state = 'off';
+  await expect(deviceAction(page, '恢复电脑屏幕')).toBeEnabled({ timeout: 8_000 });
+  state = 'unknown';
+  await expect(displayRow(page)).toContainText('操作未完成', { timeout: 8_000 });
+  await expect(displayRow(page)).toBeDisabled();
+  await page.screenshot({ path: info.outputPath('display-unavailable.png'), animations: 'disabled' });
 });

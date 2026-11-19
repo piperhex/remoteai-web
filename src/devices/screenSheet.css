@@ -31,6 +31,7 @@
 }
 .device-action > svg { flex: none; color: var(--app-accent, #00866b); }
 .device-action > span { min-width: 0; flex: 1; }
+.device-action-detail { display: block; color: var(--app-muted, #78818f); overflow-wrap: anywhere; }
 .device-action > .device-action-next { color: var(--app-muted, #78818f); }
 .device-action.danger, .device-action.danger > svg { color: var(--app-danger, #c64b43); }
 .device-action:disabled { opacity: .45; cursor: default; }

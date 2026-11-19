@@ -2,7 +2,8 @@ import { getLocale, t, useLanguage } from '../../../../shared/localization/brows
 import { Dropdown } from 'antd';
 import { ArrowLeftRight, ChevronRight, Clock, ExternalLink, KeyRound, Laptop, Monitor, MoreVertical,
   Server, Sun, Trash2, UserRound } from 'lucide-react';
-import { supportsScreenControl } from '../../../../shared/remote-desktop/screenControl';
+import { supportsScreenControl, type ScreenPowerControl } from '../../../../shared/remote-desktop/screenControl';
+import { useScreenPowerStatus } from '../../../../shared/remote-desktop/useScreenPowerStatus';
 import { useState } from 'react';
 import { DeviceScreenSheet } from './DeviceScreenSheet';
 import { DeviceBottomSheet } from './DeviceBottomSheet';
@@ -21,7 +22,7 @@ interface DeviceCardProps {
   onSelectAuthAccount: (deviceId: string) => void;
   onDelete: (device: RemoteDevice) => void;
   onRevokeService: (device: RemoteDevice) => void;
-  onScreenControl: (device: RemoteDevice, enabled: boolean) => void;
+  screenControl: ScreenPowerControl;
 }
 
 function platformLabel(platform: string) {
@@ -82,14 +83,13 @@ function DeviceDetails({ device, accounts, providers }: Pick<DeviceCardProps, 'd
     </span>)}</span>;
 }
 
-function deviceActions(props: DeviceCardProps, confirmScreen: () => void) {
+function deviceActions(props: DeviceCardProps, screen: ReturnType<typeof useScreenPowerStatus>, onScreenAction: () => void) {
   const { device, deletingDeviceId, switchingAuthDeviceId } = props;
   return [
     ...(supportsScreenControl(device) ? [
-      { key: 'screen-off', icon: <Monitor size={18} />, label: t('client.deviceScreen.turnOff'),
-        disabled: !device.online, onClick: confirmScreen },
-      { key: 'screen-restore', icon: <Sun size={18} />, label: t('client.deviceScreen.restore'),
-        disabled: !device.online, onClick: () => props.onScreenControl(device, false) },
+      { key: 'screen-power', icon: screen.action === 'on' ? <Sun size={18} /> : <Monitor size={18} />,
+        label: screen.detail ? <span>{t(screen.label)}<small className="device-action-detail">{t(screen.detail)}</small></span>
+          : t(screen.label), disabled: !screen.action, onClick: onScreenAction },
     ] : []),
     { key: 'auth', icon: <ExternalLink size={18} />, label: t("client.app.proxySignInAccount"),
       disabled: !device.online || Boolean(switchingAuthDeviceId),
@@ -107,7 +107,11 @@ export function DeviceCard(props: DeviceCardProps) {
   const [optionsOpen, setOptionsOpen] = useState(false);
   const { device, mobile, deletingDeviceId, switchingModelDeviceId } = props;
   const busy = switchingModelDeviceId === device.deviceId || deletingDeviceId === device.deviceId;
-  const items = deviceActions(props, () => setConfirmScreen(true));
+  const screen = useScreenPowerStatus(device, optionsOpen || confirmScreen, props.screenControl.read);
+  const items = deviceActions(props, screen, () => {
+    if (screen.action === 'off') setConfirmScreen(true);
+    if (screen.action === 'on') props.screenControl.change(device, false);
+  });
   const openOptions = () => setOptionsOpen(true);
   const closeOptions = () => setOptionsOpen(false);
   const modelDisabled = !device.online || busy;
@@ -125,7 +129,8 @@ export function DeviceCard(props: DeviceCardProps) {
       </span>
       <DeviceDetails device={device} accounts={props.accounts} providers={props.providers} />
     </button>
-    {!mobile && <Dropdown trigger={['click']} placement="bottomRight" menu={{ items }} overlayClassName="device-options-menu">
+    {!mobile && <Dropdown trigger={['click']} placement="bottomRight" open={optionsOpen} onOpenChange={setOptionsOpen}
+      menu={{ items, onClick: closeOptions }} overlayClassName="device-options-menu">
       <button type="button" className="device-menu-trigger" aria-label={t("client.app.moreActionsFor", { value1: device.name })}>
         <MoreVertical size={20} aria-hidden />
       </button>
@@ -142,11 +147,12 @@ export function DeviceCard(props: DeviceCardProps) {
         {item.icon}<span>{item.label}</span>
       </button>)}
     </DeviceBottomSheet>}
-    <DeviceScreenSheet device={device} open={confirmScreen} onClose={() => setConfirmScreen(false)}
+    <DeviceScreenSheet device={device} open={confirmScreen} canTurnOff={screen.action === 'off'}
+      onClose={() => setConfirmScreen(false)}
       onConfirm={() => {
-        if (!confirmScreen || !device.online) return;
+        if (!confirmScreen || screen.action !== 'off') return;
         setConfirmScreen(false);
-        props.onScreenControl(device, true);
+        props.screenControl.change(device, true);
       }} />
   </>;
 }

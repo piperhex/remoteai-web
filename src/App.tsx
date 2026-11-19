@@ -154,7 +154,7 @@ function LoginView() {
 }
 
 function DevicesPage() {
-  const onScreenControl = useDeviceScreenControl();
+  const screenControl = useDeviceScreenControl();
   const revokeService = useRevokeDesktopService();
   useLanguage();
   const dispatch = useAppDispatch();
@@ -242,7 +242,7 @@ function DevicesPage() {
     <PullToRefresh onRefresh={performRefresh} renderText={(status) => PULL_REFRESH_TEXT[status]}>
       <DeviceManagementList devices={sorted} accounts={accounts} providers={providers}
         onBack={() => dispatch(pageChanged('discover'))}
-        onScreenControl={onScreenControl}
+        screenControl={screenControl}
         refreshing={refreshing} onRefresh={performRefresh} deletingDeviceId={deletingDeviceId}
         switchingModelDeviceId={switchingProvider?.deviceId ?? (switchingAccountId ? modelDeviceId : null)}
         switchingAuthDeviceId={switchingOpenAiAuth?.deviceId ?? null}
