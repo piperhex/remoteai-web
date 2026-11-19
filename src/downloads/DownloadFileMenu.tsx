@@ -68,7 +68,9 @@ export function DownloadFileMenu({ task, busy, onOpen, onReference }: {
   if (!task.browser && onReference) items.push({ key: 'reference', label: t('client.projectBrowser.referenceFile'),
     icon: <Paperclip size={16} />, onClick: () => { void reference(); } });
   return <>
-    <Dropdown menu={{ items }} trigger={['click']} placement="bottomRight" disabled={busy || loading}>
+    <Dropdown menu={{ items, style: { maxHeight: 'calc(100dvh - 16px)', overflowY: 'auto' } }}
+      trigger={['click']} placement="bottomRight" align={{ overflow: { adjustX: true, adjustY: true, shiftY: true } }}
+      disabled={busy || loading}>
       <button type="button" aria-haspopup="menu" className="download-button" disabled={busy || loading}>
         {t('client.portForwarding.open')}<ChevronDown size={17} /></button>
     </Dropdown>
