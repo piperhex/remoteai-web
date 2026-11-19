@@ -4,6 +4,7 @@ import { isRemoteAggregateId, remoteModelOptions, type RemoteModelTarget } from 
 import { ChevronRight } from "lucide-react";
 import type { AccountSummary, RemoteDevice, RemoteProviderSummary } from "../types";
 import { AdaptiveSheet } from "../../../../shared/layout/AdaptiveSheet";
+import { DeviceBottomSheet } from '../devices/DeviceBottomSheet';
 
 interface RemoteModelSwitchSheetProps {
   device: RemoteDevice | null;
@@ -12,6 +13,7 @@ interface RemoteModelSwitchSheetProps {
   switchingAccountId: string | null;
   switchingProviderId: string | null;
   onClose: () => void;
+  onBack?: () => void;
   onSwitchAccount: (deviceId: string, accountId: string, target: RemoteModelTarget) => Promise<boolean>;
   onSwitchProvider: (deviceId: string, providerId: string, target: RemoteModelTarget) => Promise<boolean>;
   onSwitchProviderGroup: (deviceId: string, group: string) => Promise<boolean>;
@@ -24,6 +26,7 @@ export function RemoteModelSwitchSheet({
   switchingAccountId,
   switchingProviderId,
   onClose,
+  onBack,
   onSwitchAccount,
   onSwitchProvider,
   onSwitchProviderGroup,
@@ -49,9 +52,9 @@ export function RemoteModelSwitchSheet({
     if (await onSwitchProviderGroup(device.deviceId, group)) onClose();
   };
 
-  return <AdaptiveSheet open={Boolean(device)} title={t("client.app.switchModel")}
-    subtitle={device ? t("client.app.chooseTheModelSourceForThisComputer", { value1: device.name }) : undefined}
-    width={440} onClose={() => { if (!busy) onClose(); }}>
+  const title = t('client.app.switchModel');
+  const subtitle = device ? t('client.app.chooseTheModelSourceForThisComputer', { value1: device.name }) : undefined;
+  const content = <>
     <div className="model-switch-target" role="group" aria-label={t("client.app.switchTarget")}>
       <button type="button" aria-pressed={target === 'proxy'} disabled={busy}
         onClick={() => setTarget('proxy')}>{t("client.app.proxyApiModel")}</button>
@@ -116,5 +119,9 @@ export function RemoteModelSwitchSheet({
     <p className="model-switch-footer">
       {target === 'gui' ? t("client.app.futureCodexGuiRequestsWillUseTheSelectedSourceNo")
         : t("client.app.restartChatgptCodexAfterSwitchingBetweenOfficialModelsAndThird")}</p>
-  </AdaptiveSheet>;
+  </>;
+  if (onBack) return <DeviceBottomSheet open={Boolean(device)} title={title} subtitle={subtitle}
+    onClose={onClose} onBack={onBack} dismissible={!busy}>{content}</DeviceBottomSheet>;
+  return <AdaptiveSheet open={Boolean(device)} title={title} subtitle={subtitle}
+    width={440} onClose={() => { if (!busy) onClose(); }}>{content}</AdaptiveSheet>;
 }

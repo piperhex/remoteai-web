@@ -10,11 +10,18 @@ async function closeSheet(page: Page) {
 
 async function noOverflow(page: Page) {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  for (const selector of ['.adaptive-sheet-content', '.account-details', '.verification-card']) {
+  for (const selector of ['.adaptive-sheet-content', '.account-details', '.verification-card',
+    '.device-bottom-sheet .ant-drawer-body']) {
     const fits = await page.locator(selector).evaluateAll(nodes =>
       nodes.every(node => node.scrollWidth <= node.clientWidth + 1));
     expect(fits).toBe(true);
   }
+}
+
+async function openDeviceModel(page: Page) {
+  await page.locator('.device-card').filter({ hasText: '我的工作电脑' }).locator('.device-card-main').click();
+  const modelAction = page.getByRole('button', { name: '切换模型', exact: true });
+  if (await page.locator('.device-menu-trigger').count() === 0) await modelAction.click();
 }
 
 test.beforeEach(async ({ page, request }) => {
@@ -39,7 +46,8 @@ test('revokes unattended access only after confirmation and keeps the prompt com
   await navigate(page, '设备');
   const openPrompt = async () => {
     await page.getByRole('button', { name: '我的工作电脑 的更多操作' }).click();
-    await page.getByRole('menuitem', { name: '撤销无人值守授权' }).click();
+    await page.getByRole('menuitem', { name: '撤销无人值守授权' })
+      .or(page.getByRole('button', { name: '撤销无人值守授权', exact: true })).click();
     await expect(page.getByText('撤销无人值守授权？', { exact: true })).toBeVisible();
     await expect(page.getByRole('menu')).toBeHidden();
   };
@@ -198,17 +206,17 @@ test('slow refresh stays responsive and only one refresh runs', async ({ page })
 
 test('device model targets keep their selections separate', async ({ page }, info) => {
   await navigate(page, '设备');
-  const open = async () => page.locator('.device-card').filter({ hasText: '我的工作电脑' })
-    .getByRole('button', { name: /切换模型/ }).click();
+  const open = () => openDeviceModel(page);
   await open();
   await expect(page.getByRole('button', { name: '代理接口模型', exact: true })).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByRole('button', { name: /alex@example.test 官方模型/ })).toBeDisabled();
   await expect(page.getByRole('button', { name: /工作分组 同时启用/ })).toBeVisible();
   await page.getByRole('button', { name: 'Codex GUI 模型', exact: true }).click();
+  await expect(page.getByRole('group', { name: '切换目标' })).toBeInViewport({ ratio: 1 });
   await expect(page.getByRole('button', { name: /studio@example.test 官方模型/ })).toBeDisabled();
   await expect(page.getByRole('button', { name: /工作分组 同时启用/ })).toHaveCount(0);
   await noOverflow(page);
-  await page.screenshot({ path: info.outputPath('gui-model-switch.png') });
+  await page.screenshot({ path: info.outputPath('gui-model-switch.png'), animations: 'disabled' });
   const guiRequest = page.waitForRequest('**/devices/sample-pc/gui-provider');
   await page.getByRole('button', { name: /测试 Provider test-model/ }).click();
   expect((await guiRequest).postDataJSON()).toEqual({ providerId: 'provider-1' });
@@ -232,8 +240,7 @@ test('device model targets keep their selections separate', async ({ page }, inf
 
 test('pending GUI switch prevents duplicate actions and a failure preserves the selection', async ({ page }) => {
   await navigate(page, '设备');
-  await page.locator('.device-card').filter({ hasText: '我的工作电脑' })
-    .getByRole('button', { name: /切换模型/ }).click();
+  await openDeviceModel(page);
   await page.getByRole('button', { name: 'Codex GUI 模型', exact: true }).click();
   let calls = 0;
   let release: () => void = () => undefined;
@@ -258,8 +265,7 @@ test('pending GUI switch prevents duplicate actions and a failure preserves the 
 
 test('aggregate selections keep GUI and proxy targets independent', async ({ page }, info) => {
   await navigate(page, '设备');
-  const open = async () => page.locator('.device-card').filter({ hasText: '我的工作电脑' })
-    .getByRole('button', { name: /切换模型/ }).click();
+  const open = () => openDeviceModel(page);
   await open();
   await page.getByRole('button', { name: 'Codex GUI 模型', exact: true }).click();
   const guiRequest = page.waitForRequest('**/devices/sample-pc/gui-aggregate');
@@ -279,4 +285,35 @@ test('aggregate selections keep GUI and proxy targets independent', async ({ pag
   await expect(page.getByText('代理接口模型已切换', { exact: true })).toBeHidden();
   await noOverflow(page);
   await page.screenshot({ path: info.outputPath('aggregate-model-selection.png'), animations: 'disabled' });
+});
+
+test('mobile device cards open actions before the model drawer', async ({ page }, info) => {
+  test.skip(info.project.name === 'desktop');
+  if (info.project.name === 'narrow') {
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  }
+  await navigate(page, '设备');
+  const trigger = page.getByRole('button', { name: '我的工作电脑 的更多操作' });
+  const modelAction = page.getByRole('button', { name: '切换模型', exact: true });
+  await expect(page.locator('.device-menu-trigger')).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath('device-cards.png'), animations: 'disabled' });
+  await trigger.tap();
+  await expect(modelAction).toBeEnabled();
+  await expect(page.getByRole('button', { name: '代理接口模型', exact: true })).toBeHidden();
+  await page.screenshot({ path: info.outputPath('device-actions.png'), animations: 'disabled' });
+  await modelAction.tap();
+  await expect(page.getByRole('button', { name: '代理接口模型', exact: true })).toBeVisible();
+  await expect(modelAction).toBeHidden();
+  await page.screenshot({ path: info.outputPath('device-model-proxy.png'), animations: 'disabled' });
+  await page.getByRole('button', { name: 'Codex GUI 模型', exact: true }).tap();
+  await expect(page.getByRole('group', { name: '切换目标' })).toBeInViewport({ ratio: 1 });
+  await page.screenshot({ path: info.outputPath('device-model-gui.png'), animations: 'disabled' });
+  await page.getByRole('button', { name: '返回上一层', exact: true }).tap();
+  await expect(modelAction).toBeVisible();
+  await page.getByRole('button', { name: '关闭', exact: true }).tap();
+  await page.getByRole('button', { name: '备用电脑 的更多操作' }).tap();
+  await expect(modelAction).toBeDisabled();
+  await expect(page.getByRole('button', { name: '删除设备', exact: true })).toBeEnabled();
+  await page.screenshot({ path: info.outputPath('device-actions-offline.png'), animations: 'disabled' });
 });

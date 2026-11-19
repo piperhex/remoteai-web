@@ -1,4 +1,5 @@
 import { t, useLanguage } from '../../../../shared/localization/browserClient';
+import { useDesktopLayout } from '../../../../shared/layout/useDesktopLayout';
 import { Info, Layers, RefreshCw, Smartphone } from 'lucide-react';
 import type { ComponentProps } from 'react';
 import { DeviceCard } from './DeviceCard';
@@ -6,7 +7,7 @@ import { DeviceMobileHeader } from './DeviceMobileHeader';
 import { DiscoveryBackButton } from '../discovery/DiscoveryPage';
 import './styles.css';
 
-type DeviceManagementListProps = Omit<ComponentProps<typeof DeviceCard>, 'device'> & {
+type DeviceManagementListProps = Omit<ComponentProps<typeof DeviceCard>, 'device' | 'mobile'> & {
   devices: ComponentProps<typeof DeviceCard>['device'][];
   refreshing: boolean;
   onRefresh: () => Promise<void>;
@@ -15,6 +16,7 @@ type DeviceManagementListProps = Omit<ComponentProps<typeof DeviceCard>, 'device
 
 export function DeviceManagementList({ devices, refreshing, onRefresh, onBack, ...cardProps }: DeviceManagementListProps) {
   useLanguage();
+  const desktop = useDesktopLayout();
   const online = devices.filter((device) => device.online).length;
   return <>
     <div className="devices-desktop-back"><DiscoveryBackButton onBack={onBack} /></div>
@@ -35,7 +37,7 @@ export function DeviceManagementList({ devices, refreshing, onRefresh, onBack, .
     </section>
     {devices.length ? <>
       <div className="device-grid">{devices.map((device) =>
-        <DeviceCard key={device.deviceId} device={device} {...cardProps} />)}</div>
+        <DeviceCard key={device.deviceId} device={device} mobile={!desktop} {...cardProps} />)}</div>
       <p className="devices-hint"><Info size={23} aria-hidden />
         <span>{t("client.app.onlineDevicesCannotBeRemoved")}<br />{t("client.app.signOutOnTheDeviceBeforeRemovingIt")}</span></p>
     </> : <div className="devices-empty"><Smartphone size={40} aria-hidden /><h3>{t("client.app.noDevicesYet")}</h3>

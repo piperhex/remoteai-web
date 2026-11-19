@@ -1,22 +1,41 @@
-.device-screen-sheet .ant-drawer-content-wrapper {
+:is(.device-screen-sheet, .device-bottom-sheet) .ant-drawer-content-wrapper {
   width: min(440px, 100vw); max-height: 82dvh; margin-inline: auto;
 }
-.device-screen-sheet .ant-drawer-content {
+:is(.device-screen-sheet, .device-bottom-sheet) .ant-drawer-content {
   border-radius: 28px 28px 0 0; background: var(--app-surface, #fff); color: var(--app-ink, #111522);
 }
-.device-screen-sheet .ant-drawer-content::before {
+:is(.device-screen-sheet, .device-bottom-sheet) .ant-drawer-content::before {
   content: ''; flex-shrink: 0; width: 44px; height: 5px; margin: 12px auto 0;
   border-radius: 3px; background: var(--app-elevated, #d5dfd9);
 }
-.device-screen-sheet .ant-drawer-header { padding: 20px 20px 0; border-bottom: 0; }
-.device-screen-sheet .ant-drawer-header-title { align-items: flex-start; }
+:is(.device-screen-sheet, .device-bottom-sheet) .ant-drawer-header { padding: 20px 20px 0; border-bottom: 0; }
+:is(.device-screen-sheet, .device-bottom-sheet) .ant-drawer-header-title { align-items: flex-start; }
+.device-bottom-sheet-title { display: flex; align-items: flex-start; gap: 12px; }
+.device-bottom-sheet .ant-drawer-content { height: auto; max-height: 82dvh; }
 .device-screen-heading { display: grid; gap: 4px; min-width: 0; overflow-wrap: anywhere; }
 .device-screen-heading strong { font-size: 21px; line-height: 1.5; font-weight: 800; }
 .device-screen-heading span { font-size: 12px; line-height: 1.6; color: var(--app-muted, #78818f); }
-.device-screen-sheet .ant-drawer-close {
+:is(.device-screen-sheet, .device-bottom-sheet) .ant-drawer-close {
   width: 34px; height: 34px; margin: 0 0 0 12px; border-radius: 50%; background: var(--app-canvas, #eef3f0);
 }
-.device-screen-sheet .ant-drawer-body { padding: 19px 20px 12px; }
+:is(.device-screen-sheet, .device-bottom-sheet) .ant-drawer-body { padding: 19px 20px 12px; }
+.device-bottom-sheet .ant-drawer-body {
+  min-height: 0; overscroll-behavior: contain; overflow-anchor: none;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+}
+.device-bottom-sheet-title .ant-btn { flex: none; background: var(--app-canvas, #eef3f0); }
+.device-action {
+  display: flex; align-items: center; gap: 12px; width: 100%; min-height: 52px; padding: 10px;
+  border: 0; border-radius: 12px; background: transparent; color: inherit; text-align: start;
+  font: inherit; overflow-wrap: anywhere;
+}
+.device-action > svg { flex: none; color: var(--app-accent, #00866b); }
+.device-action > span { min-width: 0; flex: 1; }
+.device-action > .device-action-next { color: var(--app-muted, #78818f); }
+.device-action.danger, .device-action.danger > svg { color: var(--app-danger, #c64b43); }
+.device-action:disabled { opacity: .45; cursor: default; }
+.device-action:enabled:is(:hover, :active) { background: var(--app-canvas, #edf9f4); }
+.device-action:focus-visible { outline: 2px solid var(--app-accent, #00866b); outline-offset: -2px; }
 .device-screen-explanation {
   margin: 0; max-width: 400px; font-size: 14px; line-height: 1.7;
   color: var(--app-muted, #78818f); overflow-wrap: anywhere;

@@ -1,20 +1,23 @@
 import { getLocale, t, useLanguage } from '../../../../shared/localization/browserClient';
 import { Dropdown } from 'antd';
-import { Clock, ExternalLink, KeyRound, Laptop, Monitor, MoreVertical, Server, Sun, Trash2, UserRound } from 'lucide-react';
+import { ArrowLeftRight, ChevronRight, Clock, ExternalLink, KeyRound, Laptop, Monitor, MoreVertical,
+  Server, Sun, Trash2, UserRound } from 'lucide-react';
 import { supportsScreenControl } from '../../../../shared/remote-desktop/screenControl';
 import { useState } from 'react';
 import { DeviceScreenSheet } from './DeviceScreenSheet';
+import { DeviceBottomSheet } from './DeviceBottomSheet';
 import type { AccountSummary, RemoteDevice, RemoteProviderSummary } from '../types';
 import { remoteModelOptions, type RemoteModelTarget } from '../../../../shared/remote-chat/modelTarget';
 
 interface DeviceCardProps {
+  mobile: boolean;
   device: RemoteDevice;
   accounts: AccountSummary[];
   providers: RemoteProviderSummary[];
   deletingDeviceId: string | null;
   switchingModelDeviceId: string | null;
   switchingAuthDeviceId: string | null;
-  onSwitchModel: (deviceId: string) => void;
+  onSwitchModel: (deviceId: string, onBack?: () => void) => void;
   onSelectAuthAccount: (deviceId: string) => void;
   onDelete: (device: RemoteDevice) => void;
   onRevokeService: (device: RemoteDevice) => void;
@@ -79,15 +82,12 @@ function DeviceDetails({ device, accounts, providers }: Pick<DeviceCardProps, 'd
     </span>)}</span>;
 }
 
-export function DeviceCard(props: DeviceCardProps) {
-  useLanguage();
-  const [confirmScreen, setConfirmScreen] = useState(false);
-  const { device, deletingDeviceId, switchingModelDeviceId, switchingAuthDeviceId } = props;
-  const busy = switchingModelDeviceId === device.deviceId || deletingDeviceId === device.deviceId;
-  const items = [
+function deviceActions(props: DeviceCardProps, confirmScreen: () => void) {
+  const { device, deletingDeviceId, switchingAuthDeviceId } = props;
+  return [
     ...(supportsScreenControl(device) ? [
       { key: 'screen-off', icon: <Monitor size={18} />, label: t('client.deviceScreen.turnOff'),
-        disabled: !device.online, onClick: () => setConfirmScreen(true) },
+        disabled: !device.online, onClick: confirmScreen },
       { key: 'screen-restore', icon: <Sun size={18} />, label: t('client.deviceScreen.restore'),
         disabled: !device.online, onClick: () => props.onScreenControl(device, false) },
     ] : []),
@@ -99,10 +99,24 @@ export function DeviceCard(props: DeviceCardProps) {
     { key: 'delete', icon: <Trash2 size={18} />, label: device.online ? t("client.app.cannotRemoveWhileOnline") : t("client.app.removeDevice"),
       danger: true, disabled: device.online || Boolean(deletingDeviceId), onClick: () => props.onDelete(device) },
   ];
+}
+
+export function DeviceCard(props: DeviceCardProps) {
+  useLanguage();
+  const [confirmScreen, setConfirmScreen] = useState(false);
+  const [optionsOpen, setOptionsOpen] = useState(false);
+  const { device, mobile, deletingDeviceId, switchingModelDeviceId } = props;
+  const busy = switchingModelDeviceId === device.deviceId || deletingDeviceId === device.deviceId;
+  const items = deviceActions(props, () => setConfirmScreen(true));
+  const openOptions = () => setOptionsOpen(true);
+  const closeOptions = () => setOptionsOpen(false);
+  const modelDisabled = !device.online || busy;
   return <><article className={`device-card ${device.online ? 'online' : 'offline'}`}>
-    <button type="button" className="device-card-main" disabled={!device.online || busy} aria-busy={busy}
-      aria-label={`${device.name}，${device.online ? t("client.app.selectToSwitchModel") : t("client.chat.offline")}`}
-      onClick={() => props.onSwitchModel(device.deviceId)}>
+    <button type="button" className="device-card-main" disabled={!mobile && modelDisabled} aria-busy={busy}
+      aria-haspopup={mobile ? 'dialog' : undefined}
+      aria-label={mobile ? t('client.app.moreActionsFor', { value1: device.name })
+        : `${device.name}，${device.online ? t('client.app.selectToSwitchModel') : t('client.chat.offline')}`}
+      onClick={mobile ? openOptions : () => props.onSwitchModel(device.deviceId)}>
       <span className="device-card-header">
         <span className="device-platform"><PlatformIcon platform={device.platform} /></span>
         <span className="device-identity"><strong>{device.name}</strong>
@@ -111,12 +125,23 @@ export function DeviceCard(props: DeviceCardProps) {
       </span>
       <DeviceDetails device={device} accounts={props.accounts} providers={props.providers} />
     </button>
-    <Dropdown trigger={['click']} placement="bottomRight" menu={{ items }} overlayClassName="device-options-menu">
+    {!mobile && <Dropdown trigger={['click']} placement="bottomRight" menu={{ items }} overlayClassName="device-options-menu">
       <button type="button" className="device-menu-trigger" aria-label={t("client.app.moreActionsFor", { value1: device.name })}>
         <MoreVertical size={20} aria-hidden />
       </button>
-    </Dropdown>
+    </Dropdown>}
   </article>
+    {mobile && <DeviceBottomSheet open={optionsOpen} title={device.name} onClose={closeOptions}>
+      <button type="button" className="device-action" disabled={modelDisabled}
+        onClick={() => { closeOptions(); props.onSwitchModel(device.deviceId, openOptions); }}>
+        <ArrowLeftRight size={20} aria-hidden /><span>{t('client.app.switchModel')}</span>
+        <ChevronRight className="device-action-next" size={18} aria-hidden />
+      </button>
+      {items.map(item => <button type="button" className={`device-action${item.danger ? ' danger' : ''}`}
+        key={item.key} disabled={item.disabled} onClick={() => { closeOptions(); item.onClick(); }}>
+        {item.icon}<span>{item.label}</span>
+      </button>)}
+    </DeviceBottomSheet>}
     <DeviceScreenSheet device={device} open={confirmScreen} onClose={() => setConfirmScreen(false)}
       onConfirm={() => {
         if (!confirmScreen || !device.online) return;

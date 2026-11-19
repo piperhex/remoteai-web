@@ -170,9 +170,12 @@ function DevicesPage() {
   } = useAppSelector((state) => state.data);
   const promptModelRestart = useRemoteModelRestartPrompt();
   const [authDeviceId, setAuthDeviceId] = useState<string | null>(null);
-  const [modelDeviceId, setModelDeviceId] = useState<string | null>(null);
+  const [modelSelection, setModelSelection] = useState<{ deviceId: string; onBack?: () => void } | null>(null);
+  const modelDeviceId = modelSelection?.deviceId ?? null;
   const authDevice = devices.find((item) => item.deviceId === authDeviceId) ?? null;
   const modelDevice = devices.find((item) => item.deviceId === modelDeviceId) ?? null;
+  const closeModel = () => setModelSelection(null);
+  const returnToOptions = modelSelection?.onBack;
   const sorted = useMemo(() => [...devices].sort((left, right) => Number(right.online) - Number(left.online)
     || Date.parse(right.lastSeenAt) - Date.parse(left.lastSeenAt)), [devices]);
   const performRefresh = useCallback(async () => {
@@ -243,7 +246,8 @@ function DevicesPage() {
         refreshing={refreshing} onRefresh={performRefresh} deletingDeviceId={deletingDeviceId}
         switchingModelDeviceId={switchingProvider?.deviceId ?? (switchingAccountId ? modelDeviceId : null)}
         switchingAuthDeviceId={switchingOpenAiAuth?.deviceId ?? null}
-        onSwitchModel={setModelDeviceId} onSelectAuthAccount={setAuthDeviceId}
+        onSwitchModel={(deviceId, onBack) => setModelSelection({ deviceId, onBack })}
+        onSelectAuthAccount={setAuthDeviceId}
         onDelete={(device) => void deleteDevice(device)} onRevokeService={device => void revokeService(device)} />
     </PullToRefresh>
     <RemoteModelSwitchSheet
@@ -255,7 +259,8 @@ function DevicesPage() {
       switchingProviderId={switchingProvider
         && switchingProvider.deviceId === modelDevice?.deviceId
         ? switchingProvider.providerId : null}
-      onClose={() => setModelDeviceId(null)}
+      onClose={closeModel}
+      onBack={returnToOptions ? () => { closeModel(); returnToOptions(); } : undefined}
       onSwitchAccount={switchOfficialModel}
       onSwitchProvider={switchProviderModel}
       onSwitchProviderGroup={switchProviderGroup}
