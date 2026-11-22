@@ -77,6 +77,7 @@ export interface ConnectedChatProps {
   scrollableComposer?: boolean;
   renderSidebar?: (actions: ChatSidebarActions) => ReactNode;
   renderUserMessage?: RenderUserMessage;
+  renderHistory?: boolean;
   composerHeader?: ReactNode;
   cliVersion?: string | null;
   conversationFooter?: ReactNode;
@@ -105,7 +106,7 @@ export function ConnectedChat(props: ConnectedChatProps) {
 
 function ConnectedChatContent({ chat, device, devices, active, scope, email, chooseDevice,
   chooseLocal, accountPicker, headerActions, headerConnectionActions, headerEnd, renderSidebar, composerHeader,
-  conversationFooter, renderUserMessage, draggableHeader, scrollableComposer,
+  conversationFooter, renderUserMessage, renderHistory = true, draggableHeader, scrollableComposer,
   readClipboardImages, nativeFileDrop, desktopDiffs, deviceRefresh, cliVersion, openAccounts,
   workspacePage, onWorkspaceChange, acceptDownload }: ConnectedChatProps) {
   useLanguage();
@@ -251,7 +252,7 @@ function ConnectedChatContent({ chat, device, devices, active, scope, email, cho
           void controller.openRecoveryThread(id);
         }} onOpen={selectedFromList} />}
     </header>
-    {external && cli && <CliConversationPane cwd={cwd} dictation={controller.dictation} remoteLayout
+    {external && cli && renderHistory && <CliConversationPane cwd={cwd} dictation={controller.dictation} remoteLayout
       readClipboardImages={readClipboardImages} nativeFileDrop={nativeFileDrop}
       connected={ready}
       connection={{ client: controller.guiAccounts, deviceName: device?.name ?? t('client.settings.chooseAComputer'),
@@ -287,17 +288,19 @@ function ConnectedChatContent({ chat, device, devices, active, scope, email, cho
       {state.desktopOnly && <p className="chat-muted">
         {t("client.remoteDesktop.theDesktopIsReadyOpenRemoteDesktopAndSignIn")}</p>}
     </div></div>
-      <TaskReviewProvider controller={controller} state={state} active={conversationActive && foreground}>
+      {renderHistory && <TaskReviewProvider controller={controller} state={state} active={conversationActive && foreground}>
       <ChatRetryProvider controller={controller} state={state}>
-      <ChatMessages thread={state.selected} offline={!ready} active={conversationActive && foreground}
+      <ChatMessages thread={state.olderView?.thread ?? state.selected} offline={!ready} active={conversationActive && foreground}
+        showLatest={state.olderView && controller.showLatest}
         footer={scrollableComposer ? composer : undefined}
         renderUserMessage={renderUserMessage ?? (desktop ? props => <EditableChatMessage {...props}
           state={state} controller={controller} active={conversationActive && foreground} /> : undefined)}
-        loading={state.historyLoading} loadingMore={state.historyLoadingMore} hasMore={state.historyHasMore}
+        loading={state.historyLoading} loadingMore={state.historyLoadingMore}
+        hasMore={state.olderView?.page.hasMore ?? state.historyHasMore}
         loadOlder={() => controller.loadOlder()} historyLoad={state.historyLoad}
         processing={runningTurn && <ChatProcessing key={runningTurn.id} turn={runningTurn}
           processing={state.processing} active={conversationActive && ready} />} />
-      </ChatRetryProvider></TaskReviewProvider>
+      </ChatRetryProvider></TaskReviewProvider>}
     {!scrollableComposer && composer}
     </div>
     {conversationFooter}

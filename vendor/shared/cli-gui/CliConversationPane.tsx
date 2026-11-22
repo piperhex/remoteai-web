@@ -14,6 +14,7 @@ import styles from '../conversation/styles.module.less';
 import type { ChatConnectionProps } from '../remote-chat/views/ChatProfileMenu';
 import type { CliImageInput } from './useCliImages';
 import { CliImageProvider } from './CliImageProvider';
+import { ToolDetailsContext } from '../chat/DeferredToolDetails';
 
 function InstallationConversation({ footer }: { footer: ReactNode }) {
   return <div className={styles.messageArea}>
@@ -51,12 +52,14 @@ export function CliConversationPane({ cwd = '', projectPicker, dictation, active
     {renderComposer({ projectPicker, dictation, remoteLayout, active, composerHeader, connectionInfo,
       connection, connected, readClipboardImages, nativeFileDrop })}
   </>;
-  return <CliImageProvider ready={connected ?? true}><section className="cli-gui-pane" style={guiFontStyle(fontSize)}
+  return <ToolDetailsContext.Provider value={{ load: controller.loadToolDetails, active: active && ready }}>
+    <CliImageProvider ready={connected ?? true}><section className="cli-gui-pane" style={guiFontStyle(fontSize)}
     aria-label={uiText('client.cliGui.conversation')}>
     {state.error && <Alert type="error" showIcon message={cliErrorText(state.error)} closable
       onClose={() => controller.patch({ error: '' })} />}
-    {!ready ? <InstallationConversation footer={footer} /> : renderMessages({ history: state.history,
+    {!ready ? <InstallationConversation footer={footer} /> : renderMessages({ history: state.olderView ?? state.history,
+      showLatest: state.olderView && controller.showLatest,
       selected: state.selected?.id ?? null, loading: state.loading, loadOlder: controller.loadOlder,
       footer, active, scrollableComposer })}
-  </section></CliImageProvider>;
+  </section></CliImageProvider></ToolDetailsContext.Provider>;
 }

@@ -30,6 +30,7 @@
   width: var(--browser-preview-width); height: var(--browser-preview-height);
   transform: scale(var(--browser-preview-scale)); transform-origin: top left; pointer-events: none; }
 .browser-tab-grid .pm-browser-web-notice { display: none; }
+.browser-tab-grid .browser-tab-canvas > .pm-browser-feedback { flex: 1; padding: 0; }
 .pm-browser .browser-tab-select { position: absolute; inset: 44px 0 0; width: 100%; border-radius: 0; }
 .pm-browser .browser-tab-select:hover { background: transparent; }
 .browser-tab-card-url { position: absolute; inset: auto 0 0; pointer-events: none; font-size: .75em;

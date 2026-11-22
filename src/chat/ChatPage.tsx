@@ -95,7 +95,8 @@ function WebChat({ session, device, selected, ...props }: Props & {
       scope={JSON.stringify([session.baseUrl, session.email, device?.deviceId ?? ''])}
       deviceName={device?.name} onClose={props.closeTokenSummary} />}
     <div hidden={props.sshDiscovery} style={{ display: props.sshDiscovery ? 'none' : 'contents' }}>
-    <ConnectedChat {...props} active={props.active && !props.sshDiscovery} chat={chat} device={device} email={session.email}
+    <ConnectedChat {...props} renderHistory={selected} active={props.active && !props.sshDiscovery}
+    chat={chat} device={device} email={session.email}
     cliVersion={installer.version}
     onWorkspaceChange={setWorkspaceCwd}
     composerHeader={desktop && <RemoteGuiProject state={chat.state} controller={chat.controller}

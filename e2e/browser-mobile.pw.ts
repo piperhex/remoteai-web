@@ -2,6 +2,51 @@ import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { verifyFullscreenControl } from './browser-fullscreen-checks';
 
+test('mobile browser bounds live frames and reopens an evicted tab at its saved URL', async ({ page }, info) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => localStorage.setItem('codex-switch.web.session.v1', JSON.stringify({
+    baseUrl: `${location.origin}/renderer-account`, email: 'browser@example.test',
+    accessToken: 'fixture', refreshToken: 'fixture',
+  })));
+  await page.route('**/renderer-account/**', route => route.fulfill({ json: {
+    accounts: [], devices: [], providers: [], email: 'browser@example.test', id: 'browser', ticket: 'fixture',
+  } }));
+  await page.route('**/renderer-page/*', route => route.fulfill({ contentType: 'text/html',
+    body: `<h1>Page ${new URL(route.request().url()).pathname.split('/').pop()}</h1>
+      <a href="/renderer-page/detail">Open details</a>` }));
+  await page.goto('./');
+  const navigation = page.locator('.mobile-tabbar');
+  const open = navigation.getByRole('tab', { name: '浏览器', exact: true });
+  await open.click();
+  const browser = page.locator('.browser-main-page');
+  const address = browser.getByLabel('页面地址', { exact: true });
+  for (const number of [1, 2, 3, 4]) {
+    if (number > 1) await browser.getByRole('button', { name: '新标签页', exact: true }).click();
+    await address.fill(`${new URL(info.project.use.baseURL!).origin}/renderer-page/${number}`);
+    await address.press('Enter');
+    const selected = browser.locator('.browser-tab-selected iframe').contentFrame();
+    await expect(selected.getByRole('heading')).toHaveText(`Page ${number}`);
+    if (number === 1) {
+      await selected.getByRole('link').click();
+      await expect(selected.getByRole('heading')).toHaveText('Page detail');
+    }
+    await expect(browser.locator('iframe')).toHaveCount(Math.min(number, 3));
+  }
+  await browser.getByRole('button', { name: '管理标签页（4）' }).click();
+  await expect(browser.locator('.browser-tab-select')).toHaveCount(4);
+  await expect(page.locator('.adm-toast-mask')).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath('web-mobile-budget-four-tabs.png') });
+  await browser.locator('.browser-tab-select').first().click();
+  await expect(address).toHaveValue(/\/renderer-page\/detail$/);
+  const restored = browser.locator('.browser-tab-selected iframe').contentFrame().getByRole('heading');
+  await expect(restored).toHaveText('Page detail');
+  await navigation.getByRole('tab', { name: '发现', exact: true }).click();
+  await expect(browser.locator('iframe')).toHaveCount(1);
+  await open.click();
+  await expect(restored).toHaveText('Page detail');
+  await page.screenshot({ path: info.outputPath('web-mobile-budget-restored-tab.png') });
+});
+
 test('mobile browser sends readable website downloads to the app manager', async ({ page }, info) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.addInitScript(() => {

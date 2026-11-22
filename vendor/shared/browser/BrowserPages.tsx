@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
-import { X } from 'lucide-react';
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
+import { Globe, X } from 'lucide-react';
 import type { BrowserWindowProps } from '../provider-market/ProviderBrowser';
 import type { MarketText } from '../provider-market/i18n';
 import { BrowserWebsiteIcon } from './icons/BrowserWebsiteIcon';
@@ -8,8 +8,9 @@ import { SwipeableBrowserPage } from './SwipeableBrowserPage';
 import { DESKTOP_SITE_WIDTH } from './siteMode';
 import './mobileBrowser.css';
 import { BrowserHome } from './BrowserHome';
+import { useMobileBrowserRenderers } from './useMobileBrowserRenderers';
 
-/** Change the layout around the existing surfaces so previews never remount a tab's iframe. */
+/** Keep tab cards and navigation available when an older mobile page releases its renderer. */
 export function BrowserPages({ browser, t, manager, compact, query, blocked, select, loadingChanged, desktopTabs,
   home, bookmarks, recordVisit }: {
   browser: BrowserWindowProps & { embedded?: boolean; onPageNavigate?: (id: string, url: string) => void };
@@ -20,6 +21,19 @@ export function BrowserPages({ browser, t, manager, compact, query, blocked, sel
   recordVisit?: (id: string, page: { url: string; title: string }) => void;
 }) {
   const { tabs, activeId, Surface, commands, open } = browser;
+  const { resident } = useMobileBrowserRenderers(activeId, compact && open);
+  const observed = useRef(new Map<string, { requested: string; url: string }>());
+  useEffect(() => {
+    // Save readable in-frame navigations upon eviction. Updating a live iframe's src would reload its document.
+    for (const [id, visit] of observed.current) {
+      const tab = tabs.find(entry => entry.id === id);
+      if (!compact || tab?.url !== visit.requested) observed.current.delete(id);
+      else if (!resident.includes(id)) {
+        observed.current.delete(id);
+        (browser.onPageNavigate ?? browser.onNavigate)(id, visit.url);
+      }
+    }
+  }, [tabs, compact, resident, browser.onPageNavigate, browser.onNavigate]);
   const host = useRef<HTMLDivElement>(null);
   const [viewport, setViewport] = useState({ width: 390, height: 650 });
   useLayoutEffect(() => {
@@ -42,6 +56,7 @@ export function BrowserPages({ browser, t, manager, compact, query, blocked, sel
   return <div ref={host} className={`pm-browser-pages${manager ? ' browser-tab-grid' : ''}`} style={previewStyle}>
     {tabs.map(entry => {
       const title = entry.title || entry.url || t('market.browserNewTab');
+      const mounted = !compact || resident.includes(entry.id);
       return <SwipeableBrowserPage key={entry.id} id={`page-${entry.id}`} role={manager ? 'group' : 'tabpanel'}
         enabled={manager} dismiss={() => browser.onCloseTab(entry.id)}
         className={`pm-browser-page${entry.id === activeId ? ' browser-tab-selected' : ''}`
@@ -53,12 +68,21 @@ export function BrowserPages({ browser, t, manager, compact, query, blocked, sel
         <div key="surface" className={`browser-tab-canvas${home(entry.id) ? ' browser-home-covered' : ''}`}
           aria-hidden={manager || home(entry.id) || undefined}
           ref={element => { if (element) element.inert = manager || home(entry.id); }}>
-          <Surface tab={entry} active={open && entry.id === activeId && !blocked && !manager && !home(entry.id)}
+          {mounted && <Surface tab={entry}
+            active={open && entry.id === activeId && !blocked && !manager && !home(entry.id)}
             command={commands[entry.id] ?? null} hideForModal={browser.embedded} obscured={blocked}
             onNavigate={url => (browser.onPageNavigate ?? browser.onNavigate)(entry.id, url)}
             onPopup={url => browser.onPopup(entry.id, url)}
-            onVisit={page => recordVisit?.(entry.id, page)}
-            onLoadingChange={loading => loadingChanged(entry.id, loading)} t={t} />
+            onVisit={page => {
+              if (compact && page.url !== entry.url && /^https?:\/\//i.test(page.url)) {
+                observed.current.set(entry.id, { requested: entry.url, url: page.url });
+              } else observed.current.delete(entry.id);
+              recordVisit?.(entry.id, page);
+            }}
+            onLoadingChange={loading => loadingChanged(entry.id, loading)} t={t} />}
+          {!mounted && manager && !home(entry.id) && <div className="pm-browser-feedback" aria-hidden>
+            <Globe size={64} />
+          </div>}
         </div>
         {home(entry.id) && <BrowserHome t={t} visit={url => browser.onNavigate(entry.id, url)} bookmarks={bookmarks} />}
         {manager && <><button className="browser-tab-select" aria-label={title} aria-pressed={entry.id === activeId}

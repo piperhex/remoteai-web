@@ -25,7 +25,7 @@ test('mobile command output scrolls beyond the former page boundary', async ({ p
   await page.getByRole('button', { name: '查看处理过程，1 项活动' }).click();
   const sheet = page.locator('.chat-work-drawer');
   await expect(sheet.locator('.chat-virtual-command-viewport')).toHaveCount(0);
-  const toggle = sheet.getByRole('button', { name: /执行命令.*check-output/ });
+  const toggle = sheet.getByRole('button', { name: '已运行 · check-output', exact: true });
   await toggle.click();
   const viewport = sheet.locator('.chat-virtual-command-viewport').last();
   await expect(viewport).toContainText('LINE_0 ');

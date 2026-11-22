@@ -77,8 +77,6 @@ export function StreamingMarkdown({ text, streaming = false, children }: {
     return streaming || continueDraft ? scanDraft(normalized, previous, streaming) : empty;
   }, [normalized, streaming]);
   useLayoutEffect(() => { committed.current = draft; }, [draft]);
-  if (!streaming && !draft.end) return children(normalized);
-
   const end = streaming ? liveBlockEnd(normalized, draft.end) : normalized.length;
   return <>
     {[...draft.chunks, normalized.slice(draft.end, end)].map((part, index) =>

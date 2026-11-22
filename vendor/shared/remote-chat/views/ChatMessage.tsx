@@ -16,6 +16,7 @@ import { ChatMessageReferences } from './ChatMessageReferences';
 import { messageAttachments } from '../../chat/messageAttachments';
 import { MessageAttachments } from '../../chat/SentMessageAttachments';
 import { ChatFileLink } from './ChatFileLink';
+import { DeferredMessageBody } from '../../chat/DeferredMessageBody';
 
 export const ChatMessage = memo(function ChatMessage({ item, onOpen, process = false, running = false, onQuote,
   desktop = false, onInspect, onEdit, editDisabled }: {
@@ -23,6 +24,9 @@ export const ChatMessage = memo(function ChatMessage({ item, onOpen, process = f
   desktop?: boolean; onInspect?: () => void; onEdit?: () => void; editDisabled?: boolean;
 }) {
   useLanguage();
+  if (item.deferredBody) return <DeferredMessageBody item={item}>{full =>
+    <ChatMessage item={full} desktop={desktop} running={running} process={process} onOpen={onOpen} />}
+  </DeferredMessageBody>;
   const text = questionMessageText(item);
   if (!['userMessage', 'agentMessage'].includes(item.type)) {
     return <ChatActivity item={item} onOpen={onOpen} running={running && item.status === 'inProgress'}

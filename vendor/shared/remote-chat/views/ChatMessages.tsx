@@ -116,8 +116,8 @@ export function ChatMessages(props: MessageProps & { footer?: ReactNode }) {
   const scroll = useHistoryScroll(props, windowed);
   useMobileHistoryAnchor({ enabled: windowed, viewport: scroll.list, content: scroll.body,
     readingAnchor: scroll.readingAnchor, following: scroll.following });
-  const jump = scroll.showBottom && <button type="button" className="chat-scroll-bottom"
-    onClick={scroll.toBottom}><ArrowDown size={17} />{t("client.chat.scrollToBottom")}</button>;
+  const jump = (scroll.showBottom || props.showLatest) && <button type="button" className="chat-scroll-bottom"
+    onClick={() => { props.showLatest?.(); scroll.toBottom(); }}><ArrowDown size={17} />{t("client.chat.scrollToBottom")}</button>;
   return <div className={`chat-message-region${props.footer ? ' has-scroll-footer' : ''}`}>
     <ChatSelectionQuote root={scroll.content} selected={props.thread?.id ?? null} enabled={desktop} />
     <div ref={scroll.list} className="chat-scroll chat-messages" aria-label={t("client.chat.chatHistory")}

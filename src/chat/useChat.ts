@@ -50,6 +50,7 @@ export function useChat(session: AuthSession, deviceId: string, active: boolean)
   const state = useSyncExternalStore(controller.subscribe, controller.snapshot);
   useActiveChatPolicy(active, state.mode);
   const [foreground, setForeground] = useState(document.visibilityState === 'visible');
+  useEffect(() => { controller.setHistoryActive(active && foreground); }, [controller, active, foreground]);
   useEffect(() => {
     const update = () => setForeground(document.visibilityState === 'visible');
     const hide = () => setForeground(false);
