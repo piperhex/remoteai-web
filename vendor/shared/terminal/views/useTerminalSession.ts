@@ -21,6 +21,7 @@ export function useTerminalSession({ cwd, visible, api, session, npmScript, onEx
   const terminalRef = useRef<Terminal>();
   const [info, setInfo] = useState<TerminalInfo>();
   const [status, setStatus] = useState(uiText("client.chat.openingTerminal"));
+  const [clipboardError, setClipboardError] = useState('');
   const linkHandler = useRef(onLink);
   const transfer = useZmodemTransfer(api, session);
   linkHandler.current = onLink;
@@ -84,7 +85,8 @@ export function useTerminalSession({ cwd, visible, api, session, npmScript, onEx
       terminal.options.theme = terminalTheme(document.documentElement.dataset.theme === "dark");
     });
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-    const unbindClipboard = bindTerminalClipboard(element, terminal, setStatus);
+    setClipboardError('');
+    const unbindClipboard = bindTerminalClipboard(element, terminal, setClipboardError);
     return () => {
       unbindClipboard();
       cancelAnimationFrame(frame); observer.disconnect(); themeObserver.disconnect();
@@ -93,5 +95,6 @@ export function useTerminalSession({ cwd, visible, api, session, npmScript, onEx
     };
   }, [cwd, api, session, npmScript, transfer.bind]);
   useEffect(() => { if (visible) terminalRef.current?.focus(); }, [visible]);
-  return { host, info, status, transfer, input: (data: string) => terminalRef.current?.input(data, true) };
+  return { host, info, status, clipboardError, transfer,
+    input: (data: string) => terminalRef.current?.input(data, true) };
 }

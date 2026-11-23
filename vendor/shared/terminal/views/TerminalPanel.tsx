@@ -111,12 +111,13 @@ function TerminalPane({ tab, visible, api, translate, shortcuts, upload, uploadP
   const directory = useSyncExternalStore(callback => subscribeSshDirectory(sessionId, callback),
     () => getSshDirectory(sessionId));
   const closeLink = useCallback(() => setLink(undefined), []);
-  const { host, info, status, input, transfer } = useTerminalSession({ cwd: tab.cwd, visible, api,
+  const { host, info, status, clipboardError, input, transfer } = useTerminalSession({ cwd: tab.cwd, visible, api,
     session: tab.session, npmScript: tab.npmScript, onExit, onLink: setLink });
   const content = <>
     <div ref={host} className={styles.screen} aria-label={info?.shell ?? translate("client.projectBrowser.terminal")} />
     {dropError && <div className={styles.status} role="alert">{translate(dropError)}</div>}
     {status && <div className={styles.status} role="status">{translate(status)}</div>}
+    {!status && clipboardError && <div className={styles.clipboardError} role="status">{translate(clipboardError)}</div>}
     {shortcuts && <TerminalKeys input={input} />}
   </>;
   return <div className={styles.pane} hidden={!visible} role="tabpanel" id={`terminal-pane-${tab.id}`}

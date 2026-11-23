@@ -41,10 +41,14 @@
   &:disabled { cursor: default; opacity: .4; } }
 .tab button:hover, .iconButton:hover:not(:disabled) { background: #0000000c; }
 .close { margin-left: auto; }
-.pane { display: flex; flex-direction: column; flex: 1; min-height: 0; padding: 5px 10px 10px 16px; }
+.pane { position: relative; display: flex; flex-direction: column; flex: 1; min-height: 0; padding: 5px 10px 10px 16px; }
 .screen { flex: 1; min-height: 0; overflow: hidden; :global(.xterm) { height: 100%; }
   :global(.xterm-viewport) { background-color: var(--terminal-background); } }
 .status { flex-shrink: 0; max-width: 400px; font-size: 12px; padding-top: 6px; overflow-wrap: anywhere; }
+// Keep the terminal's row count stable so xterm preserves the selection after a failed copy.
+.clipboardError { position: absolute; z-index: 1; inset-block-start: 6px; inset-inline-end: 12px;
+  max-width: min(400px, calc(100% - 24px)); padding: 4px 8px; overflow-wrap: anywhere; pointer-events: none;
+  border: 1px solid var(--line, #ddd); border-radius: 6px; background: var(--terminal-background); }
 .keys { display: flex; flex-shrink: 0; gap: 4px; padding-top: 6px;
   button { flex: 1; min-width: 0; min-height: 44px; padding: 4px; border: 0; border-radius: 8px;
     color: inherit; background: #71807812; cursor: pointer; } }
