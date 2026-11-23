@@ -1,4 +1,5 @@
 import { remoteProviderCommand, type RemoteModelTarget } from '../../../shared/remote-chat/modelTarget';
+import { remoteControlCapabilities } from '../../../shared/realtime/remoteControlCapabilities';
 import { t } from '../../../shared/localization/browserClient';
 import {
   fetchBufferedResponse, SESSION_REFRESH_TIMEOUT_MS, throwIfAborted, waitWithSignal, withRequestDeadline,
@@ -216,14 +217,18 @@ export async function logout(options: Pick<DeadlineRequestInit, 'signal' | 'time
   }
 }
 
+export async function fetchRemoteDevices() {
+  const { devices } = await apiJson<{ devices: RemoteDevice[] }>('/devices');
+  return devices.map(normalizeRemoteDevice);
+}
+
 export async function fetchDashboardData() {
-  const [{ accounts }, devicesPayload, { providers }, profile] = await Promise.all([
+  const [{ accounts }, devices, { providers }, profile] = await Promise.all([
     apiJson<{ accounts: AccountSummary[] }>("/sync/accounts/web-summary"),
-    apiJson<{ devices: RemoteDevice[] }>("/devices"),
+    fetchRemoteDevices(),
     apiJson<{ providers: RemoteProviderSummary[] }>("/devices/providers?includeAggregates=true"),
     apiJson<UserProfile>("/auth/me"),
   ]);
-  const devices = devicesPayload.devices.map(normalizeRemoteDevice);
   const normalizedProviders = providers.map((provider) => ({
     ...provider,
     group: typeof provider.group === "string" ? provider.group : "",
@@ -350,16 +355,6 @@ function normalizeRemoteDevice(device: RemoteDevice): RemoteDevice {
     activeProviderId: device.activeProviderId ?? null,
     activeProviderGroup: device.activeProviderGroup ?? null,
     localProxyRunning: device.localProxyRunning === true,
-    capabilities: Array.isArray(device.capabilities)
-      ? device.capabilities.filter((capability) => (
-        capability === "provider-switch"
-        || capability === "provider-group-switch"
-        || capability === "restart-codex"
-        || capability === "gui-model-switch"
-        || capability === "aggregate-switch"
-        || capability === "gui-aggregate-switch"
-        || capability === "account-usage"
-      ))
-      : [],
+    capabilities: remoteControlCapabilities(device.capabilities),
   };
 }

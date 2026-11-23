@@ -1,11 +1,11 @@
 import { Provider } from 'react-redux';
 import { DeviceManagementList } from '../src/devices/DeviceManagementList';
 import { useDeviceScreenControl } from '../src/devices/useDeviceScreenControl';
-import { setActiveSession } from '../src/api';
+import { parseDeviceStatusMessage, setActiveSession } from '../src/api';
 import { store } from '../src/store';
 import type { RemoteDevice } from '../src/types';
 
-const devices: RemoteDevice[] = [
+const reportedDevices: RemoteDevice[] = [
   { deviceId: 'computer', name: '工作电脑', platform: 'Windows', online: true },
   { deviceId: 'offline', name: '离线电脑', platform: 'Windows', online: false },
   { deviceId: 'mac', name: 'Mac', platform: 'macOS', online: true },
@@ -13,6 +13,9 @@ const devices: RemoteDevice[] = [
 ].map(device => ({ ...device, capabilities: device.deviceId === 'legacy'
   ? ['screen-power'] : ['screen-power', 'screen-power-status'], localProxyRunning: false,
   lastSeenAt: '2026-10-23T00:00:00Z' }));
+const snapshot = parseDeviceStatusMessage(JSON.stringify({ type: 'devices-snapshot', devices: reportedDevices }));
+if (snapshot?.type !== 'devices-snapshot') throw new Error('Invalid device screen fixture');
+const devices = snapshot.devices;
 
 function Devices() {
   const screenControl = useDeviceScreenControl();

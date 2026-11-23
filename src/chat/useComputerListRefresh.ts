@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ComputerListRefresh } from '../../../../shared/remote-chat/ComputerSearchBar';
-import { apiJson } from '../api';
+import { fetchRemoteDevices } from '../api';
 import { useAppDispatch } from '../hooks';
 import { t } from '../../../../shared/localization/browserClient';
 import { deviceSocketMessage } from '../store';
-import type { RemoteDevice } from '../types';
 
 export function useComputerListRefresh(): ComputerListRefresh {
   const dispatch = useAppDispatch();
@@ -22,7 +21,7 @@ export function useComputerListRefresh(): ComputerListRefresh {
     setLoading(true);
     setError('');
     try {
-      const { devices } = await apiJson<{ devices: RemoteDevice[] }>('/devices');
+      const devices = await fetchRemoteDevices();
       if (mounted.current) dispatch(deviceSocketMessage({ type: 'devices-snapshot', devices }));
     } catch {
       if (mounted.current) setError(t("client.workspaceActions.couldNotLoadTheComputerListPleaseTryAgain"));

@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "d7af0829f86f30d5f6b56744034f0fd1c646f6cc",
+  "revision": "d6223afed5f34cbce7ce18c840e7a1f9318a3e4e",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "4e09f228ff9025dc9353eb90efe887c447352d56"
+    "revision": "529519e5f0074f08e1a8c5e3ef1512f42748e573"
   },
   "retainedTestSources": {
     "repository": "https://github.com/piperhex/remoteai",
@@ -14,7 +14,7 @@
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
-    "revision": "ce91350776570e4b423f21839877eca379718c17"
+    "revision": "1b64d6d4ea3fd4019b21a64eb7a2435a7a6b4fa6"
   },
   "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.40/remoteai-i18n-0.1.40.tgz",
   "files": {
@@ -2051,6 +2051,7 @@
     "shared/browser/useMobileBrowserRenderers.ts": "b83d9508424f0496313d31c852ec1dbef8bcc715f4ba952d51796f213aef5189",
     "shared/chat/DeferredMessageBody.tsx": "bdcf00a5749a68ff21489676849a64927e7fe3c4a544e63cd41fe0e80a6fbcf3",
     "shared/cli-gui/historyWindow.ts": "24ce0542b50564a37e847f647e48ce82b2032bb54668ca0d1d51e63daa0eed11",
-    "shared/cli-gui/readDetail.ts": "fed47d4630a4d689e56e40ccd04d86e8f60901b23e3bb60dca7ec3b1ab05a2f3"
+    "shared/cli-gui/readDetail.ts": "fed47d4630a4d689e56e40ccd04d86e8f60901b23e3bb60dca7ec3b1ab05a2f3",
+    "shared/realtime/remoteControlCapabilities.ts": "fa2c66d86560fb7ab5b8000ca8a37858ec2b7a204ba29335f05ecd9ef6884069"
   }
 }
