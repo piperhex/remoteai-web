@@ -107,11 +107,6 @@
 .lounge-composer-error, .lounge-composer-notice { max-width: 400px; font-size: 12px; margin: 4px 0 10px; }
 .lounge-composer-error { color: #dc5454; }
 .lounge-composer-notice { color: var(--lounge-muted); }
-.lounge-attachments { display: flex; gap: 10px; margin-bottom: 8px; }
-.lounge-attachments > div { position: relative; }
-.lounge-attachments img { width: 68px; height: 60px; border-radius: 7px; object-fit: cover; }
-.lounge-attachments button { position: absolute; right: -5px; top: -5px; display: grid; place-items: center;
-  width: 20px; height: 20px; background: #586170; color: white; border: 0; border-radius: 50%; cursor: pointer; }
 .lounge-emoji-picker { display: grid; grid-template-columns: repeat(6, 36px); gap: 4px; max-width: 400px; }
 .lounge-emoji-picker button { font-size: 22px; border: 0; background: transparent; cursor: pointer; padding: 5px; }
 .lounge-jump { position: absolute; right: 24px; bottom: 205px; border-radius: 20px; background: var(--lounge-paper);

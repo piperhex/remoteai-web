@@ -1,0 +1,17 @@
+.chat-attachment-previews { display: flex; gap: 12px; min-width: 0; overflow-x: auto; padding: 6px 6px 12px 0; }
+.chat-attachment-preview, .chat-attachment-more { box-sizing: border-box; width: 64px; height: 64px; flex-shrink: 0; }
+.chat-attachment-preview { position: relative; }
+.chat-attachment-preview img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+.chat-attachment-previews button { display: grid; place-items: center; padding: 0; cursor: pointer; }
+.chat-attachment-previews button:disabled { opacity: .45; cursor: default; }
+.chat-attachment-preview button { position: absolute; border: 0; color: white; }
+.chat-attachment-remove { top: -4px; right: -4px; width: 24px; height: 24px; border-radius: 50%; background: #13231c; }
+.chat-attachment-edit {
+  bottom: 0; left: 0; width: 100%; min-height: 28px;
+  border-radius: 0 0 10px 10px; background: #0009; font-size: 12px;
+}
+.chat-attachment-more {
+  background: var(--app-surface, var(--lounge-paper, white));
+  border: 1px solid var(--app-border, var(--lounge-line, #dce8df));
+  border-radius: 10px; color: var(--app-ink, var(--lounge-text, #13231c));
+}

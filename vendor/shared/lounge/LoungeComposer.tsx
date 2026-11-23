@@ -150,7 +150,7 @@ export function LoungeComposer({ connected, send, onHistory, mobile = false, rep
     </div>
     {reply && <LoungeReplyPreview reply={reply} cancel={() => cancelReply()} />}
     <LoungeImageAttachments maxBytes={imageLimit} images={images} setImages={setImages}
-      disabled={busy || processing} onEditingChange={setEditingImage} />
+      disabled={busy || processing} onEditingChange={setEditingImage} onAdd={() => picker.current?.click()} />
     <textarea ref={textarea} rows={mobile ? 1 : undefined} value={text}
       onFocus={() => { if (mobile) setEmojiOpen(false); }}
       aria-label={t('client.lounge.message')}

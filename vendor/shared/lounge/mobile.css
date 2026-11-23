@@ -87,6 +87,7 @@
   background: var(--lounge-blue); color: var(--lounge-bg); }
 .lounge-mobile .lounge-reply-draft { grid-column: 1 / -1; grid-row: 1; margin: 0; }
 .lounge-mobile .lounge-attachments { grid-column: 1 / -1; grid-row: 2; }
+.lounge-mobile .chat-attachment-edit { min-height: 36px; }
 .lounge-mobile .lounge-composer-error, .lounge-mobile .lounge-composer-notice { grid-column: 1 / -1; margin: 0; }
 .lounge-mobile .lounge-composer-error { grid-row: 5; }
 .lounge-mobile .lounge-composer-notice { grid-row: 6; }
