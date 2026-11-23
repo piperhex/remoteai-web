@@ -11,6 +11,7 @@ import type { TerminalApi, TerminalInfo } from "../types";
 import "@xterm/xterm/css/xterm.css";
 import { bindSshDirectory } from '../sshDirectory';
 import { useZmodemTransfer } from '../useZmodemTransfer';
+import { bindTerminalClipboard } from './terminalClipboard';
 
 export function useTerminalSession({ cwd, visible, api, session, npmScript, onExit, onLink }: {
   cwd: string; visible: boolean; api: TerminalApi; session?: TerminalInfo; onLink: (link: TerminalLinkTarget) => void;
@@ -83,8 +84,9 @@ export function useTerminalSession({ cwd, visible, api, session, npmScript, onEx
       terminal.options.theme = terminalTheme(document.documentElement.dataset.theme === "dark");
     });
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-    terminal.attachCustomKeyEventHandler((event) => handleClipboard(event, terminal, setStatus));
+    const unbindClipboard = bindTerminalClipboard(element, terminal, setStatus);
     return () => {
+      unbindClipboard();
       cancelAnimationFrame(frame); observer.disconnect(); themeObserver.disconnect();
       zmodem?.dispose(); directory?.dispose(); input.dispose(); resize.dispose(); connection.dispose();
       terminal.dispose(); terminalRef.current = undefined;
@@ -92,19 +94,4 @@ export function useTerminalSession({ cwd, visible, api, session, npmScript, onEx
   }, [cwd, api, session, npmScript, transfer.bind]);
   useEffect(() => { if (visible) terminalRef.current?.focus(); }, [visible]);
   return { host, info, status, transfer, input: (data: string) => terminalRef.current?.input(data, true) };
-}
-
-function handleClipboard(event: KeyboardEvent, terminal: Terminal, report: (message: string) => void) {
-  if (event.type !== "keydown" || !(event.ctrlKey || event.metaKey)) return true;
-  if (event.key.toLowerCase() === "c" && terminal.hasSelection()) {
-    event.preventDefault();
-    void navigator.clipboard.writeText(terminal.getSelection()).catch(() => report(uiText("client.chat.couldNotCopyTryAgain")));
-    return false;
-  }
-  if (event.key.toLowerCase() === "v" && event.shiftKey) {
-    event.preventDefault();
-    void navigator.clipboard.readText().then((text) => terminal.paste(text)).catch(() => report(uiText("client.chat.couldNotPasteTryAgain")));
-    return false;
-  }
-  return true;
 }
