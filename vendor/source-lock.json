@@ -3,7 +3,7 @@
   "revision": "7c346626bf45be50f9f1c9d6dc0be25eccdfb4cf",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "b86b499a85eb49234f070da7d68425e8299b6465"
+    "revision": "79009aa286b166dae9513128f660791f75f4c3b4"
   },
   "retainedTestSources": {
     "repository": "https://github.com/piperhex/remoteai",
@@ -1858,7 +1858,7 @@
     "shared/browser/bookmarks/useBrowserBookmarks.tsx": "ddedd3fb5b919f1f93a4351c424474c987ca5344ab6456a9c0eacd59c1f0f394",
     "shared/browser/bookmarks/model.ts": "a7fda5c0828d5dfe778fcfa7ac5a9caec898a81ecb0024221aab1ba8d95b8116",
     "shared/browser/bookmarks/BookmarkBar.tsx": "47a2c96f1c78a689b76f73d6e75486f0b7732816439c505786d518fa7c8f9245",
-    "shared/browser/bookmarks/BookmarkEditor.tsx": "a0f00afc1b5d0c1480e880cf734e56c07dc4a93e7afed3237f034ba1c6a4786f",
+    "shared/browser/bookmarks/BookmarkEditor.tsx": "0d5ec01b9d5b4b9f66a69cd8cf500dd84f8b8a998afd1088697c06271370c1bf",
     "shared/browser/bookmarks/BookmarkManager.tsx": "4daac1c4563ba00fd40218bd39342b92f35eaaa19e47101f105bfc67485e59d5",
     "shared/browser/bookmarks/bookmarks.css": "8272ffaceb12258e290c42e291cd4e66d17f5cf234200d04925c85e93f02fcc1",
     "apps/desktop/e2e/nested-scroll-checks.ts": "d069d4904859fd6d130d21f6d8169cdd17e45e65c6ffa7d443d3dbfd8f06dbb4",
@@ -2002,7 +2002,7 @@
     "shared/browser/overlays/nativePopup.ts": "99bc1cc1be83df6606b76c72708e3e2bc86f71242e0434b959eac53f89a94598",
     "shared/browser/overlays/usePopupAnchor.ts": "250eae332d41b818c50593c029b4e52b20e8b9789bbac3298254033766652c32",
     "shared/browser/overlays/popupDocument.ts": "334e4e1097634089331e68a651c544390789a868b2c652a43e746571abdfe06e",
-    "shared/browser/overlays/popupPlacement.ts": "dc9cee8ecdfd6305606b36417b1fc8dadcc4f17ff69870b76bca01e0405b2580",
+    "shared/browser/overlays/popupPlacement.ts": "fbf094da1f2331f34bb97500cfaf7d209f8b6cab9c29213b31746b93f31d373d",
     "shared/browser/overlays/popupRegions.ts": "6f66b09535e8c144205a6b22ab629862f7792bcfaebc335dd55c8bf2571b0d18",
     "shared/chat/useScopedDraft.ts": "fd3abae3689fc3ce72e4d4bc4ddc16befe93c4cd0e2abadafaded9ba501a0e1e",
     "shared/remote-chat/client/draftScopes.ts": "f3cacb9209c98ae2d3260bc46e5e82503cbd86728197c9d66da5c9e455804fc7",
