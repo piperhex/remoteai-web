@@ -1,5 +1,5 @@
 import { t, useLanguage } from '../../../../shared/localization/browserClient';
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { usePagePreview } from '../../../../shared/navigation/PageSwipeContext';
 import { useAppDispatch } from '../hooks';
 import { chatDeviceSelected } from '../store';
@@ -7,6 +7,7 @@ import type { AuthSession, RemoteDevice } from '../types';
 import { ConnectedChat } from '../../../../shared/remote-chat/views/ConnectedChat';
 import { ChatTokenSummary } from './ChatTokenSummary';
 import { SshPage } from '../discovery/SshPage';
+import { RetainedView } from '../../../../shared/RetainedView';
 import { ChatTools } from './ChatTools';
 import { useChat } from './useChat';
 import { useChatViewport } from './useChatViewport';
@@ -23,6 +24,8 @@ import { RemoteGuiTools } from '../../../../shared/conversation/remote/RemoteGui
 import { RemoteGuiProject } from '../../../../shared/conversation/remote/RemoteGuiProject';
 import './desktopTools.css';
 import { ConversationSync } from './ConversationSync';
+
+const DesktopSshPage = lazy(() => import('../discovery/DesktopSshPage'));
 
 interface Props {
   session: AuthSession; devices: RemoteDevice[]; active: boolean; openAccounts?: () => void;
@@ -88,7 +91,14 @@ function WebChat({ session, device, selected, ...props }: Props & {
   useDownloadConnection({ session, deviceId: device?.deviceId ?? '', deviceName: device?.name ?? '',
     controller: chat.controller, enabled: selected });
   return <TerminalWorkspaceProvider panel={terminal}>
-    {props.sshDiscovery && <SshPage client={chat.controller.guiTools.terminal} connected={chat.state.ready}
+    {desktop && <RetainedView active={!!props.sshDiscovery}>
+      <Suspense fallback={null}>
+        <DesktopSshPage active={!!props.sshDiscovery} client={chat.controller.guiTools.terminal} connected={chat.state.ready}
+          device={device} devices={props.devices} chooseDevice={props.chooseDevice}
+          scope={JSON.stringify([session.baseUrl, session.email])} />
+      </Suspense>
+    </RetainedView>}
+    {!desktop && props.sshDiscovery && <SshPage client={chat.controller.guiTools.terminal} connected={chat.state.ready}
       deviceName={device?.name} devices={props.devices} chooseDevice={props.chooseDevice}
       onBack={props.closeSshDiscovery!} />}
     {props.tokenSummary && <ChatTokenSummary read={chat.controller.readTokenSummary} ready={chat.state.ready}

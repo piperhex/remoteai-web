@@ -1,0 +1,86 @@
+.ssh-workspace {
+  --ssh-surface: var(--panel, var(--app-surface, #fff));
+  --ssh-text: var(--ink, var(--app-ink, #182823));
+  --ssh-muted: var(--muted, var(--app-muted, #677870));
+  --ssh-accent: var(--green, var(--app-accent, #147b66));
+  --ssh-subtle: color-mix(in srgb, var(--ssh-surface) 96%, var(--ssh-muted));
+  --ssh-accent-soft: color-mix(in srgb, var(--ssh-surface) 89%, var(--ssh-accent));
+  --ssh-line: var(--line, color-mix(in srgb, var(--ssh-surface) 82%, var(--ssh-muted)));
+  container-type: inline-size; width: 100%; height: 100%; flex: 1; min-width: 0; min-height: 0;
+  display: flex; flex-direction: column; color: var(--ssh-text); background: var(--ssh-surface);
+}
+.ssh-workspace[hidden], .ssh-workspace [hidden] { display: none; }
+.sshw-header, .sshw-tools, .sshw-host, .sshw-tabs, .sshw-switch { display: flex; align-items: center; }
+.sshw-header { flex-wrap: wrap; gap: 10px; padding: 12px 20px; border-bottom: 1px solid var(--ssh-line); }
+.sshw-header h1 { margin: 0; font-size: 1.35em; line-height: 1.3; letter-spacing: .02em; }
+.sshw-mark, .sshw-hero-icon { display: inline-grid; place-items: center; border-radius: 10px;
+  color: var(--ssh-accent); background: var(--ssh-accent-soft); }
+.sshw-mark { width: 34px; height: 34px; }
+.sshw-host { gap: 6px; padding-inline-start: 12px; border-inline-start: 1px solid var(--ssh-line);
+  color: var(--ssh-muted); overflow-wrap: anywhere; }
+.sshw-tools { margin-inline-start: auto; gap: 6px; }
+.sshw-body { display: grid; grid-template-columns: clamp(235px, 25%, 330px) minmax(0, 1fr);
+  flex: 1; min-height: 0; }
+.sshw-rail, .sshw-main, .sshw-files, .sshw-console { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.sshw-rail { background: var(--ssh-subtle); border-inline-end: 1px solid var(--ssh-line); }
+.sshw-files, .sshw-profiles, .sshw-console { flex: 1; min-height: 0; }
+.sshw-files .pf-browser { --pf-subtle: var(--ssh-subtle); }
+.sshw-profiles .ssh-profile-sidebar { height: 100%; box-sizing: border-box; padding: 18px 12px; border: 0; }
+.sshw-profiles .ssh-profile-results { min-height: 0; flex: 1; }
+.sshw-profiles .ssh-profile-list { inset: 0; position: absolute; max-height: none; }
+.sshw-profiles .ssh-profile-heading { padding-inline: 4px; }
+.sshw-profiles .ssh-profile-card { padding-block: 10px; }
+.sshw-profiles .ssh-profile-card:hover:not(:disabled) { border-color: var(--ssh-line); }
+.sshw-main { background: var(--ssh-surface); }
+.sshw-tabs { min-height: 42px; padding: 4px 10px; gap: 6px; border-bottom: 1px solid var(--ssh-line); }
+.sshw-tabs [data-overflow-tab][data-selected="true"] { color: var(--ssh-text); background: var(--ssh-accent-soft); }
+.sshw-home-tab, .sshw-switch button { display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 6px 9px; border: 0; border-radius: 6px; background: transparent; color: var(--ssh-muted);
+  font: inherit; cursor: pointer; }
+.sshw-home-tab[aria-pressed="true"], .sshw-switch button[aria-pressed="true"] {
+  color: var(--ssh-text); background: var(--ssh-surface); box-shadow: 0 1px 3px #0002; }
+.sshw-switch { flex-shrink: 0; gap: 3px; margin: 8px; padding: 3px; border-radius: 9px;
+  background: color-mix(in srgb, var(--ssh-subtle) 94%, var(--ssh-muted)); }
+.sshw-switch button { flex: 1; min-width: 0; padding-inline: 4px; }
+.sshw-switch svg { flex: none; }
+.sshw-rail { container: sshrail / inline-size; }
+@container sshrail (max-width: 255px) {
+  .sshw-switch svg { display: none; }
+}
+.sshw-console { --terminal-background: #000; color: #e5e5e5; padding-block-start: 8px; background: #000; }
+.sshw-home { display: flex; flex: 1; min-height: 0; overflow: auto; padding: clamp(20px, 5cqw, 68px); }
+.sshw-launch { margin: auto; width: min(100%, 720px); }
+.sshw-hero-icon { width: 58px; height: 58px; border-radius: 17px; }
+.sshw-launch h2 { margin: 18px 0 6px; font-size: 2em; line-height: 1.24; }
+.sshw-launch p { margin: 0 0 20px; color: var(--ssh-muted); }
+.sshw-quick { margin-top: 32px; border-top: 1px solid var(--ssh-line); padding-top: 18px; }
+.sshw-quick h3 { margin: 0 0 12px; font-size: 1em; font-weight: 600; }
+.sshw-quick > div { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 205px), 1fr)); }
+.sshw-quick button { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 12px;
+  color: var(--ssh-text); background: var(--ssh-subtle); border: 1px solid var(--ssh-line); border-radius: 9px;
+  font: inherit; text-align: start; cursor: pointer; }
+.sshw-quick button:hover:not(:disabled) { border-color: var(--ssh-accent); }
+.sshw-quick button:disabled { opacity: .6; cursor: default; }
+.sshw-quick button > svg { flex: none; color: var(--ssh-accent); }
+.sshw-quick button > svg:last-child { color: var(--ssh-muted); }
+.sshw-quick button span { flex: 1; min-width: 0; }
+.sshw-quick strong, .sshw-quick small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sshw-quick small { margin-top: 3px; color: var(--ssh-muted); }
+.sshw-monitor { display: flex; align-items: stretch; flex: none; flex-wrap: wrap; background: var(--ssh-subtle);
+  color: var(--ssh-text); border-top: 1px solid var(--ssh-line); font-size: .94em; }
+.sshm-title, .sshm-values, .sshm-values > span, .sshm-status { display: flex; align-items: center; }
+.sshm-title { gap: 7px; padding: 8px 14px; color: var(--ssh-accent); }
+.sshm-values { flex: 1; min-width: 0; flex-wrap: wrap; padding: 4px 2px; row-gap: 3px; }
+.sshm-values > span { gap: 6px; padding: 3px 12px; white-space: nowrap; border-inline-start: 1px solid var(--ssh-line); }
+.sshm-values svg { width: 1.1em; height: 1.1em; color: var(--ssh-muted); }
+.sshm-values b { font-weight: 600; }
+.sshm-values output { font-variant-numeric: tabular-nums; }
+.sshm-meter { height: 4px; width: 28px; border-radius: 3px; background: var(--ssh-line); overflow: hidden; }
+.sshm-meter i { display: block; height: 100%; background: var(--ssh-accent); }
+.sshm-status { padding-inline: 10px; color: var(--ssh-muted); }
+@container (max-width: 630px) {
+  .sshw-body { grid-template-columns: minmax(180px, 36%) minmax(0, 1fr); }
+  .sshw-header { padding: 8px 12px; }
+  .sshw-switch button { padding-inline: 3px; }
+  .sshw-quick { margin-top: 18px; }
+}

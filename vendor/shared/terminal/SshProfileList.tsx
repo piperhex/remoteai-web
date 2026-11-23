@@ -6,10 +6,10 @@ import { displayText as t } from '../localization/messages';
 
 interface Props {
   profiles: SshProfile[]; selected?: SshProfile; disabled: boolean; loading: boolean;
-  choose: (profile?: SshProfile) => void;
+  choose: (profile?: SshProfile) => void; showNew?: boolean;
 }
 
-export function SshProfileList({ profiles, selected, disabled, loading, choose }: Props) {
+export function SshProfileList({ profiles, selected, disabled, loading, choose, showNew = true }: Props) {
   const [query, setQuery] = useState('');
   const search = query.trim().toLocaleLowerCase();
   const filtered = profiles.filter(profile =>
@@ -20,8 +20,8 @@ export function SshProfileList({ profiles, selected, disabled, loading, choose }
     <Input className="ssh-profile-search" prefix={<Search size={15} aria-hidden />} allowClear
       value={query} onChange={event => setQuery(event.target.value)}
       placeholder={t('client.ssh.searchConnections')} aria-label={t('client.ssh.searchConnections')} />
-    <button type="button" className="ssh-profile-new" aria-pressed={!selected} disabled={disabled}
-      onClick={() => choose()}><Plus size={16} aria-hidden />{t('client.ssh.createTitle')}</button>
+    {showNew && <button type="button" className="ssh-profile-new" aria-pressed={!selected} disabled={disabled}
+      onClick={() => choose()}><Plus size={16} aria-hidden />{t('client.ssh.createTitle')}</button>}
     <div className="ssh-profile-results" aria-busy={loading}>
       {loading ? <div className="ssh-profile-empty"><Spin /></div> : <>
         {filtered.length ? <ul className="ssh-profile-list">{filtered.map(profile => <li key={profile.id}>

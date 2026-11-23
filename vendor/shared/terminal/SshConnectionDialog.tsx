@@ -12,10 +12,10 @@ import { remoteErrorText } from '../localization/errors';
 import './ssh-dialog.css';
 import { SshHostKeyDialog } from './SshHostKeyDialog';
 
-export function SshConnectionDialog({ api, initial, manage = false, settingsOnly = false,
+export function SshConnectionDialog({ api, initial, manage = false, settingsOnly = false, allowConnect = true,
   projectCwd, close, connected, dispose, changed }: {
   api: SshApi; initial?: SshProfile; manage?: boolean; projectCwd: string; close: () => void;
-  settingsOnly?: boolean;
+  settingsOnly?: boolean; allowConnect?: boolean;
   connected: (info: TerminalInfo) => void; dispose: (id: string) => Promise<void>; changed: () => void;
 }) {
   const [form] = Form.useForm<SshValues>();
@@ -85,7 +85,7 @@ export function SshConnectionDialog({ api, initial, manage = false, settingsOnly
           <div className="ssh-credentials-note"><ShieldCheck size={17} aria-hidden />
             <div><p>{t('client.ssh.settingsCredentialsHint')}</p>
               <p>{t('client.ssh.credentialsHint')}</p></div></div>
-          {!settingsOnly && <Button className="ssh-test" icon={<PlugZap size={16} />} disabled={disabled}
+          {!settingsOnly && allowConnect && <Button className="ssh-test" icon={<PlugZap size={16} />} disabled={disabled}
             loading={action === 'test'} onClick={() => authenticate('test')}>
             {t(trust ? 'client.ssh.trustAndTest' : 'client.ssh.testConnection')}</Button>}
           <div ref={feedback} aria-live="polite">
@@ -108,7 +108,7 @@ export function SshConnectionDialog({ api, initial, manage = false, settingsOnly
           <div className="ssh-submit-actions">
             <Button aria-label={t('client.ssh.cancel')} disabled={busy} onClick={close}>{t('client.ssh.cancel')}</Button>
             {!finished && <>
-              {!settingsOnly && <Button onClick={() => authenticate('submit')} loading={action === 'connect'}
+              {!settingsOnly && allowConnect && <Button onClick={() => authenticate('submit')} loading={action === 'connect'}
                 icon={<ArrowUpRight size={16} />}>
                 {t(trust ? 'client.ssh.trustAndConnect' : 'client.ssh.connect')}</Button>}
               <Button aria-label={t('client.ssh.saveSettings')} className="ssh-connect" type="primary" htmlType="submit"

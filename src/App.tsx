@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button, Dialog, Form, Input, PullToRefresh, SafeArea, SpinLoading, Toast } from "antd-mobile";
 import { Dropdown, Tooltip, type MenuProps } from "antd";
 import { ChevronRight, CircleGauge, Compass, LayoutDashboard, LogOut, Menu, MonitorCog,
-  Download, MessageSquare, PanelLeftClose, PanelLeftOpen, RefreshCw, Server, Settings, ShieldCheck, Sparkles } from "lucide-react";
+  Download, MessageSquare, PanelLeftClose, PanelLeftOpen, RefreshCw, Server, Settings, ShieldCheck, Sparkles, Terminal } from "lucide-react";
 import { defaultApiBaseUrl, deviceStatusWebSocketUrl, getActiveSession, parseDeviceStatusMessage } from "./api";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { bootstrapApp, clearAuthError, clearDataError, deviceSocketMessage, pageChanged, refreshAll,
@@ -318,7 +318,7 @@ function AppShell() {
   useChatViewport(page === 'lounge' && !desktopLayout);
   const lastRefreshRef = useRef(Date.now());
   const totpManager = useTotpVault(session);
-  const activeNavigationPage = page === 'browser' || desktopLayout && page === 'lounge'
+  const activeNavigationPage = page === 'browser' || desktopLayout && (page === 'lounge' || page === 'ssh')
     ? page : primaryNavigationPage(page);
   const changePrimaryPage = useCallback((next: PrimaryPage) => { dispatch(pageChanged(next)); }, [dispatch]);
   const openAccounts = useCallback(() => changePrimaryPage('accounts'), [changePrimaryPage]);
@@ -431,6 +431,12 @@ function AppShell() {
             : <item.icon size={19} />}<span>{item.label}</span>
         </button>
       </Tooltip>)}
+        <Tooltip placement="right" title={menuVisible ? undefined : t('client.discovery.ssh')}>
+          <button type="button" aria-label={t('client.discovery.ssh')} aria-current={page === 'ssh' ? 'page' : undefined}
+            className={page === 'ssh' ? 'active' : ''} onClick={() => dispatch(pageChanged('ssh'))}>
+            <Terminal size={19} /><span>{t('client.discovery.ssh')}</span>
+          </button>
+        </Tooltip>
         <Tooltip placement="right" title={menuVisible ? undefined : t('client.lounge.title')}>
           <button type="button" aria-label={t('client.lounge.title')}
             aria-current={page === 'lounge' ? 'page' : undefined}

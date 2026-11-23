@@ -3,6 +3,34 @@ import { connect, fixtureUrl, login, navigate, operationCount, screenshot, state
 import { testText } from '../../../scripts/i18n-fixture.mjs';
 import { mockDiscoverySshStore } from './discovery-ssh-store';
 
+test('desktop sidebar opens saved SSH sessions independently of the chat terminal', async ({ page, request }, info) => {
+  test.skip(info.project.name !== 'desktop', 'Desktop sidebar');
+  await request.post(fixtureUrl + '/test/reset');
+  const store = await mockDiscoverySshStore(page, [{ id: 'dev', name: '开发服务器', host: 'dev.example.test',
+    port: 22, username: 'dev', auth: 'password', revision: 1, fingerprint: 'SHA256:fixture' }]);
+  store.secrets.set('dev', { password: 'fixture-password' });
+  await login(page); await connect(page);
+  const nav = page.locator('.desktop-sidebar nav');
+  await nav.getByRole('button', { name: 'SSH', exact: true }).click();
+  const workspace = page.getByRole('region', { name: 'SSH', exact: true });
+  await expect(workspace.locator('.ssh-profile-card')).toBeEnabled({ timeout: 25_000 });
+  await screenshot(page, info, 'web-desktop-ssh-sidebar');
+  await workspace.locator('.ssh-profile-card').click();
+  await expect(workspace.locator('.xterm-rows:visible')).toContainText('SSH ready');
+  // Older connected computers can keep serving a terminal without reporting host metrics.
+  await expect(workspace.locator('.sshm-status')).toHaveText(testText('client.conversationWorkspace.unavailable'));
+  await workspace.locator('.sshw-switch').getByRole('button', { name: '已保存的连接' }).click();
+  await expect(workspace.locator('.ssh-profile-card')).toBeVisible();
+  await screenshot(page, info, 'web-desktop-ssh-connected');
+  await navigate(page, '聊天');
+  await nav.getByRole('button', { name: 'SSH', exact: true }).click();
+  await expect(workspace.locator('.xterm-rows:visible')).toContainText('SSH ready');
+  await workspace.getByRole('button', { name: '关闭终端 1', exact: true }).click();
+  await expect(workspace.getByRole('tab')).toHaveCount(0);
+  expect(await operationCount(request, 'guiTerminalOpen')).toBe(0);
+  expect(await operationCount(request, 'guiTerminalSshOpen')).toBe(1);
+});
+
 test('saved SSH connections open directly from mobile Discover', async ({ page, request }, info) => {
   test.skip(info.project.name !== 'mobile', 'Mobile discovery entry');
   await request.post(`${fixtureUrl}/test/reset`);

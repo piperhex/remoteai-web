@@ -24,7 +24,7 @@ import { getSshDirectory, subscribeSshDirectory } from '../sshDirectory';
 import { ZmodemDialog } from '../ZmodemDialog';
 import { enqueueSshDownload } from '../../downloads/sshDownload';
 
-const nativeDrop = { subscribe: subscribeSshFileDrop, read: nativeSshUploadBatch };
+export const nativeDrop = { subscribe: subscribeSshFileDrop, read: nativeSshUploadBatch };
 
 export default function TerminalPanel({ panel, active, api, fill = false, translate = displayText, notice, empty, onClose }: {
   panel: TerminalPanelState; active: boolean; api: TerminalApi; fill?: boolean;
@@ -99,9 +99,9 @@ export default function TerminalPanel({ panel, active, api, fill = false, transl
   </section>;
 }
 
-function TerminalPane({ tab, visible, api, translate, shortcuts, upload, uploadPending, onExit }: {
+export function TerminalPane({ tab, visible, api, translate, shortcuts, upload, uploadPending, onExit, darkScreen }: {
   tab: TerminalTab; visible: boolean; api: TerminalApi; translate: (source: string) => string;
-  shortcuts: boolean;
+  shortcuts: boolean; darkScreen?: boolean;
   onExit: () => void;
   upload: (batch: SshUploadBatch) => Promise<void>; uploadPending: boolean;
 }) {
@@ -112,7 +112,7 @@ function TerminalPane({ tab, visible, api, translate, shortcuts, upload, uploadP
     () => getSshDirectory(sessionId));
   const closeLink = useCallback(() => setLink(undefined), []);
   const { host, info, status, clipboardError, input, transfer } = useTerminalSession({ cwd: tab.cwd, visible, api,
-    session: tab.session, npmScript: tab.npmScript, onExit, onLink: setLink });
+    session: tab.session, npmScript: tab.npmScript, onExit, onLink: setLink, darkScreen });
   const content = <>
     <div ref={host} className={styles.screen} aria-label={info?.shell ?? translate("client.projectBrowser.terminal")} />
     {dropError && <div className={styles.status} role="alert">{translate(dropError)}</div>}

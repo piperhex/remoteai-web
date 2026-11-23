@@ -13,9 +13,9 @@ import { bindSshDirectory } from '../sshDirectory';
 import { useZmodemTransfer } from '../useZmodemTransfer';
 import { bindTerminalClipboard } from './terminalClipboard';
 
-export function useTerminalSession({ cwd, visible, api, session, npmScript, onExit, onLink }: {
+export function useTerminalSession({ cwd, visible, api, session, npmScript, onExit, onLink, darkScreen }: {
   cwd: string; visible: boolean; api: TerminalApi; session?: TerminalInfo; onLink: (link: TerminalLinkTarget) => void;
-  npmScript?: string; onExit?: () => void;
+  npmScript?: string; onExit?: () => void; darkScreen?: boolean;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const terminalRef = useRef<Terminal>();
@@ -36,7 +36,7 @@ export function useTerminalSession({ cwd, visible, api, session, npmScript, onEx
     };
     const terminal = new Terminal({ cursorBlink: true, fontSize: 13, scrollback: 5000, linkHandler: { activate },
       fontFamily: '"Cascadia Mono", Consolas, "Courier New", monospace', allowTransparency: false,
-      theme: terminalTheme(document.documentElement.dataset.theme === "dark") });
+      theme: terminalTheme(darkScreen || document.documentElement.dataset.theme === "dark") });
     terminalRef.current = terminal;
     const fit = new FitAddon(); terminal.loadAddon(fit); terminal.open(element);
     terminal.loadAddon(new WebLinksAddon(activate));
@@ -82,7 +82,7 @@ export function useTerminalSession({ cwd, visible, api, session, npmScript, onEx
     });
     observer.observe(element);
     const themeObserver = new MutationObserver(() => {
-      terminal.options.theme = terminalTheme(document.documentElement.dataset.theme === "dark");
+      terminal.options.theme = terminalTheme(darkScreen || document.documentElement.dataset.theme === "dark");
     });
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     setClipboardError('');
@@ -93,7 +93,7 @@ export function useTerminalSession({ cwd, visible, api, session, npmScript, onEx
       zmodem?.dispose(); directory?.dispose(); input.dispose(); resize.dispose(); connection.dispose();
       terminal.dispose(); terminalRef.current = undefined;
     };
-  }, [cwd, api, session, npmScript, transfer.bind]);
+  }, [cwd, api, session, npmScript, transfer.bind, darkScreen]);
   useEffect(() => { if (visible) terminalRef.current?.focus(); }, [visible]);
   return { host, info, status, clipboardError, transfer,
     input: (data: string) => terminalRef.current?.input(data, true) };
