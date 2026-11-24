@@ -162,7 +162,7 @@ h1, h2, h3, .brand-lockup { font-family: "Manrope", "PingFang SC", "Microsoft Ya
   .main-menu-collapsed .desktop-sidebar { width: 72px;
     padding: var(--desktop-header-padding) 10px 12px; overflow-y: auto; }
   .main-menu-collapsed .desktop-sidebar-heading { flex-direction: column-reverse; gap: 18px; }
-  .main-menu-collapsed .main-menu-toggle { width: var(--desktop-toggle-size); height: var(--desktop-toggle-size);
+  .main-menu-collapsed .desktop-sidebar .main-menu-toggle { width: var(--desktop-toggle-size); height: var(--desktop-toggle-size);
     border: 1px solid var(--app-border, #d8e7e0); }
   .main-menu-collapsed .brand-mark { width: 42px; height: 42px; }
   .main-menu-collapsed .desktop-sidebar .brand-lockup b,

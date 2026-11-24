@@ -1,4 +1,4 @@
-import { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import type { Language } from '@remoteai/i18n';
 import { isTauri } from '@tauri-apps/api/core';
 import { BrowserContents } from '../provider-market/ProviderBrowser';
@@ -13,9 +13,10 @@ import './browserPage.css';
 import { BrowserClientContext } from '../file-preview/workspace/browserClient';
 
 /** Reuse the established engine and tabs without tying the main browser to a conversation. */
-export function BrowserPage({ language, active = true, onClose, homeBaseUrl, homeTransport }: {
+export function BrowserPage({ language, active = true, onClose, homeBaseUrl, homeTransport, sidebarToggle,
+  windowControls }: {
   language: Language; active?: boolean; onClose?: () => void; homeBaseUrl?: string;
-  homeTransport?: BrowserHomeTransport;
+  homeTransport?: BrowserHomeTransport; sidebarToggle?: ReactNode; windowControls?: ReactNode;
 }) {
   const navigation = useContext(BrowserNavigationContext);
   const standalone = useWebsiteTabs();
@@ -57,6 +58,7 @@ export function BrowserPage({ language, active = true, onClose, homeBaseUrl, hom
     aria-label={marketText(language)('market.browserNavigation')}>
     <BrowserClientContext.Provider value={browserClient}>
     <BrowserContents {...browser} embedded mainBrowser language={language} open={active} Surface={NavigationBrowserSurface}
+      tabBarStart={sidebarToggle} windowControls={windowControls}
       onCloseTab={id => closeTabs([id])} onCloseTabs={closeTabs}
       onClose={() => { setExpanded(false); onClose?.(); }}
       fullscreen={expanded} toggleFullscreen={() => setExpanded(value => !value)} />

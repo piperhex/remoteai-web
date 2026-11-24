@@ -17,11 +17,12 @@ interface Props {
   language: Language; visits: ReadonlyMap<string, BrowserTabVisit>;
   select: (id: string) => void; close: (id: string) => void; menuChanged: (open: boolean) => void;
   closeTabs: (ids: string[]) => void;
+  windowDragRegion?: boolean;
 }
 
 /** Match project and workspace tabs: reveal the selection, fade the clipped left edge and list hidden tabs. */
 export function BrowserTabs({ tabs, activeId, visible, t, language, visits, select, close, closeTabs,
-  menuChanged }: Props) {
+  menuChanged, windowDragRegion }: Props) {
   const overflow = useTabOverflow(tabs.map(tab => ({ path: tab.id })), activeId);
   const hidden = tabs.filter(tab => overflow.hiddenPaths.includes(tab.id));
   const [open, setOpen] = useState(false);
@@ -44,6 +45,7 @@ export function BrowserTabs({ tabs, activeId, visible, t, language, visits, sele
   useEffect(() => { menuChanged(open || contextOpen || coversNativePage); },
     [open, contextOpen, coversNativePage, menuChanged]);
   return <div ref={overflow.bar} className="pm-browser-tabs-bar" data-clipped-left={overflow.clippedLeft}
+    data-tauri-drag-region={windowDragRegion || undefined}
     onKeyDown={event => {
       if (event.key !== 'Escape') return;
       if (contextOpen) {
@@ -54,7 +56,7 @@ export function BrowserTabs({ tabs, activeId, visible, t, language, visits, sele
       event.currentTarget.querySelector<HTMLButtonElement>('.pm-browser-tabs-more')?.focus();
     }}>
     <div ref={overflow.viewport} className="pm-browser-tabs" role="tablist" aria-label={t('market.browserTabs')}
-      {...hover.events}>
+      data-tauri-drag-region={windowDragRegion || undefined} {...hover.events}>
       {tabs.map(tab => <BrowserTabItem key={tab.id} tab={tab} tabs={tabs} active={tab.id === activeId}
         t={t} select={choose} close={closeTab} closeTabs={closeMany} menuOpen={contextOpen && contextId === tab.id}
         descriptionId={hovered?.id === tab.id && !overlay ? `tab-hover-${tab.id}` : undefined}

@@ -16,6 +16,9 @@
 .pm-browser button:focus-visible { outline: 2px solid var(--accent, #6175db); }
 .pm-browser-titlebar { display: flex; align-items: center; gap: 6px; padding: 8px 10px 0;
   background: var(--surface-secondary, #eef1f6); }
+.pm-browser-titlebar[data-tauri-drag-region] { padding: 0 0 0 10px; }
+.pm-browser-titlebar[data-tauri-drag-region] > .pm-browser-tabs-bar { margin-top: 8px; }
+.pm-browser-window-drag-region { align-self: stretch; flex: 1 0 56px; }
 .pm-browser .pm-browser-tabs-bar { display: flex; flex: 0 1 auto; min-width: 0;
   position: relative; align-items: center; -webkit-user-select: none; user-select: none; caret-color: transparent; }
 .pm-browser-titlebar > .pm-browser-close { margin-inline-start: auto; }

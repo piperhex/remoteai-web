@@ -409,6 +409,11 @@ function AppShell() {
     (page === 'discover' || page === 'token-summary') && 'discovery-active',
     !menuVisible && 'main-menu-collapsed'].filter(Boolean).join(' ');
   const MenuToggleIcon = menuVisible ? PanelLeftClose : PanelLeftOpen;
+  const menuToggle = <button type="button" className="main-menu-toggle"
+    aria-label={menuVisible ? t("client.app.collapseMainMenu") : t("client.app.expandMainMenu")}
+    aria-expanded={menuVisible} onClick={() => setMenuVisible(value => !value)}>
+    <MenuToggleIcon size={20} /></button>;
+  const toggleInBrowser = page === 'browser' && desktopLayout;
   return <ExtensionMarketContext.Provider value={session?.baseUrl}><BookmarkProvider scope={session ? JSON.stringify([session.baseUrl, session.email]) : 'guest'}
     channel={session ? lounge.controller.bookmarks : undefined}>
     <BrowserNavigationProvider onOpen={() => dispatch(pageChanged('browser'))}>
@@ -417,9 +422,7 @@ function AppShell() {
       <div className="desktop-sidebar-heading">
         <div className="brand-lockup"><BrandMark />
           <b>Remote AI</b></div>
-        <button type="button" className="main-menu-toggle" aria-label={menuVisible ? t("client.app.collapseMainMenu") : t("client.app.expandMainMenu")}
-          aria-expanded={menuVisible} onClick={() => setMenuVisible(value => !value)}>
-          <MenuToggleIcon size={20} /></button>
+        {!toggleInBrowser && menuToggle}
       </div>
       <nav>{navItems.map((item) => <Tooltip key={item.key} placement="right"
         title={menuVisible ? undefined : item.label}>
@@ -492,6 +495,7 @@ function AppShell() {
         <RetainedView active={page === 'browser'}>
           <WebsiteDownloadsContext.Provider value={websiteDownloads}>
             <BrowserPage language={language} active={page === 'browser'}
+              sidebarToggle={toggleInBrowser && menuToggle}
               homeBaseUrl={session?.baseUrl}
               onClose={() => dispatch(pageChanged('discover'))} />
           </WebsiteDownloadsContext.Provider>

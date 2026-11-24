@@ -34,7 +34,7 @@ export function WebsitePreview(props: {
       }} onCloseTabs={ids => {
         browser.onCloseTabs(ids);
         if (browser.tabs.every(tab => ids.includes(tab.id))) props.onClose();
-      }} history={props.navigation && (props.navigation.canGoBack || props.navigation.canGoForward)
+      }} tabBarStart={props.navigation && (props.navigation.canGoBack || props.navigation.canGoForward)
         ? <PreviewNavigation navigation={props.navigation} /> : undefined}
       actions={<><CopyButton text={url} label={uiText('client.mobile.copyLink')} />
         <button type="button" aria-label={uiText('client.workspaceActions.openInBrowser')} disabled={!externalUrl}
