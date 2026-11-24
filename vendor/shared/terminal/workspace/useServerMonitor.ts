@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import type { SshApi } from '../ssh';
 import { serverRates, type TimedSample } from './serverMetrics';
 
-const SAMPLE_INTERVAL_MS = 4000;
-const FIRST_DELTA_MS = 1000;
+const SAMPLE_INTERVAL_MS = 1000;
 const RETRY_INTERVAL_MS = 20000;
 
 interface Reading extends ReturnType<typeof serverRates> { values: TimedSample['values'] }
@@ -47,7 +46,6 @@ export function useServerMonitor(api: SshApi, id: string, enabled: boolean) {
         if (disposed || document.hidden) return;
         setReading({ values: current.values, ...serverRates(current, previous) });
         setFailed(false);
-        if (!previous) delay = FIRST_DELTA_MS;
         previous = current;
       } catch {
         if (!disposed) { setReading(undefined); setFailed(true); }
