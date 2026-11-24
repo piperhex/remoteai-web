@@ -62,7 +62,8 @@ function WorkSummary({ entry, open, inline, desktop }: {
   </div>;
 }
 
-const TimelineEntry = memo(function TimelineEntry({ entry, open, inline, desktop, renderUserMessage }: {
+const TimelineEntry = memo(function TimelineEntry({ entry, open, inline, desktop, renderUserMessage, threadId }: {
+  threadId?: string;
   entry: Entry; open: (selection: Selection) => void; inline: (id: string, value: boolean) => void;
   desktop: boolean;
   renderUserMessage?: RenderUserMessage;
@@ -90,7 +91,7 @@ const TimelineEntry = memo(function TimelineEntry({ entry, open, inline, desktop
     const elapsed = turnElapsedMs(entry.turn, 0);
     return elapsed == null ? null : <p className="chat-turn-duration">{t("client.chat.duration.8d6d31")} {formatTurnDuration(elapsed)}</p>;
   }
-  if (entry.kind === 'summary') return <ChatTurnSummary turn={entry.turn} hideStopped={desktop}
+  if (entry.kind === 'summary') return <ChatTurnSummary turn={entry.turn} threadId={threadId} hideStopped={desktop}
     onOpen={panel => open({ type: 'turn', id: entry.turn.id, panel })} />;
   if (entry.kind === 'error') return <ChatRequestError turn={entry.turn} record={entry.error}
     onOpen={() => open({ type: 'turn', id: entry.turn.id, panel: 'error', errorId: entry.error.id })} />;
@@ -179,7 +180,7 @@ function ChatMessageHistory({ props, scroll }: {
           className={`chat-entry-${entry.kind}`}>
           <HistoryContent desktop={desktop} enabled={desktop && 'item' in entry
             && ['userMessage', 'agentMessage'].includes(entry.item.type)}>
-            {() => <TimelineEntry entry={entry} open={open} inline={setInline} desktop={desktop}
+            {() => <TimelineEntry entry={entry} threadId={thread?.id} open={open} inline={setInline} desktop={desktop}
               renderUserMessage={props.renderUserMessage} />}
           </HistoryContent>
         </div>

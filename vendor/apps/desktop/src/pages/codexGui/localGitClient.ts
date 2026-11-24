@@ -1,8 +1,10 @@
 import { invoke } from '../../api/backend';
+import { guiApi } from '../../../../../shared/conversation/api';
 import type { GitClient } from '../../../../../shared/remote-chat/gitTypes';
 
 /** Use the same Git service as remote viewers, on this computer's native command worker. */
 export const localGitClient: GitClient = {
+  savedReview: target => guiApi.request({ ...target, operation: 'savedTurnReview' }),
   conflict: (cwd, path) => invoke('codex_gui_git_tool', { request: { operation: 'conflict', cwd, path } }),
   resolveConflict: request => invoke('codex_gui_git_tool', { request: { ...request, operation: 'resolveConflict' } }),
   continueIntegration: (cwd, version) =>
@@ -14,7 +16,7 @@ export const localGitClient: GitClient = {
     invoke('codex_gui_git_tool', { request: { operation: 'repository', cwd, includeChildren } }),
   action: request => invoke('codex_gui_git_tool', { request: { ...request, operation: 'action' } }),
   changes: cwd => invoke('codex_gui_git_tool', { request: { operation: 'changes', cwd } }),
-  diff: (cwd, path, commit) => invoke('codex_gui_git_tool', { request: { operation: 'diff', cwd, path, commit } }),
+  diff: (cwd, path, commit, scope) => invoke('codex_gui_git_tool', { request: { operation: 'diff', cwd, path, commit, scope } }),
   history: (cwd, skip) => invoke('codex_gui_git_tool', { request: { operation: 'history', cwd, skip } }),
   commitFiles: (cwd, commit) => invoke('codex_gui_git_tool', { request: { operation: 'commitFiles', cwd, commit } }),
   commit: request => invoke('codex_gui_git_tool', { request: { ...request, operation: 'commit' } }),

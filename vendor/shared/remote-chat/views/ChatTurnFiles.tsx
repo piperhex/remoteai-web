@@ -9,13 +9,14 @@ import { ChatChangesPill } from './ChatChangesPill';
 
 const PREVIEW_FILES = 3;
 
-export function ChatTurnFiles({ files, running, onOpen, onResult }: {
+export function ChatTurnFiles({ files, running, onOpen, onResult, review }: {
+  review?: import('../../conversation/detailsContext').TurnReview;
   files: readonly DiffFile[]; running: boolean; onOpen: () => void; onResult?: () => void;
 }) {
   const details = useContext(DetailsContext);
   const result = onResult && <button type="button" className="chat-task-result" onClick={onResult}>
     {t("client.taskReview.reviewResult")}</button>;
-  if (details) return <ChatFilesSummary files={files} compact={running} beforeReview={result} />;
+  if (details) return <ChatFilesSummary files={files} review={review} compact={running} beforeReview={result} />;
   if (running) return <ChatChangesPill files={files} onOpen={onOpen} />;
   const { files: summary, added, removed } = summarizeDiffFiles(files);
   return <div className="chat-files-summary">

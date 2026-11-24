@@ -10,9 +10,9 @@ import layout from './styles.module.less';
 const FOCUSABLE = 'button:not(:disabled), [tabindex="0"]';
 
 /** Keep a single copy of the controls mounted while moving them into the overflow popover. */
-export function ProjectBar({ children, trailing, active, scope, barRef, hint }: {
+export function ProjectBar({ children, trailing, active, scope, barRef, hint, draftDirectory }: {
   children: ReactNode; trailing?: ReactNode; active: boolean; scope: string;
-  barRef?: RefObject<HTMLDivElement>; hint?: ReactNode;
+  barRef?: RefObject<HTMLDivElement>; hint?: ReactNode; draftDirectory?: string;
 }) {
   const fallbackBar = useRef<HTMLDivElement>(null);
   const bar = barRef ?? fallbackBar;
@@ -23,6 +23,7 @@ export function ProjectBar({ children, trailing, active, scope, barRef, hint }: 
 
   return <div ref={bar} className={layout.projectBar} data-project-bar data-compact={compact}>
     {hint}
+    {compact && draftDirectory && <span className={styles.directory} title={draftDirectory}>{draftDirectory}</span>}
     <div ref={setInlineTarget} className={styles.inline} hidden={compact} />
     <Popover trigger="click" placement="topLeft" arrow={false} open={expanded} onOpenChange={setOpen}
       afterOpenChange={visible => {

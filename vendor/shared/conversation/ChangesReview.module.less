@@ -1,0 +1,13 @@
+.review { display: flex; flex-direction: column; align-items: stretch; gap: .65em; min-width: 0;
+  > :first-child { align-self: flex-start; max-width: 100%; }
+  p, small { color: var(--gui-muted); }
+}
+.scopes, .location { display: flex; align-items: center; gap: .4em; }
+.observed { padding-block: .6em; overflow-wrap: anywhere; summary { cursor: pointer; } }
+.location { justify-content: space-between; color: var(--gui-muted); overflow-wrap: anywhere;
+  small { display: block; } }
+.file { border-bottom: 1px solid var(--gui-border); min-width: 0;
+  > button { width: 100%; display: flex; align-items: center; gap: .55em; padding: .6em 0;
+    border: 0; background: transparent; color: inherit; cursor: pointer; font: inherit; text-align: left;
+    svg { flex: none; } span { flex: 1; overflow-wrap: anywhere; } }
+}

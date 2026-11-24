@@ -37,17 +37,22 @@ export function useDetailsPanel({ selected, enabled, active, remoteFiles = false
   useManagedBrowserTabs({ threadId: selected, active: enabled && active,
     open: openManagedWebsite, close: closeManagedWebsite });
   const visible = drawer.visible && enabled
-    && Boolean((showingChanges && entry?.files.length) || (drawer.selected === "preview" && preview));
+    && Boolean((showingChanges && (entry?.turnReview || entry?.workspaceReview || entry?.files.length)) || (drawer.selected === "preview" && preview));
   const open = useCallback((next: DiffPanelEntry) => {
-    cancel(); rememberOpener(); setEntry(next); reveal(true);
+    cancel(); rememberOpener();
+    const workspace = changes.current.workspaceReview;
+    const sameThread = next.turnReview?.threadId === changes.current.turnReview?.threadId;
+    setEntry(next.turnReview && !next.workspaceReview && sameThread && workspace
+      ? { ...next, workspaceReview: { ...workspace, cwd: next.turnReview.cwd ?? '' }, initialReview: 'turn' } : next);
+    reveal(true);
   }, [cancel, rememberOpener, reveal]);
   const update = useCallback((next: DiffPanelEntry) => {
-    setEntry(current => current?.id === next.id ? { ...next,
+    setEntry(current => current?.id === next.id ? { ...current, ...next,
       filePath: next.files.some(file => file.path === current.filePath) ? current.filePath : undefined } : current);
   }, []);
   const setConversationChanges = useCallback((next: DiffPanelEntry) => {
     changes.current = next;
-    setHasConversationChanges(next.files.length > 0);
+    setHasConversationChanges(Boolean(next.workspaceReview || next.files.length));
   }, []);
   const close = useCallback(() => {
     cancel(); hide();

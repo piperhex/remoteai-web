@@ -242,7 +242,8 @@ function ConnectedChatContent({ chat, device, devices, active, scope, email, cho
         onClick={() => { void controller.archive().then(drawerMotion.openDrawer); }}>
         {t("client.chat.restore")}</button>}
       {headerActions}
-      {!workspacePage && showDesktopDiffs && (external ? <CliChangesButton /> : <ConversationChangesButton
+      {!workspacePage && showDesktopDiffs && (external ? <CliChangesButton git={controller.guiTools.git} cwd={workspaceCwd} />
+        : <ConversationChangesButton git={controller.guiTools.git} cwd={workspaceCwd} threadId={state.selected?.id}
         value={state.selected?.turns ? { turns: state.selected.turns } : undefined} />)}
       {headerEnd}
       {(desktop || draggableHeader) && <RunningConversations entries={remoteRunningConversations(state)}

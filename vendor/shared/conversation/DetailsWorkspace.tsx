@@ -6,6 +6,7 @@ import { WorkspaceDrawerTabs } from "../chat/WorkspaceDrawerTabs";
 import { FileDiff, FileSearch, Globe, Maximize2, Minimize2, Minus, PanelRightOpen, X } from "lucide-react";
 import { DetailsContext } from "./detailsContext";
 import { DiffDocument } from "./DiffDocument";
+import { ChangesReview } from './ChangesReview';
 import { useDiffText } from "../chat/diffText";
 import { useDrawerResize } from "./useDrawerResize";
 import { guiFontStyle, useGuiFontSize } from "./guiAppearance";
@@ -48,7 +49,7 @@ export function DetailsWorkspace({ selected, active, children, enabled = true, c
   const showingStart = enabled && drawer.tabs.selected === 'start';
   const tool = drawer.tabs.entries.find(tab => tab.id === drawer.tabs.selected);
   const visible = drawer.tabs.visible
-    && Boolean(showingStart || tool || (enabled && ((showingChanges && entry?.files.length)
+    && Boolean(showingStart || tool || (enabled && ((showingChanges && (entry?.files.length || entry?.workspaceReview))
       || (showingPreview && preview))));
   const hasTabs = Boolean(showingStart || hasChanges || preview || drawer.tabs.entries.length);
   const tabs = showingStart ? [{ id: 'start', title: startTitle, icon: <Globe size={16} /> }] : [
@@ -121,7 +122,11 @@ export function DetailsWorkspace({ selected, active, children, enabled = true, c
           </div>
         </header>
         {showingStart && <WorkspaceStartPage launchers={launchers.launchers} openBrowser={panel.openBrowser} />}
-        {hasChanges && entry && entry.files.length > 0
+        {entry?.workspaceReview && visible && showingChanges && <div className={styles.content}>
+          <ChangesReview key={JSON.stringify([selected, entry.workspaceReview.cwd, viewId])}
+            entry={entry} workspace={entry.workspaceReview} />
+        </div>}
+        {hasChanges && entry && !entry.workspaceReview && entry.files.length > 0
           && <div hidden={!showingChanges} key={`${entry.id}:${entry.filePath ?? ""}:${viewId}`}
           className={styles.content}>
           <DiffDocument files={entry.files} filePath={entry.filePath}

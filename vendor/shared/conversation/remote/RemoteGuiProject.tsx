@@ -26,7 +26,7 @@ export function RemoteGuiProject({ state, controller, computers, active }: {
     else controller.chooseDraftProject(directoryProject(path));
   };
   return <div className="gui-remote-project">
-    <ProjectBar active={active} scope={`${computers.current?.deviceId}:${selected}:${cwd}`}
+    <ProjectBar active={active} scope={`${computers.current?.deviceId}:${selected}:${cwd}`} draftDirectory={selected ? undefined : cwd}
       trailing={<GuiHostPicker navigation={computers} active={active} />}>
       <RemoteProjectPicker key={`${computers.current?.deviceId}:${state.selected?.id ?? 'draft'}`}
         state={state} controller={controller} active={active}
@@ -34,7 +34,7 @@ export function RemoteGuiProject({ state, controller, computers, active }: {
       {selected && <ConversationWorkspaceStatus key={`${computers.current?.deviceId}:${cwd}`} cwd={cwd}
         enabled={active && state.ready && !state.workspaceBusy} request={controller.guiTools.workspace} />}
       {!selected && <WorkspacePicker key={cwd} cwd={cwd} disabled={!canChoose}
-        remote localLabel={uiText("client.conversation.worktree")} enabled={active && state.ready}
+        remote localLabel={uiText("client.workspaceActions.remoteComputer")} enabled={active && state.ready}
         request={controller.guiTools.workspace} onBusyChange={controller.setWorkspaceBusy}
         onChange={choose} />}
       <GuiToolbox trigger="git" active={active} connected={state.ready && !state.workspaceBusy} cwd={cwd}

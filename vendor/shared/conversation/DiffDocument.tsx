@@ -35,7 +35,7 @@ function SplitCell({ line, side, language }: { line?: DiffLine; side: "left" | "
   </div>;
 }
 
-function DiffContent({ file, split }: { file: DiffFile; split: boolean }) {
+export function DiffContent({ file, split }: { file: DiffFile; split: boolean }) {
   const t = useDiffText();
   const lines = useMemo(() => file.lines.filter((line) => line.kind !== "meta"
     || !REDUNDANT_DIFF_HEADER.test(line.text)), [file.lines]);
