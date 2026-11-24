@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "d7b122f9c71ec22584155a83ca7c7d3939283d38",
+  "revision": "5bbd850c5aaac298dbb639e3832556c97ccb2f71",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "c807059a12f4accf43a50f3397178bfd97cbe2b3"
+    "revision": "28f1f097b958189a1f94912ba6ce102214f099a3"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -920,7 +920,7 @@
     "shared/provider-market/i18n.ts": "99dda5e97e45baf4e6a78c6db8ecf6df1dae0d66356af9647cfe4264dd9413b2",
     "shared/file-preview/workspace/preview.module.less": "ab254b31294a88ac66379927c40523f47cf90756c44da0f2670b9509890d8701",
     "shared/remote-chat/views/remoteFilePreview.css": "fabb7a21c444c886f938711c288702b314d08dcc3e4ca38bbb198229cf700080",
-    "shared/provider-market/ProviderBrowser.tsx": "d0852c2491900457ce1fe57bf82edf279f92957d874d7374d9a4b437e01032de",
+    "shared/provider-market/ProviderBrowser.tsx": "be9fb6b3aaf37f4df5fc062d9af8eab684e7711d218a35f68bb6cd37f9bf016d",
     "shared/file-preview/workspace/ManagedBrowserSurface.tsx": "fb5f496e3678990a56fdb495313de51a1f7c3cf78219e4eff767c633ba140996",
     "shared/remote-chat/views/ChatBinaryFilePreview.tsx": "d18d95c89fcd05ddd62ce5d23297c65dede1f4712cb97af8f641650b0818ad97",
     "shared/remote-chat/filePreview.ts": "8d369c8a09c5a195afe36a072b33eba610baf26717f370c0a7911d6457314096",
@@ -1843,9 +1843,9 @@
     "shared/chat/ImageAttachments.module.less": "f48693662f819616adeccb766be1a2b06079dbeb6b38a7a1774b7340626de28a",
     "shared/remote-chat/views/ChatRequestError.tsx": "1fb486a68d5fd40b55ac0e6fa0ac67a326de353ab117a78e0959c2c3bddcc259",
     "shared/conversation/turnMessageGroups.ts": "7c2123485a73a46b5611c0e75f8cfce3e323d299c978640df3ed8dafcb94dd37",
-    "shared/browser/BrowserPage.tsx": "85936e58b1c76b87ea31eac9d6c05e1279fd000513970980aba7089e3a3e1ddc",
+    "shared/browser/BrowserPage.tsx": "cba31a9f81cb8b0036ec24f1297c7eebccfa579c7e158d0efc43807b97bce21b",
     "shared/browser/bookmarks/context.tsx": "b59a30211164574668cef6363ca9b11a2c21f859a015cbf57cd99da099849418",
-    "shared/browser/browserPage.css": "d0804b21664edc4e705b7a55663bad4d9f0c685fe29a3d8171e0a0b2d88f0045",
+    "shared/browser/browserPage.css": "ce911269f8c7d9258bc010546d7736e4ee008b8c107ff9d119d4805f76bdc5f0",
     "shared/browser/bookmarks/channel.ts": "e0836226c27aee327d609805fc6a19ca7cc84216769b337d82e5b44215d944ad",
     "shared/browser/bookmarks/store.ts": "c9501be61d70ff74e07d2f89a79c25fa807cb1bead8a307b208ff6643202403e",
     "shared/browser/bookmarks/useBrowserBookmarks.tsx": "ddedd3fb5b919f1f93a4351c424474c987ca5344ab6456a9c0eacd59c1f0f394",

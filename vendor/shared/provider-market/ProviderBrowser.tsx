@@ -56,7 +56,7 @@ export interface BrowserWindowProps {
 /** Browser chrome shared by the Provider dialog and the conversation sidebar. */
 export function BrowserContents(props: BrowserWindowProps & {
   fullscreen: boolean; toggleFullscreen: () => void; embedded?: boolean; actions?: ReactNode;
-  mainBrowser?: boolean; windowControls?: ReactNode;
+  mainBrowser?: boolean; windowControls?: ReactNode; tabBarHost?: HTMLElement | null;
   onPageNavigate?: (id: string, url: string) => void; tabBarStart?: ReactNode;
 }) {
   return <BrowserOverlayProvider><BrowserContentsView {...props} /></BrowserOverlayProvider>;
@@ -147,8 +147,8 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
       return next.size === current.size ? current : next;
     });
   }, [tabs]);
-  return <>
-    {!compact && <div className="pm-browser-titlebar" data-tauri-drag-region={props.windowControls ? true : undefined}>
+  const tabBar = !compact && <div className="pm-browser-titlebar"
+    data-tauri-drag-region={props.windowControls ? true : undefined}>
     {props.tabBarStart}
     <BrowserTabs tabs={tabs} activeId={activeId} visible={open} t={t} language={props.language} visits={records.visits}
       windowDragRegion={Boolean(props.windowControls)} select={props.onSelect} close={props.onCloseTab}
@@ -158,7 +158,9 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
     {!props.embedded && <button className="pm-browser-close" aria-label={t('market.close')} title={t('market.close')}
       onClick={props.onClose}><X size={19} /></button>}
     {props.windowControls && <><div className="pm-browser-window-drag-region" data-tauri-drag-region />
-      {props.windowControls}</>}</div>}
+      {props.windowControls}</>}</div>;
+  return <>
+    {props.tabBarHost ? createPortal(tabBar, props.tabBarHost) : tabBar}
     {mobileFullscreen ? <BrowserFullscreenControl t={t} exit={props.toggleFullscreen} />
       : showManager ? <MobileTabManagerToolbar t={t} count={tabs.length} query={query} setQuery={setQuery}
       close={() => setManager(false)} add={add} closeAll={() => closeTabs(tabs.map(tab => tab.id))} /> : compact

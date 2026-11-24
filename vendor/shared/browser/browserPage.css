@@ -4,6 +4,14 @@
 .pm-browser.browser-main-expanded[popover] { margin: 0; padding: 0; max-width: none; max-height: none; height: 100dvh; }
 .pm-browser.browser-main-expanded::backdrop { background: transparent; }
 .pm-browser.browser-main-page[hidden] { display: none; }
+.pm-browser.browser-tabstrip-host {
+  width: auto; height: auto; min-width: 0; overflow: visible; border: 0; border-radius: 0; box-shadow: none;
+}
+.browser-tabstrip-host > .pm-browser-titlebar {
+  flex: 1; min-height: 0; padding: 0 0 0 12px; border-bottom: 1px solid var(--border, #dce1e8);
+}
+.browser-tabstrip-host .pm-browser-titlebar > .pm-browser-tabs-bar { margin-top: 0; align-self: end; }
+.browser-tabstrip-host .pm-browser-tab { padding-block: 0; }
 .browser-desktop-main { display: flex; flex-direction: column; min-height: 0; overflow: hidden; padding: 0 !important; }
 .browser-active .content-shell { height: 100vh; display: flex; flex-direction: column; }
 .browser-active .main-content { flex: 1; padding: 0; min-height: 0; display: flex; flex-direction: column; }

@@ -136,14 +136,15 @@ h1, h2, h3, .brand-lockup { font-family: "Manrope", "PingFang SC", "Microsoft Ya
 
 /* Shell */
 .app-shell { --desktop-header-padding: 12px; --desktop-toggle-size: 40px;
+  --sidebar-heading-top: 30px; --sidebar-nav-gap: 45px; --collapsed-heading-gap: 18px;
   min-height: 100vh; background: var(--canvas); }
-.desktop-sidebar { position: fixed; inset: 0 auto 0 0; z-index: 20; width: 252px; display: flex; flex-direction: column; padding: 30px 22px 22px; border-right: 1px solid var(--app-border, #e3ebe7); background: color-mix(in srgb, var(--app-surface, #fafcfb) 94%, transparent); backdrop-filter: blur(18px); }
+.desktop-sidebar { position: fixed; inset: 0 auto 0 0; z-index: 20; width: 252px; display: flex; flex-direction: column; padding: var(--sidebar-heading-top) 22px 22px; border-right: 1px solid var(--app-border, #e3ebe7); background: color-mix(in srgb, var(--app-surface, #fafcfb) 94%, transparent); backdrop-filter: blur(18px); }
 .desktop-sidebar-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .desktop-sidebar .brand-lockup { min-width: 0; white-space: nowrap; }
 .main-menu-toggle { display: grid; place-items: center; flex-shrink: 0; width: 32px; height: 38px;
   padding: 0; border: 0; border-radius: 8px; background: transparent; color: var(--ink); cursor: pointer; }
 .main-menu-toggle:hover { background: var(--app-canvas, #edf4f0); }
-.desktop-sidebar nav { display: flex; flex-direction: column; gap: 5px; margin: 45px 0 auto; }
+.desktop-sidebar nav { display: flex; flex-direction: column; gap: 5px; margin: var(--sidebar-nav-gap) 0 auto; }
 .desktop-sidebar nav button { width: 100%; height: 47px; display: flex; align-items: center; gap: 12px; padding: 0 13px; border: 0; border-radius: 12px; color: var(--app-muted, #64756d); background: transparent; cursor: pointer; text-align: left; font-weight: 600; transition: 150ms ease; }
 .desktop-sidebar nav button:hover { color: var(--app-ink, #203a30); background: var(--app-canvas, #edf4f0); }
 .desktop-sidebar nav button.active { color: var(--app-accent, #0b6f5c); background: var(--app-canvas, #e1f3ec); box-shadow: inset 3px 0 var(--green); }
@@ -159,9 +160,23 @@ h1, h2, h3, .brand-lockup { font-family: "Manrope", "PingFang SC", "Microsoft Ya
 .sidebar-profile strong { font-size: 11px; }.sidebar-profile small { margin-top: 2px; color: var(--muted); font-size: 10px; }
 .content-shell { min-height: 100vh; margin-left: 252px; }
 @media (min-width: 861px) {
+  .browser-active { --browser-tabstrip-height: 38px; }
+  .browser-active > .browser-tabstrip-host {
+    position: fixed; inset: 0 0 auto; height: var(--browser-tabstrip-height); z-index: 21;
+  }
+  .browser-active .content-shell { padding-top: var(--browser-tabstrip-height); }
+  .browser-active .desktop-sidebar { top: var(--browser-tabstrip-height); padding-top: var(--desktop-header-padding); }
+  .browser-active:not(.main-menu-collapsed) .desktop-sidebar nav {
+    margin-top: calc(var(--sidebar-nav-gap) + var(--sidebar-heading-top) - var(--browser-tabstrip-height)
+      - var(--desktop-header-padding));
+  }
+  .browser-active.main-menu-collapsed .desktop-sidebar {
+    padding-top: calc(var(--desktop-header-padding) + var(--desktop-toggle-size) + var(--collapsed-heading-gap)
+      - var(--browser-tabstrip-height));
+  }
   .main-menu-collapsed .desktop-sidebar { width: 72px;
     padding: var(--desktop-header-padding) 10px 12px; overflow-y: auto; }
-  .main-menu-collapsed .desktop-sidebar-heading { flex-direction: column-reverse; gap: 18px; }
+  .main-menu-collapsed .desktop-sidebar-heading { flex-direction: column-reverse; gap: var(--collapsed-heading-gap); }
   .main-menu-collapsed .desktop-sidebar .main-menu-toggle { width: var(--desktop-toggle-size); height: var(--desktop-toggle-size);
     border: 1px solid var(--app-border, #d8e7e0); }
   .main-menu-collapsed .brand-mark { width: 42px; height: 42px; }

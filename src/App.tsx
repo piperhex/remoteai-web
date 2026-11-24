@@ -308,6 +308,7 @@ function AppShell() {
   const { page, profile, devices, refreshing, error } = useAppSelector((state) => state.data);
   useSyncDownloadAccount(session ? downloadOwner(session) : '');
   const desktopLayout = useDesktopLayout();
+  const [browserTabBarHost, setBrowserTabBarHost] = useState<HTMLDivElement | null>(null);
   const downloadsBack = useRef<'discover' | 'browser'>('discover');
   const openBrowserDownloads = useCallback(() => {
     downloadsBack.current = 'browser';
@@ -418,6 +419,7 @@ function AppShell() {
     channel={session ? lounge.controller.bookmarks : undefined}>
     <BrowserNavigationProvider onOpen={() => dispatch(pageChanged('browser'))}>
     <DownloadedFileProvider owner={downloadScope ?? ''}><div className={shellClass}>
+    {toggleInBrowser && <div className="pm-browser browser-tabstrip-host" ref={setBrowserTabBarHost} />}
     <aside className="desktop-sidebar">
       <div className="desktop-sidebar-heading">
         <div className="brand-lockup"><BrandMark />
@@ -495,7 +497,7 @@ function AppShell() {
         <RetainedView active={page === 'browser'}>
           <WebsiteDownloadsContext.Provider value={websiteDownloads}>
             <BrowserPage language={language} active={page === 'browser'}
-              sidebarToggle={toggleInBrowser && menuToggle}
+              sidebarToggle={toggleInBrowser && menuToggle} tabBarHost={browserTabBarHost}
               homeBaseUrl={session?.baseUrl}
               onClose={() => dispatch(pageChanged('discover'))} />
           </WebsiteDownloadsContext.Provider>
