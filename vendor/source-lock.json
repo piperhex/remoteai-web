@@ -3,7 +3,7 @@
   "revision": "d3ee2be0366acf66479b8ab18ec195a236c33984",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "899f3321f2f8aee41c050a1599c6d93234b1e05f"
+    "revision": "c935b3fdd43df3ce212732fafdd8e8c1d76a608f"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -179,7 +179,7 @@
     "shared/totp/TotpSyncSwitch.tsx": "6fa39ad826906051fa6aca4095f3822be55f7e95d9530f0dd23246e9fd5f2e4a",
     "shared/downloads/DownloadCountIcon.tsx": "4d81eecdb5fc97c698c938ec276edd6864e5e910d0dd1b62f83c9c3018964b84",
     "shared/navigation/discovery.ts": "cbf3e50096ee169da0c708f5d414e1b50773204ac63ae72aa18b1f81c8ac8ad8",
-    "shared/lounge/LoungePage.tsx": "f1f1fc80b1b3b240a60e5d68f5cd09499b85582354b86ddb2e0562dbe846376d",
+    "shared/lounge/LoungePage.tsx": "a9ba72dcff4ec7271a203dff266b300154c7cdd7e4984a60cf30eebee8f72e2a",
     "shared/lounge/LoungeIcon.tsx": "a75f87b127909ff73f027f7f426007256697636c7a7d677d9a287cf8a50b8331",
     "shared/lounge/LoungeAvatar.tsx": "9fd1efd47cd846360f73f27977a971d245e34071e53977d1157f0944d36c6c26",
     "shared/lounge/accountLabel.ts": "1a7df4efab4db98672a83c9760a49dc6331979ef723ded48f9f599feac3ad6b8",
@@ -678,7 +678,6 @@
     "shared/downloads/useActiveDownloadCount.ts": "1d28fc93406931a2d7e6f255c052a81c90ee8a480d95177ea479adb2c8b7a05b",
     "shared/downloads/countIcon.css": "d1e5a5b89f7647d0c15ee756e3bc5559d3cb484c6e37ea28bd4ac6eb4889d121",
     "shared/lounge/names.ts": "778bd95737e23505bf77424829c150d99fcdc0f7b8e806955fefe20d7af51482",
-    "shared/lounge/LoungeSyncNotice.tsx": "d5fa0bc04889cc7e8b34af9d25278a2ffa74155471c63dc4353bdb9de23a5b65",
     "shared/lounge/types.ts": "7a98a7541f99ad31b08a6e030a8165485593942bebeeb5e26bef4ee18afd6d2d",
     "shared/lounge/LoungeComposer.tsx": "ea6b1c9a4ac7d0402b9b7f7503c3012ca5b217b40d54e3f15ceb93829eae1956",
     "shared/lounge/LoungeModeration.tsx": "203cf136f8de41f32bbe9dc66f52216ff9836cbad1f3b80dc11021ce211eca54",
@@ -694,7 +693,7 @@
     "shared/lounge/contacts.ts": "0e714ae8250c1a2fe0869e445515e39985b55209e7a21ba71d13dfa4f918f61b",
     "shared/lounge/lounge.css": "dcee42e8f0116362e5a6b5040b28d71fcbde228c1c3f1d13e04b2af5edf49fc4",
     "shared/lounge/people.css": "7d1821969951c34da414d28c10e8303e26a07f1f32f42b9ef4ce389f8af09fd1",
-    "shared/lounge/MobileLoungePage.tsx": "8d77fe004462322bf2ea942e304ad0ae0bbddb157144598d78c1c057b6d957bb",
+    "shared/lounge/MobileLoungePage.tsx": "f03adfb7292e5318750258a4435a7548928985da9a60d28fc5f95ad0d509daee",
     "shared/lounge/archive.ts": "4a3e57a480d8957ab4e1b71442f880c7d9ed9ffaaea6f381736b34ff8d1113f4",
     "shared/lounge/useLoungeNavigation.ts": "7ede9b25183a32c96f67f5c1817a8ff7a3a566fac30570c5ded52b2e7e8459e9",
     "shared/lounge/scrollToMessage.ts": "76e41636190800e6b4356865b92f9acb3d2de905582b5ab6256fd5ed3e45b10d",
