@@ -29,7 +29,6 @@ export async function projectPickerJourney({ page, request, relay }: {
   const project = controls.trigger;
   const draft = page.getByRole('textbox', { name: '聊天消息' });
   await expect(project).toHaveText(controls.desktop ? '选择项目' : '未选择项目');
-  await draft.fill('保留这条尚未发送的消息');
   await expect(page.locator('.chat-header').getByRole('button', { name: '选择项目' })).toHaveCount(0);
   const triggerBounds = await project.boundingBox();
   const composerBounds = await page.locator('.chat-composer').boundingBox();
@@ -37,16 +36,22 @@ export async function projectPickerJourney({ page, request, relay }: {
   await project.click();
   await controls.option(/演示项目/).click();
   await expect(project).toHaveText('演示项目');
-  await expect(draft).toHaveValue('保留这条尚未发送的消息');
+  if (controls.desktop) {
+    const bar = page.locator('[data-project-bar]');
+    await expect(bar.getByRole('button', { name: '工作位置', exact: true })).toHaveText('远程电脑');
+    await expect(bar).not.toContainText('F:/projects/demo');
+  }
+  await draft.fill('保留这条尚未发送的消息');
   expect((await state(request)).operations.some(entry => entry.operation === 'start')).toBe(false);
   await project.click();
   await expect(controls.option(/演示项目/)).toHaveAttribute(controls.checked, 'true');
   await page.getByRole('button', {
     name: '新建项目', exact: true,
   }).click();
-  await chooseNewProjectFolder(page);
+  if (controls.desktop) await chooseDesktopProjectFolder(page);
+  else await chooseNewProjectFolder(page);
   await expect(project).toHaveText(LONG_PROJECT_NAME);
-  await expect(draft).toHaveValue('保留这条尚未发送的消息');
+  await expect(draft).toHaveValue('');
   expect(await project.locator('span').evaluate((element) => element.scrollWidth > element.clientWidth
     && getComputedStyle(element).textOverflow === 'ellipsis')).toBe(true);
   await expect(page.locator('.adm-toast-mask')).toHaveCount(0);
@@ -59,10 +64,33 @@ export async function projectPickerJourney({ page, request, relay }: {
   if (controls.desktop) await page.getByRole('textbox', { name: '搜索项目', exact: true }).press('Escape');
   else await page.getByRole('button', { name: /^(关闭|Close)$/ }).click();
   await expect(project).toHaveText(LONG_PROJECT_NAME);
+  await project.click();
+  await controls.option(/演示项目/).click();
+  await expect(draft).toHaveValue('保留这条尚未发送的消息');
+  await project.click();
+  await controls.option(LONG_PROJECT_NAME).click();
+  await expect(draft).toHaveValue('');
+  await draft.fill('检查新项目');
   await page.getByRole('button', { name: '发送消息', exact: true }).click();
   await expect.poll(async () => (await state(request)).operations.find((entry) => entry.operation === 'start')?.cwd)
     .toBe(`F:/projects/${LONG_PROJECT_NAME}`);
   await switchExistingConversation(page, request);
+}
+
+async function chooseDesktopProjectFolder(page: Page) {
+  const picker = page.getByRole('dialog', { name: '选择项目', exact: true });
+  const address = picker.getByRole('navigation', { name: '文件夹地址' });
+  const choose = picker.getByRole('button', { name: '选择文件夹', exact: true });
+  const option = (name: string) => picker.getByRole('option').filter({ hasText: name });
+  await address.getByRole('button', { name: '此电脑' }).click();
+  await expect(choose).toBeDisabled();
+  await option('F:').dblclick();
+  await option('projects').dblclick();
+  await option('不可访问的文件夹').dblclick();
+  await expect(picker.getByRole('alert')).toBeVisible();
+  await picker.getByRole('button', { name: '后退', exact: true }).click();
+  await option(LONG_PROJECT_NAME).click();
+  await choose.click();
 }
 
 async function chooseNewProjectFolder(page: Page) {
@@ -82,7 +110,7 @@ async function chooseNewProjectFolder(page: Page) {
   await picker.getByRole('button', { name: 'F:', exact: true }).click();
   await picker.getByRole('button', { name: 'projects', exact: true }).click();
   await picker.getByRole('button', { name: LONG_PROJECT_NAME, exact: true }).click();
-  if ((page.viewportSize()?.width ?? 0) <= 860) await preservePickerInBackground(page);
+  await preservePickerInBackground(page);
   await picker.getByRole('button', { name: '返回上一级' }).click();
   await picker.getByRole('button', { name: LONG_PROJECT_NAME, exact: true }).click();
   await choose.click();

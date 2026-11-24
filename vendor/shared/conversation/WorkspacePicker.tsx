@@ -82,7 +82,7 @@ export function WorkspacePicker({ cwd, disabled, onChange, onBusyChange, request
       styles={{ root: { maxWidth: 400 }, body: { padding: 6, borderRadius: 18 } }}>
       <button type="button" className={styles.trigger} disabled={disabled || git.busy}
         aria-label={uiText("client.workspaceActions.workLocation")} aria-haspopup="menu" aria-expanded={menu === "location"}>
-        <Laptop size={16} /><span title={cwd}>{locationLabel}{cwd && <small className={styles.directory}>{cwd}</small>}</span>
+        <Laptop size={16} /><span>{locationLabel}</span>
       </button>
     </Popover>
     {cwd && <Popover trigger="click" placement="topLeft" align={MENU_ALIGN} arrow={false}

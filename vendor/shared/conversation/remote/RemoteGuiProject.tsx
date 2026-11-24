@@ -26,7 +26,7 @@ export function RemoteGuiProject({ state, controller, computers, active }: {
     else controller.chooseDraftProject(directoryProject(path));
   };
   return <div className="gui-remote-project">
-    <ProjectBar active={active} scope={`${computers.current?.deviceId}:${selected}:${cwd}`} draftDirectory={selected ? undefined : cwd}
+    <ProjectBar active={active} scope={`${computers.current?.deviceId}:${selected}:${cwd}`}
       trailing={<GuiHostPicker navigation={computers} active={active} />}>
       <RemoteProjectPicker key={`${computers.current?.deviceId}:${state.selected?.id ?? 'draft'}`}
         state={state} controller={controller} active={active}
