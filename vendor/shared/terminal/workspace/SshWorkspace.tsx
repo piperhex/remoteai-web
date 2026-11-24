@@ -115,9 +115,10 @@ export function SshWorkspace({ api, active, available, scope, host, login }: Pro
             upload={batch => { setFiles(true); return uploads.enqueue(tab.id, batch); }}
             uploadPending={uploads.pending.some(upload => upload.id === tab.id)} />)}
         </div>
+        {current && <ServerMonitor key={current.id} id={current.id} api={ssh}
+          enabled={active && available && !current.exited} />}
       </div>
     </div>
-    {current && <ServerMonitor key={current.id} id={current.id} api={ssh} enabled={active && available && !current.exited} />}
     {active && editor && <SshConnectionDialog key={editor} api={ssh} projectCwd={SSH_WORKSPACE} manage={editor === 'manage'}
       settingsOnly={editor === 'new' && !available} allowConnect={available && !limit}
       connected={adopt} dispose={api.close} changed={() => void saved.refresh()} close={closeDialog} />}
