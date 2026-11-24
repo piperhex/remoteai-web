@@ -9,11 +9,12 @@ import './detailsWorkspace.css';
 import { RemoteBrowserResourceContext } from '../../file-preview/workspace/browserResources';
 import { chatBrowserResource } from './chatBrowserResource';
 import type { FilePreviewTarget } from '../../file-preview/workspace/usePreviewHistory';
+import type { ReadSavedReview } from '../../conversation/savedReview';
 import { MobileChatBrowser } from './MobileChatBrowser';
 
 /** Keep one layout tree across viewport changes so composer drafts and terminal sessions survive. */
-export function ChatDetailsWorkspace({ selected, active, enabled, children }: {
-  selected: string | null; active: boolean; enabled: boolean; children: ReactNode;
+export function ChatDetailsWorkspace({ selected, active, enabled, readSavedReview, children }: {
+  selected: string | null; active: boolean; enabled: boolean; readSavedReview?: ReadSavedReview; children: ReactNode;
 }) {
   const language = useLanguage();
   const files = useContext(ChatFileContext);
@@ -27,7 +28,8 @@ export function ChatDetailsWorkspace({ selected, active, enabled, children }: {
       renderRemoteFile={files ? props => <ChatRemoteFilePreview {...props} context={files}
         key={`${props.target.threadId}:${props.target.path}:${props.target.line ?? ''}`} /> : undefined}
       className="chat-diff-workspace" contentClassName="chat-diff-layout">
-      <MobileChatBrowser>{children}</MobileChatBrowser></DetailsWorkspace>
+      <MobileChatBrowser active={active} readSavedReview={readSavedReview}>{children}</MobileChatBrowser>
+    </DetailsWorkspace>
     </RemoteBrowserResourceContext.Provider>
   </DiffTextContext.Provider>;
 }

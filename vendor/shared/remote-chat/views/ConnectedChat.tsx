@@ -217,7 +217,8 @@ function ConnectedChatContent({ chat, device, devices, active, scope, email, cho
     <ChatFileContext.Provider value={{ threadId: state.selected?.id ?? null, ready, client: controller.files,
       load: controller.textPreview }}>
     <ChatBrowserProvider controller={controller}>
-    <ChatDetailsWorkspace selected={external ? `cli:${cli?.state.engine}:${cli?.state.selected?.id ?? 'draft'}`
+    <ChatDetailsWorkspace readSavedReview={controller.guiTools.git.savedReview}
+      selected={external ? `cli:${cli?.state.engine}:${cli?.state.selected?.id ?? 'draft'}`
       : state.selected?.id ?? null} active={active && !workspacePage} enabled={showDesktopDiffs}>
     <ChatFileReferencesProvider><ImageAnnotationsProvider>
     <ChatQuotesProvider scope={state.draftScope ?? state.selected?.id ?? null} sending={state.sending}

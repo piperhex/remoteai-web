@@ -23,6 +23,11 @@ test('reviews task changes with versioned checks, comments, restore preview and 
     ? page.getByRole('dialog', { name: '本轮修改', exact: true }).locator('.chat-diff')
     : page.getByRole('dialog', { name: '文件更改详情', exact: true });
   await expect(changes).toBeVisible();
+  if (info.project.name === 'mobile') {
+    await changes.locator('summary').filter({ hasText: 'note.ts' }).click();
+    await expect(changes.locator('.chat-diff-line.add')).toContainText('+const value = 2;');
+    await screenshot(page, info, 'mobile-turn-review-diff');
+  }
   await expect(page.locator('.chat-review-panel')).toHaveCount(0);
   await page.getByRole('button', { name: /关闭详情抽屉|^关闭$/ }).last().click();
   await result.click();
