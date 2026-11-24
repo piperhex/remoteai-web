@@ -9,6 +9,7 @@ import { placeBrowser } from './nativeBrowserPlacement';
 import { nativeSurfaceSession } from '../../browser/managed/nativeSurfaceSession';
 import { useNativeBrowserPreview } from '../../browser/managed/useNativeBrowserPreview';
 import { BrowserInspector } from '../../browser/managed/BrowserInspector';
+import { useNativeZoom, type NativeZoomEvent } from '../../browser/zoom/nativeZoom';
 import { rememberWebsiteIcons } from '../../browser/icons/websiteIcons';
 
 export function WebsiteBrowserSurface(props: BrowserSurfaceProps) {
@@ -27,6 +28,7 @@ function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, ob
   const { image: overlayImage, preview } = useNativeBrowserPreview();
   const [image, setImage] = useState('');
   const [failed, setFailed] = useState(false);
+  const zoom = useNativeZoom('conversation', client.native);
   const refresh = useRef<() => void>();
   useEffect(() => {
     let disposed = false;
@@ -83,8 +85,9 @@ function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, ob
       attributeFilter: browserOverlayAttributes });
     window.addEventListener('resize', sync); window.addEventListener('scroll', sync, true);
     document.addEventListener('visibilitychange', sync);
-    const listener = listen<{ url: string; popup?: boolean; icons?: string[] }>(
+    const listener = listen<{ url?: string; popup?: boolean; icons?: string[] } & NativeZoomEvent>(
       `conversation-browser-${tab.id}`, ({ payload }) => {
+      zoom?.(payload);
       if (!payload.popup && payload.url) rememberWebsiteIcons(payload.url, payload.icons);
       if (!payload.popup && payload.url) current.current.onNavigate(payload.url);
     });

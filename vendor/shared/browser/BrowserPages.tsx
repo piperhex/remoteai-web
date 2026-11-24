@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
+import { BrowserTabCanvas } from './zoom/BrowserTabCanvas';
 import { Globe, X } from 'lucide-react';
 import type { BrowserWindowProps } from '../provider-market/ProviderBrowser';
 import type { MarketText } from '../provider-market/i18n';
@@ -12,7 +13,8 @@ import { useMobileBrowserRenderers } from './useMobileBrowserRenderers';
 
 /** Keep tab cards and navigation available when an older mobile page releases its renderer. */
 export function BrowserPages({ browser, t, manager, compact, query, blocked, select, loadingChanged, desktopTabs,
-  home, bookmarks, recordVisit }: {
+  home, bookmarks, recordVisit, zoomAnchor }: {
+  zoomAnchor: HTMLSpanElement | null;
   browser: BrowserWindowProps & { embedded?: boolean; onPageNavigate?: (id: string, url: string) => void };
   t: MarketText; manager: boolean; compact: boolean; query: string; blocked: boolean;
   select: (id: string) => void; loadingChanged: (id: string, loading: boolean) => void;
@@ -65,9 +67,9 @@ export function BrowserPages({ browser, t, manager, compact, query, blocked, sel
         {manager && <div className="browser-tab-card-header"><BrowserWebsiteIcon url={entry.url} size={16} />
           <span>{title}</span><button aria-label={t('market.browserCloseTab', { name: title })}
             onClick={() => browser.onCloseTab(entry.id)}><X size={18} /></button></div>}
-        <div key="surface" className={`browser-tab-canvas${home(entry.id) ? ' browser-home-covered' : ''}`}
-          aria-hidden={manager || home(entry.id) || undefined}
-          ref={element => { if (element) element.inert = manager || home(entry.id); }}>
+        <BrowserTabCanvas key="surface" id={entry.id} language={browser.language} desktop={!compact}
+          anchor={!compact && open && entry.id === activeId && !blocked ? zoomAnchor : null}
+          manager={manager} covered={home(entry.id)}>
           {mounted && <Surface tab={entry}
             active={open && entry.id === activeId && !blocked && !manager && !home(entry.id)}
             command={commands[entry.id] ?? null} hideForModal={browser.embedded} obscured={blocked}
@@ -83,7 +85,7 @@ export function BrowserPages({ browser, t, manager, compact, query, blocked, sel
           {!mounted && manager && !home(entry.id) && <div className="pm-browser-feedback" aria-hidden>
             <Globe size={64} />
           </div>}
-        </div>
+        </BrowserTabCanvas>
         {home(entry.id) && <BrowserHome t={t} visit={url => browser.onNavigate(entry.id, url)} bookmarks={bookmarks} />}
         {manager && <><button className="browser-tab-select" aria-label={title} aria-pressed={entry.id === activeId}
           onClick={() => select(entry.id)} /><span className="browser-tab-card-url">{entry.url || title}</span></>}

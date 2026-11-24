@@ -8,7 +8,8 @@ import { BrowserWebsiteIcon } from './icons/BrowserWebsiteIcon';
 import { BrowserAddressField } from './BrowserAddressField';
 
 export function BrowserToolbar({ tab, loading, fullscreen, toggleFullscreen, navigate, action, t, actions, star, settings,
-  searchEngine, active, overlayChanged }: {
+  searchEngine, active, overlayChanged, zoomAnchor }: {
+  zoomAnchor?: (element: HTMLSpanElement | null) => void;
   loading: boolean; active: boolean; overlayChanged: (open: boolean) => void;
   tab?: BrowserTab; fullscreen: boolean; toggleFullscreen: () => void;
   navigate: (url: string) => void; action: (action: BrowserAction) => void; t: MarketText; actions?: ReactNode;
@@ -42,6 +43,7 @@ export function BrowserToolbar({ tab, loading, fullscreen, toggleFullscreen, nav
       <BrowserAddressField address={address} context={JSON.stringify([tab?.id, tab?.url])} active={active}
         invalid={invalid} change={value => { setAddress(value); setInvalid(false); }}
         submit={submit} overlayChanged={overlayChanged} t={t} />
+      {zoomAnchor && <span className="browser-zoom-anchor" ref={zoomAnchor} />}
       {star}<button type="submit" aria-label={t('market.visitPage')}><ArrowRight size={16} /></button>
     </form>
     {actions}

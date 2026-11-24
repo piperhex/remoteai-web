@@ -74,6 +74,7 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
   const mobileFullscreen = compact && props.fullscreen;
   const home = useMobileBrowserHome(props, compact);
   const displayTab = tab && home.isHome(tab.id) ? { ...tab, url: '', title: '' } : tab;
+  const [zoomAnchor, setZoomAnchor] = useState<HTMLSpanElement | null>(null);
   const [manager, setManager] = useState(false);
   const [query, setQuery] = useState('');
   const [desktopTabs, setDesktopTabs] = useState<Record<string, boolean>>({});
@@ -168,7 +169,7 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
       action={(action) => { if (tab) props.onAction(tab.id, action); }} t={t}
       actions={<><BrowserExtensions t={t} active={open} onOverlay={setExtensionsOpen} onPanel={setSidePanel}
         panelId={sidePanel?.id} closePanel={closeSidePanel} />{props.actions}</>}
-      star={bookmarks.star} settings={bookmarks.settings} />}
+      zoomAnchor={setZoomAnchor} star={bookmarks.star} settings={bookmarks.settings} />}
     {!mobileFullscreen && !showManager && !(tab && home.isHome(tab.id)) && bookmarks.bar}{bookmarks.overlays}
     {mappingsOpen && <BrowserPortMappings language={props.language} close={() => setMappingsOpen(false)}
       visit={url => { if (tab) home.navigate(tab.id, url); }} />}
@@ -182,7 +183,7 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
     <div className="browser-content-row"><BrowserPages key="pages" browser={{ ...props, onAction: home.action, onNavigate: home.navigate,
       onCloseTab: id => closeTabs([id]) }}
       home={home.isHome} bookmarks={bookmarks.manage} t={t} manager={showManager} compact={compact} query={query}
-      desktopTabs={desktopTabs}
+      desktopTabs={desktopTabs} zoomAnchor={zoomAnchor}
       blocked={!nativeOverlay && (addressOpen || menuOpen || extensionsOpen || bookmarks.overlayOpen || mappingsOpen
         || !!dataPanel || !!records.candidate || !!records.focus)}
       loadingChanged={loadingChanged}

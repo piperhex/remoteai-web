@@ -6,6 +6,7 @@ import type { BrowserSurfaceProps } from '../../provider-market/ProviderBrowser'
 import { nativeBrowserSession } from './providerBrowserSession';
 import { browserOverlayAttributes, hasBrowserOverlay } from './browserOverlays';
 import { BrowserFrame } from './BrowserFrame';
+import { useNativeZoom, type NativeZoomEvent } from '../zoom/nativeZoom';
 import { useNativeBrowserPreview } from './useNativeBrowserPreview';
 import { BrowserInspector } from './BrowserInspector';
 import { rememberWebsiteIcons } from '../icons/websiteIcons';
@@ -32,6 +33,7 @@ export function ProviderBrowserSurface(props: BrowserSurfaceProps) {
   const nativeNavigation = useRef('');
   const lastCommand = useRef(0);
   const needsDesktop = !desktop && Object.keys(tab.headers).length > 0;
+  const zoom = useNativeZoom('provider', desktop && !!tab.url && !failed && !unsupported);
   useEffect(() => {
     if (!desktop || !host.current) return;
     const element = host.current;
@@ -57,8 +59,9 @@ export function ProviderBrowserSurface(props: BrowserSurfaceProps) {
     };
     refresh.current = sync;
     const unlisten = listen<{ url?: string; title?: string; popup?: boolean; loading?: boolean;
-      visited?: boolean; icons?: string[] }>(
+      visited?: boolean; icons?: string[] } & NativeZoomEvent>(
       `provider-browser-${tab.id}`, ({ payload }) => {
+        zoom?.(payload);
         if (payload.popup && payload.url) { state.current.onPopup(payload.url); return; }
         if (typeof payload.loading === 'boolean') state.current.onLoadingChange?.(payload.loading);
         if (payload.visited && payload.url) state.current.onVisit?.({ url: payload.url, title: payload.title ?? '' });

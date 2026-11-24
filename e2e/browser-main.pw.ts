@@ -1,5 +1,26 @@
 import { expect, test } from '@playwright/test';
 
+test('toolbar zoom resizes a cross-origin website without reloading it', async ({ page }) => {
+  const url = 'https://preview.example.test/zoom';
+  await page.route(url, route => route.fulfill({ contentType: 'text/html', body: '<input aria-label="draft">' }));
+  await page.goto('e2e/web-browser-bookmarks-harness.html');
+  const browser = page.locator('.browser-main-page');
+  const address = browser.getByRole('combobox');
+  await address.fill(url);
+  await address.press('Enter');
+  const draft = browser.locator('iframe').contentFrame().getByRole('textbox');
+  await draft.fill('retained');
+  const width = await draft.evaluate(() => innerWidth);
+  await browser.getByRole('button', { name: '缩放比例' }).click();
+  const popup = browser.locator('.browser-zoom-popup');
+  await popup.getByRole('button', { name: '放大', exact: true }).click();
+  await expect(popup.locator('output')).toHaveText('110%');
+  expect(await draft.evaluate(() => innerWidth)).toBeLessThan(width);
+  await expect(draft).toHaveValue('retained');
+  await popup.getByRole('button', { name: '重置' }).click();
+  expect(await draft.evaluate(() => innerWidth)).toBe(width);
+});
+
 for (const enlarged of [false, true]) test(`web desktop browser ${enlarged ? 'dark narrow enlarged' : 'light wide'}`,
   async ({ page }, info) => {
     await page.setViewportSize({ width: enlarged ? 900 : 1440, height: 900 });

@@ -2,7 +2,8 @@ import { useLayoutEffect, useState, type RefObject, type CSSProperties } from 'r
 import { theme } from 'antd';
 
 /** A full-client native popup uses the same CSS coordinates as its owning document. */
-export function usePopupAnchor(anchor: RefObject<HTMLElement>, enabled: boolean): CSSProperties | undefined {
+export function usePopupAnchor(anchor: RefObject<HTMLElement>, enabled: boolean, align: 'stretch' | 'end' = 'stretch'):
+  CSSProperties | undefined {
   const [bounds, setBounds] = useState<DOMRect>();
   const { token } = theme.useToken();
   useLayoutEffect(() => {
@@ -14,9 +15,11 @@ export function usePopupAnchor(anchor: RefObject<HTMLElement>, enabled: boolean)
     return () => { observer.disconnect(); window.removeEventListener('resize', sync);
       window.removeEventListener('scroll', sync, true); };
   }, [anchor, enabled]);
-  return enabled && bounds ? { position: 'fixed', top: bounds.bottom + 5, left: bounds.left, right: 'auto',
-    width: bounds.width, zIndex: 1700, fontSize: token.fontSize, fontFamily: token.fontFamily,
+  return enabled && bounds ? { position: 'fixed', top: bounds.bottom + 5,
+    ...(align === 'end' ? { right: window.innerWidth - bounds.right, width: 'max-content' }
+      : { left: bounds.left, right: 'auto', width: bounds.width }),
+    zIndex: 1700, fontSize: token.fontSize, fontFamily: token.fontFamily,
     '--panel-bg': token.colorBgElevated, '--text': token.colorText, '--border': token.colorBorderSecondary,
     '--text-secondary': token.colorTextSecondary, '--hover-bg': token.colorBgTextHover,
-    '--accent': token.colorPrimary } as CSSProperties : undefined;
+    '--accent': token.colorPrimary } as CSSProperties & Record<`--${string}`, string> : undefined;
 }

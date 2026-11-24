@@ -1,0 +1,27 @@
+.browser-zoom-anchor { position: relative; display: inline-flex; align-items: center; }
+.browser-zoom-anchor:empty { display: none; }
+.browser-zoom-popup {
+  position: absolute; top: calc(100% + 6px); inset-inline-end: 0; z-index: 1700;
+  display: flex; align-items: center; gap: 3px; width: max-content; max-width: min(400px, 95vw);
+  padding: 6px 8px; border: 1px solid var(--border, #dce1e8); border-radius: 10px;
+  background: var(--panel-bg, #fff); color: var(--text, #182230);
+  box-shadow: 0 4px 16px #10182824; font: inherit; user-select: none;
+}
+.browser-zoom-popup[data-native-fallback] { top: 50%; transform: translateY(-50%); }
+.browser-zoom-popup output { padding: 0 6px; min-width: 4.5ch; font-variant-numeric: tabular-nums; }
+.browser-zoom-popup button {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 28px; min-height: 28px; padding: 4px; border: 0; border-radius: 50%;
+  background: transparent; color: inherit; cursor: pointer; font: inherit;
+}
+.browser-zoom-popup button:hover:enabled { background: var(--hover-bg, #e8edf4); }
+.browser-zoom-popup button:disabled { opacity: .45; cursor: default; }
+.browser-zoom-popup button:focus-visible { outline: 2px solid var(--accent, #6175db); }
+.browser-zoom-popup .browser-zoom-reset {
+  margin-inline-start: 4px; padding: 3px 12px; border: 1px solid var(--border, #dce1e8); border-radius: 20px;
+}
+.browser-tab-canvas[data-page-zoom] { overflow: hidden; }
+.browser-tab-canvas[data-page-zoom] > :first-child {
+  position: absolute; top: 0; left: 0; transform-origin: top left; transform: scale(var(--browser-page-scale));
+  width: calc(100% / var(--browser-page-scale)); height: calc(100% / var(--browser-page-scale));
+}

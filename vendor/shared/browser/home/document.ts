@@ -1,6 +1,7 @@
 import { init, parse } from 'es-module-lexer';
 import { fromByteArray, toByteArray } from 'base64-js';
 import type { HomeBundle } from './package';
+import zoomWheel from './zoomWheel.js?raw';
 
 type File = HomeBundle['files'][number];
 const text = (file: File) => new TextDecoder().decode(toByteArray(file.data));
@@ -118,5 +119,8 @@ function rewriteHtml(source: string, root: string, resources: {
   const policy = document.createElement('meta'); policy.httpEquiv = 'Content-Security-Policy';
   policy.content = "object-src 'none'; frame-src 'none'; form-action 'none'";
   document.head.prepend(policy);
+  const zoom = document.createElement('script');
+  zoom.textContent = zoomWheel;
+  document.head.append(zoom);
   return '<!doctype html>' + document.documentElement.outerHTML;
 }
