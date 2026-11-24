@@ -3,7 +3,7 @@
   "revision": "eb504504684a43509d5c9e06697a8a646f7ef361",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "0adb38dbfeff8a1491970e0bedec749d2b04e69f"
+    "revision": "54e0cc732e20b40b0d99e9cda0b3b04ad589e7ff"
   },
   "retainedTestSources": {
     "repository": "https://github.com/piperhex/remoteai",
@@ -1942,7 +1942,7 @@
     "shared/conversation/questions/useQuestionPager.ts": "a2b70feae63ac08308671ed8a0d9c5ec26e2328a0f18fa5be3c40d8d0a12b732",
     "shared/conversation/questions/QuestionPager.module.less": "1f8cb9fd156434c61e792031533380cb8577c6c38dc995f8bd99dbbd8e065e43",
     "shared/browser/data/vaultKeyStorage.ts": "30270d7a991b09c52c53806e477a29675098ebf98832840d18ea951d0c565b39",
-    "shared/browser/data/PasswordSuggestions.tsx": "b99378a76f0eb4bdb2a2bff06822291ffd03109d583ecf47014a51b84390bf93",
+    "shared/browser/data/PasswordSuggestions.tsx": "6d220702be32c13940d3dba95ea7dbcc55b42ccb4001ec7c2b9b39613ff21777",
     "shared/browser/data/browserVaultKeyStorage.ts": "63c69bb61b6b41f63b5ea44b231298be8f6ae86b4d9c7183ab8cf3717d4881c1",
     "shared/browser/data/passwordFocus.ts": "fb41e8ae3b3250a0d6e4cb1d2d24b5fe0c4940ef4e27058bf4ce5a4be078ce19",
     "shared/browser/data/usePasswordSuggestions.ts": "36188c0f4b57f8d41b7d64a139225f1b35a0a691f7a45951cda28ec4d2491aa4",
@@ -2062,6 +2062,8 @@
     "shared/terminal/workspace/useServerMonitor.ts": "f44d5162c1824d491e23edf40c405489ff1f19a874cab9035e597f029d24ab95",
     "shared/terminal/workspace/SshRemoveProfileDialog.tsx": "2fc187003df8ff907b077782268b7237c1dfbc8cfbcaa9fc046974aade250133",
     "shared/terminal/workspace/SshSessionMenu.tsx": "7cf324ee27adf1814d631340eb4446964b046250348add6d794e6705884179c9",
-    "shared/terminal/SshProfileRow.tsx": "fdaec36fc5bc02219bb955f5f40ec9848255c04bdba19d4a243f346c0d364dde"
+    "shared/terminal/SshProfileRow.tsx": "fdaec36fc5bc02219bb955f5f40ec9848255c04bdba19d4a243f346c0d364dde",
+    "shared/browser/data/usePasswordPopupPlacement.ts": "3983d89f6dfd94a16516b58534bf14593e881e38c3d5b4ac3f197f61d5c280cd",
+    "shared/browser/data/passwordSuggestions.css": "822f5ae6c428390cf96ae774a457421c180b2e04c7cbe736c7ef64f1a3d1972f"
   }
 }
