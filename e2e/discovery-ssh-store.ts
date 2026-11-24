@@ -24,6 +24,14 @@ export async function mockDiscoverySshStore(page: Page, initial: SshProfile[] = 
       store.profiles = [...store.profiles.filter(item => item.id !== id),
         { ...profile, revision: (profile.revision ?? 0) + 1 }];
     }
+    if (request.method() === 'DELETE') {
+      const { revision } = request.postDataJSON();
+      if (!store.profiles.some(item => item.id === id && item.revision === revision)) {
+        await route.fulfill({ status: 409, json: { message: 'client.ssh.profileChanged' } }); return;
+      }
+      store.profiles = store.profiles.filter(item => item.id !== id);
+      store.secrets.delete(id);
+    }
     await route.fulfill({ json: store.profiles });
   });
   return store;

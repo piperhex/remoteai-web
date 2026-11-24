@@ -32,6 +32,10 @@
 .sshw-profiles .ssh-profile-card { padding-block: 10px; }
 .sshw-profiles .ssh-profile-card:hover:not(:disabled) { border-color: var(--ssh-line); }
 .sshw-main { background: var(--ssh-surface); }
+.sshw-session-menu.ant-dropdown-menu { max-height: min(60dvh, 420px); overflow-y: auto; }
+.sshw-session-label { display: block; overflow-wrap: anywhere; }
+.sshw-session-label small { display: block; opacity: .72; }
+.sshw-profile-name { overflow-wrap: anywhere; }
 .sshw-tabs { min-height: 42px; padding: 4px 10px; gap: 6px; border-bottom: 1px solid var(--ssh-line); }
 .sshw-tabs [data-overflow-tab][data-selected="true"] { color: var(--ssh-text); background: var(--ssh-accent-soft); }
 .sshw-home-tab, .sshw-switch button { display: inline-flex; align-items: center; justify-content: center; gap: 6px;

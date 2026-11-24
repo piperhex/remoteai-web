@@ -18,6 +18,8 @@ import { MAX_TERMINAL_TABS } from '../views/useTerminalPanel';
 import type { TerminalApi, TerminalInfo } from '../types';
 import { useRecentSshProfiles, useSshSessions } from './useSshSessions';
 import { ServerMonitor } from './ServerMonitor';
+import { SshRemoveProfileDialog } from './SshRemoveProfileDialog';
+import { SshSessionMenu } from './SshSessionMenu';
 import './workspace.css';
 
 interface Props {
@@ -26,6 +28,7 @@ interface Props {
 
 // The remote terminal list uses this opaque project association to isolate SSH tabs from chat terminals.
 const SSH_WORKSPACE = 'remoteai:ssh-workspace';
+type WorkspaceDialog = { kind: 'new' | 'manage'; profile?: undefined } | { kind: 'edit' | 'remove'; profile: SshProfile };
 
 export function SshWorkspace({ api, active, available, scope, host, login }: Props) {
   useGuiLanguage();
@@ -34,7 +37,7 @@ export function SshWorkspace({ api, active, available, scope, host, login }: Pro
   const sessions = useSshSessions(api);
   const recent = useRecentSshProfiles(scope);
   const uploads = useSshDropQueue(sessions.tabs.map(tab => tab.id));
-  const [editor, setEditor] = useState<'new' | 'manage'>();
+  const [editor, setEditor] = useState<WorkspaceDialog>();
   const [connecting, setConnecting] = useState<SshProfile>();
   const [files, setFiles] = useState(true);
   useEffect(() => { if (!active) { setEditor(undefined); setConnecting(undefined); } }, [active]);
@@ -51,7 +54,7 @@ export function SshWorkspace({ api, active, available, scope, host, login }: Pro
   };
   const choose = (profile?: SshProfile) => {
     if (login) { login(); return; }
-    if (!profile) { setEditor('new'); return; }
+    if (!profile) { setEditor({ kind: 'new' }); return; }
     if (canConnect) setConnecting(profile);
   };
   const recentProfiles = recent.ids.flatMap(id => saved.profiles.find(p => p.id === id) ?? []);
@@ -62,7 +65,7 @@ export function SshWorkspace({ api, active, available, scope, host, login }: Pro
       <div className="sshw-tools">
         <Tooltip title={t('client.ssh.refresh')}><Button aria-label={t('client.ssh.refresh')}
           icon={<RefreshCw size={15} />} loading={saved.loading} onClick={() => void saved.refresh()} /></Tooltip>
-        <Button icon={<Settings2 size={15} />} onClick={() => login ? login() : setEditor('manage')}>
+        <Button icon={<Settings2 size={15} />} onClick={() => login ? login() : setEditor({ kind: 'manage' })}>
           {t('client.ssh.manage')}</Button>
       </div>
     </header>
@@ -78,7 +81,8 @@ export function SshWorkspace({ api, active, available, scope, host, login }: Pro
             onClick={() => setFiles(true)}><FolderTree size={15} />{t('client.chat.files.39932f')}</button>
         </div>}
         <div className="sshw-profiles" hidden={showFiles}>
-          <SshProfileList profiles={saved.profiles} disabled={saved.loading || !canConnect} loading={saved.loading} showNew={false}
+          <SshProfileList profiles={saved.profiles} disabled={saved.loading || !canConnect} loading={saved.loading} inlineCreate
+            onAction={active && !showFiles && !login && !saved.error ? (kind, profile) => setEditor({ kind, profile }) : undefined}
             choose={choose} selected={connecting} />
         </div>
         {sessions.tabs.map(tab => <div className="sshw-files" key={tab.id} hidden={!showFiles || tab.id !== current?.id}>
@@ -94,8 +98,7 @@ export function SshWorkspace({ api, active, available, scope, host, login }: Pro
             <Home size={17} /></button></Tooltip>
           <TerminalTabStrip tabs={sessions.tabs} selected={sessions.selected} select={sessions.select}
             visible={active} remove={sessions.remove} removeTabs={sessions.removeTabs} translate={t} />
-          <Tooltip title={t('client.ssh.createTitle')}><Button type="text" icon={<Plus size={15} />}
-            aria-label={t('client.ssh.createTitle')} onClick={() => choose()} /></Tooltip>
+          {active && <SshSessionMenu profiles={saved.profiles} canConnect={canConnect && !saved.loading} choose={choose} />}
         </div>
         {!current && <div className="sshw-home"><div className="sshw-launch">
           <span className="sshw-hero-icon"><Terminal size={30} /></span>
@@ -119,8 +122,11 @@ export function SshWorkspace({ api, active, available, scope, host, login }: Pro
           enabled={active && available && !current.exited} />}
       </div>
     </div>
-    {active && editor && <SshConnectionDialog key={editor} api={ssh} projectCwd={SSH_WORKSPACE} manage={editor === 'manage'}
-      settingsOnly={editor === 'new' && !available} allowConnect={available && !limit}
+    {active && editor?.kind === 'remove' && <SshRemoveProfileDialog profile={editor.profile}
+      remove={saved.remove} close={closeDialog} />}
+    {active && editor && editor.kind !== 'remove' && <SshConnectionDialog key={editor.profile?.id ?? editor.kind}
+      api={ssh} projectCwd={SSH_WORKSPACE} initial={editor.profile} manage={editor.kind === 'manage'}
+      settingsOnly={editor.kind === 'edit' || (editor.kind === 'new' && !available)} allowConnect={available && !limit}
       connected={adopt} dispose={api.close} changed={() => void saved.refresh()} close={closeDialog} />}
     {active && connecting && available && <SshQuickConnectDialog api={ssh} profile={connecting} projectCwd={SSH_WORKSPACE}
       connected={adopt} dispose={api.close} close={closeDialog} />}
