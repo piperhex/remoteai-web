@@ -3,7 +3,7 @@
   "revision": "d3ee2be0366acf66479b8ab18ec195a236c33984",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "09b52833fafcfcef65bf10f9250441f4ba4c31f1"
+    "revision": "899f3321f2f8aee41c050a1599c6d93234b1e05f"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -921,7 +921,7 @@
     "shared/file-preview/workspace/preview.module.less": "ab254b31294a88ac66379927c40523f47cf90756c44da0f2670b9509890d8701",
     "shared/remote-chat/views/remoteFilePreview.css": "fabb7a21c444c886f938711c288702b314d08dcc3e4ca38bbb198229cf700080",
     "shared/provider-market/ProviderBrowser.tsx": "be9fb6b3aaf37f4df5fc062d9af8eab684e7711d218a35f68bb6cd37f9bf016d",
-    "shared/file-preview/workspace/ManagedBrowserSurface.tsx": "fb5f496e3678990a56fdb495313de51a1f7c3cf78219e4eff767c633ba140996",
+    "shared/file-preview/workspace/ManagedBrowserSurface.tsx": "b7358e456118b0874e2d756ecd7586a1be9e2ee309810a1a299b3fed1efb3ce3",
     "shared/remote-chat/views/ChatBinaryFilePreview.tsx": "d18d95c89fcd05ddd62ce5d23297c65dede1f4712cb97af8f641650b0818ad97",
     "shared/remote-chat/filePreview.ts": "8d369c8a09c5a195afe36a072b33eba610baf26717f370c0a7911d6457314096",
     "shared/file-preview/ResourceDownloadCard.tsx": "0b82b12a2fd3c2ac7149abcec77059a6a3b878f5515cc9efd5f890425d6b5387",
@@ -1431,7 +1431,7 @@
     "shared/provider-market/BrowserTabs.tsx": "e00caf9740e353d398ed253d4f997e852238d66651f8e658306fdfd831332aea",
     "shared/provider-market/ProviderWebsiteIcon.tsx": "33bc47efad0ae8fa4860962c64ab7ec9f4a8f6c2a1b34b1183226088fa30245d",
     "shared/provider-market/providerBrowser.css": "1fe23a105360a04af50416aefa590e52681c5eb9f380a8a4ba744adf50fc8c4c",
-    "shared/browser/managed/ProviderBrowserSurface.tsx": "04cab9514436a8b8c474db9a0ccc931326dcb4239fb44bf60e6034e1846a4bef",
+    "shared/browser/managed/ProviderBrowserSurface.tsx": "35e909c2b0b7aa579fb80b4b7bd9aa76d2bdf638f5d5ddc04c3b965633777307",
     "shared/browser/managed/browserOverlays.ts": "7049ab695b456b6b81304be6a4d09ee9f789c3e20e5762799c86a3f56c507a4f",
     "shared/file-preview/workspace/nativeBrowserPlacement.ts": "1c92017b8a513a44853dc406d12c1213895a66842db6a3c82259dc8d81336967",
     "shared/file-preview/resourceDownloadCard.css": "814b092087b2377aab8e9e883a629d8743671980e2c3e87b44af5dff1345a3ce",
@@ -1704,7 +1704,7 @@
     "shared/provider-market/BrowserTabIcon.tsx": "f4102ba2705249e268c752a02c999c3575bf54c37d81a5962a24449e83a57073",
     "shared/provider-market/providerWebsiteIcon.css": "9b13173df3c427d0f6dece11252ad7cdc1f76f4017c4d4e4ac279d5f5bb3d515",
     "shared/browser/managed/providerBrowserSession.ts": "1d09ead472cd5b3e8857e2168bde7b63e3a8e5ccc091be30ccd0d88e7a69ac2d",
-    "shared/browser/managed/BrowserFrame.tsx": "469194c2771187edf0cd629d1f79ed92666c9da6fe877ad005ef09627442e1e2",
+    "shared/browser/managed/BrowserFrame.tsx": "f902e5dc43914043cf760ba567d049f68794fb0514a5a4e3855f62598bb0f318",
     "shared/chat/mermaidCache.ts": "07da621d1ffd2fc48e1d2d54420e804035cda107ae66a5fff73a4b67c7214dfb",
     "apps/desktop/src/pages/codexGui/ModelChangeNotice.tsx": "9e3306197887961c70103eca28bac9e276d20fceb1dc518e01c9d849fc37b17d",
     "apps/desktop/src/pages/codexGui/MessageActions.tsx": "29276b2182aac1efdee89e303680279c851aa9ce315256cc252e1b0c6ef89b91",
@@ -1890,7 +1890,7 @@
     "shared/conversation/runningConversationEntries.ts": "6908d8764060b6b1853cf3640bfe4308de711d46120852441a4002a6ef688306",
     "shared/conversation/RunningConversations.module.less": "2592e16f5d09ae9ca6d22b99b19ca98b77ecd31a5bc2c29fec88e0cd807ad7f2",
     "shared/browser/browserChrome.css": "07d55ac9dbed42b48c1ea2fbf61467d33d73438c913ba57522da3e1b1d53a2a0",
-    "shared/browser/managed/nativeSurfaceSession.ts": "d6cdbad6eaf4eb9ae0afe9b74dfdc2467602c1fa72d6da58136e22b557b1a3e2",
+    "shared/browser/managed/nativeSurfaceSession.ts": "a46254adafc8285cb66433b9984131a6dd2dbd7d69b66a6e93a2b3a6b2547211",
     "shared/browser/managed/useNativeBrowserPreview.ts": "9fbc6be08de4a4e3df85a5a040f118d870dfe6eef95a8afc83e3a94ec2e188e9",
     "shared/browser/managed/nativeBrowserPreview.css": "8992184a0f5abd3f0a298d8a2692ba2a3b6f9597db8372ad5a49b3658e316401",
     "shared/browser/managed/BrowserInspector.tsx": "d14d55f6e944f8a178ac199f72c279756efb371b0758e4478f65325e3fede04f",

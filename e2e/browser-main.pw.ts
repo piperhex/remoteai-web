@@ -23,6 +23,27 @@ for (const narrow of [false, true]) {
   });
 }
 
+test('a cross-origin video can enter fullscreen and return to the same tab', async ({ page }) => {
+  const url = 'https://preview.example.test/video';
+  await page.route(url, route => route.fulfill({ contentType: 'text/html', body:
+    '<video controls></video><button onclick="document.querySelector(\'video\').requestFullscreen()">Fullscreen</button>' }));
+  await page.goto('e2e/web-browser-bookmarks-harness.html');
+  const browser = page.locator('.browser-main-page');
+  const address = browser.getByRole('combobox');
+  await address.fill(url);
+  await address.press('Enter');
+  const frame = browser.locator('iframe');
+  const video = frame.contentFrame().locator('video');
+  await expect(video).toBeVisible();
+  const before = await frame.boundingBox();
+  await frame.contentFrame().getByRole('button', { name: 'Fullscreen' }).click();
+  await expect.poll(() => video.evaluate(node => document.fullscreenElement === node)).toBe(true);
+  await expect.poll(() => frame.boundingBox()).toEqual({ x: 0, y: 0, ...page.viewportSize() });
+  await video.evaluate(() => document.exitFullscreen());
+  await expect.poll(() => frame.boundingBox()).toEqual(before);
+  await expect(address).toHaveValue(url);
+});
+
 test('toolbar zoom resizes a cross-origin website without reloading it', async ({ page }) => {
   const url = 'https://preview.example.test/zoom';
   await page.route(url, route => route.fulfill({ contentType: 'text/html', body: '<input aria-label="draft">' }));

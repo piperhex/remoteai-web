@@ -43,7 +43,7 @@ export function BrowserFrame({ tab, active, command, onLoadingChange, onVisit, t
     current.current.onLoadingChange?.(false);
   }, [command]);
   return <iframe ref={frame} key={attempt} src={tab.url} title={tab.title || t('market.browserNewTab')}
-    allow="microphone; camera; geolocation"
+    allow="microphone; camera; geolocation; fullscreen"
     sandbox={`allow-scripts allow-forms allow-same-origin${managed ? ' allow-downloads' : ''}`}
     referrerPolicy="no-referrer"
     onLoad={() => {

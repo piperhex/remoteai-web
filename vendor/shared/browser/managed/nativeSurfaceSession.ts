@@ -1,5 +1,13 @@
 interface Visibility { visible: boolean; preservePreview?: boolean }
 
+export interface NativePageFullscreenEvent { pageFullscreen?: boolean }
+
+/** The native child sits above the host DOM. Keep its normal layout live underneath a fullscreen player. */
+export function nativeSurfaceBounds(rect: DOMRect, fullscreen: boolean) {
+  if (fullscreen) return { x: 0, y: 0, width: window.innerWidth, height: window.innerHeight };
+  return { x: Math.max(0, rect.x), y: Math.max(0, rect.y), width: rect.width, height: rect.height };
+}
+
 /** Serialize native placement, keeping the last rendered page beneath application overlays. */
 export function nativeSurfaceSession<Request extends Visibility>(options: {
   apply: (request: Request) => Promise<void>;

@@ -6,7 +6,9 @@ import { ProviderBrowserSurface } from '../../browser/managed/ProviderBrowserSur
 import { browserOverlayAttributes, hasBrowserOverlay } from '../../browser/managed/browserOverlays';
 import { BrowserClientContext } from './browserClient';
 import { placeBrowser } from './nativeBrowserPlacement';
-import { nativeSurfaceSession } from '../../browser/managed/nativeSurfaceSession';
+import {
+  nativeSurfaceBounds, nativeSurfaceSession, type NativePageFullscreenEvent,
+} from '../../browser/managed/nativeSurfaceSession';
 import { useNativeBrowserPreview } from '../../browser/managed/useNativeBrowserPreview';
 import { BrowserInspector } from '../../browser/managed/BrowserInspector';
 import { useNativeZoom, type NativeZoomEvent } from '../../browser/zoom/nativeZoom';
@@ -55,6 +57,7 @@ function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, ob
     if (!client.native || !host.current) return;
     const element = host.current;
     let stopped = false;
+    let pageFullscreen = false;
     const session = nativeSurfaceSession<Parameters<typeof placeBrowser>[0] & { preservePreview: boolean }>({
       apply: async ({ preservePreview: _preview, ...request }) => {
         await placeBrowser(request);
@@ -75,7 +78,7 @@ function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, ob
       const visible = current.current.active && !document.hidden && !modal && bounds.width > 0 && bounds.height > 0;
       session.update({ threadId: tab.automationThread, tabId: tab.id,
         visible, preservePreview: Boolean(current.current.obscured || modal),
-        bounds: { x: Math.max(0, bounds.x), y: Math.max(0, bounds.y), width: bounds.width, height: bounds.height } });
+        bounds: nativeSurfaceBounds(bounds, pageFullscreen && visible) });
     };
     refresh.current = sync;
     const observer = new ResizeObserver(sync); observer.observe(element);
@@ -85,9 +88,11 @@ function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, ob
       attributeFilter: browserOverlayAttributes });
     window.addEventListener('resize', sync); window.addEventListener('scroll', sync, true);
     document.addEventListener('visibilitychange', sync);
-    const listener = listen<{ url?: string; popup?: boolean; icons?: string[] } & NativeZoomEvent>(
+    type PageEvent = { url?: string; popup?: boolean; icons?: string[] } & NativeZoomEvent & NativePageFullscreenEvent;
+    const listener = listen<PageEvent>(
       `conversation-browser-${tab.id}`, ({ payload }) => {
       zoom?.(payload);
+      if (typeof payload.pageFullscreen === 'boolean') { pageFullscreen = payload.pageFullscreen; sync(); }
       if (!payload.popup && payload.url) rememberWebsiteIcons(payload.url, payload.icons);
       if (!payload.popup && payload.url) current.current.onNavigate(payload.url);
     });

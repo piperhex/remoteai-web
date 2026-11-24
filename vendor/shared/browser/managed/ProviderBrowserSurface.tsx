@@ -4,6 +4,7 @@ import { listen } from '@tauri-apps/api/event';
 import { Globe } from 'lucide-react';
 import type { BrowserSurfaceProps } from '../../provider-market/ProviderBrowser';
 import { nativeBrowserSession } from './providerBrowserSession';
+import { nativeSurfaceBounds, type NativePageFullscreenEvent } from './nativeSurfaceSession';
 import { browserOverlayAttributes, hasBrowserOverlay } from './browserOverlays';
 import { BrowserFrame } from './BrowserFrame';
 import { useNativeZoom, type NativeZoomEvent } from '../zoom/nativeZoom';
@@ -43,6 +44,7 @@ export function ProviderBrowserSurface(props: BrowserSurfaceProps) {
     }, preview);
     let frame = 0;
     let modalVisible = false;
+    let pageFullscreen = false;
     const sync = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
@@ -53,15 +55,15 @@ export function ProviderBrowserSurface(props: BrowserSurfaceProps) {
         session.update({ url: current.tab.url, headers: current.tab.headers,
           headerOrigin: current.tab.headerOrigin, visible, preservePreview: current.obscured || modalVisible,
           navigate: nativeNavigation.current !== current.tab.url,
-          bounds: { x: Math.max(0, bounds.x), y: Math.max(0, bounds.y),
-            width: bounds.width, height: bounds.height } });
+          bounds: nativeSurfaceBounds(bounds, pageFullscreen && visible) });
       });
     };
     refresh.current = sync;
     const unlisten = listen<{ url?: string; title?: string; popup?: boolean; loading?: boolean;
-      visited?: boolean; icons?: string[] } & NativeZoomEvent>(
+      visited?: boolean; icons?: string[] } & NativeZoomEvent & NativePageFullscreenEvent>(
       `provider-browser-${tab.id}`, ({ payload }) => {
         zoom?.(payload);
+        if (typeof payload.pageFullscreen === 'boolean') { pageFullscreen = payload.pageFullscreen; sync(); }
         if (payload.popup && payload.url) { state.current.onPopup(payload.url); return; }
         if (typeof payload.loading === 'boolean') state.current.onLoadingChange?.(payload.loading);
         if (payload.visited && payload.url) state.current.onVisit?.({ url: payload.url, title: payload.title ?? '' });
