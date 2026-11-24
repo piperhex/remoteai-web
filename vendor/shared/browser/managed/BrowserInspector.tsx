@@ -1,8 +1,11 @@
-import { useRef, useState, type PointerEvent, type ReactNode } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from 'react';
 import { MonitorSmartphone, PanelBottom, PanelRight, ExternalLink, X } from 'lucide-react';
 import type { MarketKey, MarketText } from '../../provider-market/i18n';
 import { useInspector } from './useInspector';
 import type { InspectorDock, InspectorTarget } from './inspectorSession';
+import { DeviceToolbar } from './DeviceToolbar';
+import { initialDevice, responsiveDevice, type ViewportSize } from './deviceViewport';
+import { ViewportHandles } from './ViewportHandles';
 import './browserInspector.css';
 
 const MIN_SHARE = 20;
@@ -15,8 +18,23 @@ const clampShare = (value: number) => Math.max(MIN_SHARE, Math.min(MAX_SHARE, va
 export function BrowserInspector(props: InspectorTarget & {
   enabled: boolean; active: boolean; t: MarketText; children: ReactNode;
 }) {
-  const inspector = useInspector(props);
+  const stage = useRef<HTMLDivElement>(null);
+  const [available, setAvailable] = useState<ViewportSize>({ width: 0, height: 0 });
+  const [device, setDevice] = useState(initialDevice);
+  const [scaleLimit, setScaleLimit] = useState(1);
+  const scale = Math.min(scaleLimit, available.width / device.width, available.height / device.height);
+  const viewport = useMemo(() => scale > 0 ? { width: device.width, height: device.height, scale } : undefined,
+    [device.width, device.height, scale]);
+  const inspector = useInspector(props, viewport);
   const { open, dock, setDock, close, failed, host } = inspector;
+  const mobile = open && inspector.mobile;
+  const responsive = mobile && device.name === responsiveDevice;
+  useLayoutEffect(() => {
+    if (!mobile || !stage.current) return;
+    const observer = new ResizeObserver(([{ contentRect: { width, height } }]) => setAvailable({ width, height }));
+    observer.observe(stage.current);
+    return () => observer.disconnect();
+  }, [mobile]);
   const layout = useRef<HTMLDivElement>(null);
   const [sizes, setSizes] = useState({ right: INITIAL_SHARE, bottom: INITIAL_SHARE });
   const [dragging, setDragging] = useState(false);
@@ -36,8 +54,20 @@ export function BrowserInspector(props: InspectorTarget & {
     { dock: 'window', icon: ExternalLink, key: 'market.inspectorWindow' },
   ];
   return <div ref={layout} className="browser-inspector-layout" data-dock={open ? dock : 'closed'}>
-    <div className={open && inspector.mobile ? 'browser-inspector-phone' : 'browser-inspector-page'}>
-      {props.children}
+    <div className={mobile ? 'browser-inspector-phone' : 'browser-inspector-page'}>
+      {mobile && <DeviceToolbar device={device} change={next => { setScaleLimit(1); setDevice(next); }}
+        scale={scale} t={props.t} />}
+      <div key="stage" ref={stage} className="browser-device-stage" data-responsive={responsive || undefined}
+        style={mobile && viewport ? {
+        '--device-preview-width': `${viewport.width * scale}px`,
+        '--device-preview-height': `${viewport.height * scale}px`,
+      } as CSSProperties : undefined}>
+        {props.children}
+        {responsive && <ViewportHandles size={device} scale={scale} t={props.t}
+          resize={(size, startScale) => {
+            setScaleLimit(startScale); setDevice({ ...size, name: responsiveDevice });
+          }} />}
+      </div>
     </div>
     {embedded && <div className="browser-inspector-splitter" role="separator" tabIndex={0}
       aria-label={props.t('market.inspectorResize')} aria-orientation={dock === 'right' ? 'vertical' : 'horizontal'}

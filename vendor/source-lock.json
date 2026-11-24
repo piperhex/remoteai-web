@@ -1,15 +1,15 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "cf4d75a9129d6741784d8005fb8090873616d785",
+  "revision": "780891c0bcc6bc7d900c25fee41169b65da9faf8",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "b6726826767b715a67cdd49234089df8c554998c"
+    "revision": "eeb169c0c35d0b7f5efd1642431e1e1e92207264"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
     "revision": "7fd2d6456c1916527444c6c03eff838bde8d44f5"
   },
-  "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.41/remoteai-i18n-0.1.41.tgz",
+  "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.43/remoteai-i18n-0.1.43.tgz",
   "files": {
     "scripts/test-browser.mjs": "456d5b867ac937a571630f4a01cd37ded9380d519bee3011e8807480c0739733",
     "scripts/test-browser.d.mts": "0f13ced709be8e097af7d4038400129b64e5d400f62e9bea2a0371125ec4f70f",
@@ -1893,10 +1893,10 @@
     "shared/browser/managed/nativeSurfaceSession.ts": "d6cdbad6eaf4eb9ae0afe9b74dfdc2467602c1fa72d6da58136e22b557b1a3e2",
     "shared/browser/managed/useNativeBrowserPreview.ts": "9fbc6be08de4a4e3df85a5a040f118d870dfe6eef95a8afc83e3a94ec2e188e9",
     "shared/browser/managed/nativeBrowserPreview.css": "8992184a0f5abd3f0a298d8a2692ba2a3b6f9597db8372ad5a49b3658e316401",
-    "shared/browser/managed/BrowserInspector.tsx": "8aa13f9a2fce11394f288f821aeaca6d3da0eece1ec90ed5dbf298f1a2a3a421",
-    "shared/browser/managed/useInspector.ts": "0f273647e47491740e9825e036d8fbf578985dacfa250b0f8730195c09a68054",
-    "shared/browser/managed/inspectorSession.ts": "1cd787dec74098450f0fb5f7a9a04b15db6ee2860ce55bb6ab233b7da43758af",
-    "shared/browser/managed/browserInspector.css": "ea85b395b9fbcb12b7a665c7ef299cce82c8373b0aee88c5cc462d5846463c0f",
+    "shared/browser/managed/BrowserInspector.tsx": "d14d55f6e944f8a178ac199f72c279756efb371b0758e4478f65325e3fede04f",
+    "shared/browser/managed/useInspector.ts": "17bf9e467a8a35e486fb3511c792467e2926e1ab429a2fdcecdbe35770bfcda3",
+    "shared/browser/managed/inspectorSession.ts": "49b110cd93bd1006c6b1e15177d9a7639b896e050da429f183cf7108d8cd9411",
+    "shared/browser/managed/browserInspector.css": "853d7d4f55bcae0495aa798574439f65fd29daab7522723f47e6dbb302d7d285",
     "shared/browser/BrowserFullscreenControl.tsx": "ae09e0409f5429329f519e2dd0d16b555159fbe75132a2552405dd8fa7063f3d",
     "shared/browser/useFullscreenControl.ts": "11d6cfd8855b21c1486c2ced59c4be5cc0b34b9dd9436b7c7c4c7069a51d6974",
     "shared/browser/browserFullscreenControl.css": "a852c8755d91b3feb7c700d57f68839f562c39f02f7e27e9a79063f1b51f41fe",
@@ -2067,6 +2067,9 @@
     "shared/browser/home/zoomWheel.js": "41bff8c69e7024e9829ab6edd3383d6e6d24638adc071470a02858d869dd6ac4",
     "shared/provider-market/BrowserTabHoverCard.tsx": "4fb993e45a94ad9e0f2edeca9b5b76171ac7d5f80aa868be90a49aed13aa7f28",
     "shared/provider-market/useBrowserTabHover.ts": "d2eca934647ced720a74b60f20a7b8021ceddc1266d1a63e87317c9327f9c416",
-    "shared/provider-market/browserTabHover.css": "0a92068bfa12c05dab8665d46e45af9314e3bbefecaed4377e4a941d6f2e1d8e"
+    "shared/provider-market/browserTabHover.css": "0a92068bfa12c05dab8665d46e45af9314e3bbefecaed4377e4a941d6f2e1d8e",
+    "shared/browser/managed/DeviceToolbar.tsx": "ef0e304d51d7478266fba526e26d5abd5025612dca6bcc2e50670c82c43d62d9",
+    "shared/browser/managed/deviceViewport.ts": "6786c27749d1c36feba8851db1f59d9903e3c15b4d301085aabae660c2329a4e",
+    "shared/browser/managed/ViewportHandles.tsx": "b67621ce82c739b93ddce635c9de5bb606c2ba151c51a77039717f4ecc395142"
   }
 }

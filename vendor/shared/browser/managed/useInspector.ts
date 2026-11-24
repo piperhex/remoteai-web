@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { listen } from '@tauri-apps/api/event';
 import { browserOverlayAttributes, hasBrowserOverlay } from './browserOverlays';
+import type { DeviceViewport } from './deviceViewport';
 import { inspectorCommand, inspectorSession, type InspectorDock, type InspectorStatus,
   type InspectorTarget } from './inspectorSession';
 
-export function useInspector({ id, kind, enabled, active }: InspectorTarget & { enabled: boolean; active: boolean }) {
+export function useInspector({ id, kind, enabled, active }: InspectorTarget & { enabled: boolean; active: boolean },
+  viewport: DeviceViewport | undefined) {
   const [{ open, mobile }, setStatus] = useState<InspectorStatus>({ open: false, mobile: false });
   const [switching, setSwitching] = useState(false);
   const [deviceFailed, setDeviceFailed] = useState(false);
@@ -12,7 +14,7 @@ export function useInspector({ id, kind, enabled, active }: InspectorTarget & { 
   const [failed, setFailed] = useState(false);
   const host = useRef<HTMLDivElement>(null);
   const refresh = useRef<() => void>();
-  const current = useRef({ active, dock }); current.current = { active, dock };
+  const current = useRef({ active, dock, viewport, mobile }); current.current = { active, dock, viewport, mobile };
   useEffect(() => {
     if (!enabled) return;
     let stopped = false;
@@ -37,10 +39,10 @@ export function useInspector({ id, kind, enabled, active }: InspectorTarget & { 
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
         const bounds = element.getBoundingClientRect();
-        const { active, dock } = current.current;
+        const { active, dock, mobile, viewport } = current.current;
         const visible = active && !document.hidden && !hasBrowserOverlay(element)
           && element.getClientRects().length > 0;
-        session.update({ action: 'place', dock, visible, bounds: {
+        session.update({ action: 'place', dock, visible, viewport: mobile ? viewport : undefined, bounds: {
           x: Math.max(0, bounds.x), y: Math.max(0, bounds.y),
           width: Math.max(1, bounds.width), height: Math.max(1, bounds.height),
         } }, window.devicePixelRatio);
@@ -61,7 +63,7 @@ export function useInspector({ id, kind, enabled, active }: InspectorTarget & { 
       void session.stop().catch(error => console.debug('Inspector surface already closed', error));
     };
   }, [enabled, open, id, kind]);
-  useEffect(() => { refresh.current?.(); }, [active, dock]);
+  useEffect(() => { refresh.current?.(); }, [active, dock, mobile, viewport]);
   const close = () => {
     void inspectorCommand({ id, kind }, { action: 'close' }).then(status => { setStatus(status); setDock('right'); })
       .catch(() => setFailed(true));

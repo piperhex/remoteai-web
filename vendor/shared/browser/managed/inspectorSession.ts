@@ -1,10 +1,12 @@
 import { invoke } from '@tauri-apps/api/core';
+import type { DeviceViewport } from './deviceViewport';
 
 export type InspectorDock = 'right' | 'bottom' | 'window';
 export interface InspectorTarget { id: string; kind: 'provider' | 'conversation' }
 export interface InspectorPlacement {
   action: 'place'; dock: InspectorDock; visible: boolean;
   bounds: { x: number; y: number; width: number; height: number };
+  viewport?: DeviceViewport;
 }
 export interface InspectorStatus { open: boolean; mobile: boolean }
 type Command = InspectorPlacement | { action: 'status' | 'close' } | { action: 'setMobile'; enabled: boolean };
@@ -25,6 +27,8 @@ export function inspectorCommand(target: InspectorTarget, command: Command) {
 
 function samePlacement(previous: InspectorPlacement | undefined, next: InspectorPlacement) {
   return previous?.dock === next.dock && previous.visible === next.visible
+    && previous.viewport?.width === next.viewport?.width && previous.viewport?.height === next.viewport?.height
+    && previous.viewport?.scale === next.viewport?.scale
     && previous.bounds.x === next.bounds.x && previous.bounds.y === next.bounds.y
     && previous.bounds.width === next.bounds.width && previous.bounds.height === next.bounds.height;
 }
