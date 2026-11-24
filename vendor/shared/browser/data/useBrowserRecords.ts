@@ -12,7 +12,7 @@ export function useBrowserRecords(options: {
   tabs: BrowserTab[]; activeId: string; active: boolean; closeTabs: (ids: string[]) => void;
 }) {
   const { store, vault, random } = useBrowserData(), observed = useRef(new Map<string, { url: string; at: number }>());
-  const recorded = useRef(new Map<string, string>());
+  const recorded = useRef(new Map<string, { requested: string; url: string; title: string }>());
   const [candidate, setCandidate] = useState<Login>();
   const desktop = isTauri(), closeCapture = useCallback(() => setCandidate(undefined), []);
   useEffect(() => {
@@ -22,10 +22,13 @@ export function useBrowserRecords(options: {
       const at = Date.now(); observed.current.set(tab.id, { url: tab.url, at });
     }
     for (const id of observed.current.keys()) if (!options.tabs.some(tab => tab.id === id)) observed.current.delete(id);
+    for (const id of recorded.current.keys()) if (!options.tabs.some(tab => tab.id === id)) recorded.current.delete(id);
   }, [options.tabs, store, random]);
-  const recordVisit = useCallback((id: string, page: { url: string; title: string }) => {
-    if (!browserUrl(page.url) || recorded.current.get(id) === page.url) return;
-    recorded.current.set(id, page.url);
+  const recordVisit = useCallback((id: string, page: { url: string; title: string }, requested: string) => {
+    if (!browserUrl(page.url)) return;
+    const previous = recorded.current.get(id);
+    recorded.current.set(id, { ...page, requested });
+    if (previous?.url === page.url) return;
     try { store.visit({ id: newDataId(random), kind: 'visit', url: page.url, title: page.title.slice(0, 512), at: Date.now() }); }
     catch { /* The store exposes persistence failures in the browser data UI. */ }
   }, [store, random]);
@@ -71,5 +74,5 @@ export function useBrowserRecords(options: {
       request: { action: 'fill', login: { origin, username, password }, focusId } });
     if (!done) throw new Error('password-fill');
   } : undefined;
-  return { controls, fill, candidate, closeCapture, recordVisit, ...suggestions };
+  return { controls, fill, candidate, closeCapture, recordVisit, visits: recorded.current, ...suggestions };
 }

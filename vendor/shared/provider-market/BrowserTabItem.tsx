@@ -19,9 +19,11 @@ interface Props {
   tab: BrowserTab; tabs: BrowserTab[]; active: boolean; menuOpen: boolean; t: MarketText;
   select: (id: string) => void; close: (id: string) => void; closeTabs: (ids: string[]) => void;
   setMenuOpen: (open: boolean) => void;
+  descriptionId?: string;
 }
 
-export function BrowserTabItem({ tab, tabs, active, menuOpen, t, select, close, closeTabs, setMenuOpen }: Props) {
+export function BrowserTabItem({ tab, tabs, active, menuOpen, t, select, close, closeTabs, setMenuOpen,
+  descriptionId }: Props) {
   const button = useRef<HTMLButtonElement>(null);
   // Let Dropdown position touch and keyboard menus just like a native context-menu event.
   const gesture = useThreadLongPress(press => {
@@ -49,7 +51,7 @@ export function BrowserTabItem({ tab, tabs, active, menuOpen, t, select, close, 
       data-overflow-tab data-path={tab.id} data-active={active}>
       <button ref={button} type="button" role="tab" aria-selected={active} tabIndex={active ? 0 : -1}
         aria-controls={`page-${tab.id}`} aria-haspopup="menu" aria-expanded={menuOpen}
-        onClick={() => select(tab.id)} title={name} onKeyDown={event => {
+        onClick={() => select(tab.id)} aria-describedby={descriptionId} onKeyDown={event => {
           const offsets: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1,
             Home: -index, End: tabs.length - index - 1 };
           if (!(event.key in offsets)) return;

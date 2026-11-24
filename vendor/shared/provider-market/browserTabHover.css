@@ -1,0 +1,24 @@
+.pm-tab-hover-card {
+  --tab-card-width: min(280px, calc(100vw - 16px));
+  position: fixed;
+  left: clamp(8px, var(--tab-left), calc(100vw - var(--tab-card-width) - 8px));
+  width: var(--tab-card-width);
+  z-index: 1690;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid;
+  border-radius: 12px;
+  line-height: 1.45;
+  user-select: none;
+  cursor: default;
+}
+.pm-tab-hover-heading { display: grid; gap: 4px; padding: 12px 14px; overflow-wrap: anywhere; }
+.pm-tab-hover-heading strong, .pm-tab-hover-heading span {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+.pm-tab-hover-heading strong { font-weight: 600; }
+.pm-tab-hover-memory { display: flex; gap: 8px; align-items: center; padding: 10px 14px; overflow-wrap: anywhere; }
+.pm-tab-hover-memory svg { flex: none; }

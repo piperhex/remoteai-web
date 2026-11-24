@@ -1,22 +1,15 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "8e2eeeedd4ac3349b7cecd544fe6594a3a9fa1fc",
+  "revision": "cf4d75a9129d6741784d8005fb8090873616d785",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "95ffd8fa3908605cf8b7855efa4285addf5a8b17"
-  },
-  "retainedTestSources": {
-    "repository": "https://github.com/piperhex/remoteai",
-    "revision": "d0dc18146c173a36064eddab0a1f9afe8af41634",
-    "paths": [
-      "apps/desktop/e2e/"
-    ]
+    "revision": "b6726826767b715a67cdd49234089df8c554998c"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
     "revision": "7fd2d6456c1916527444c6c03eff838bde8d44f5"
   },
-  "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.40/remoteai-i18n-0.1.40.tgz",
+  "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.41/remoteai-i18n-0.1.41.tgz",
   "files": {
     "scripts/test-browser.mjs": "456d5b867ac937a571630f4a01cd37ded9380d519bee3011e8807480c0739733",
     "scripts/test-browser.d.mts": "0f13ced709be8e097af7d4038400129b64e5d400f62e9bea2a0371125ec4f70f",
@@ -927,7 +920,7 @@
     "shared/provider-market/i18n.ts": "99dda5e97e45baf4e6a78c6db8ecf6df1dae0d66356af9647cfe4264dd9413b2",
     "shared/file-preview/workspace/preview.module.less": "ab254b31294a88ac66379927c40523f47cf90756c44da0f2670b9509890d8701",
     "shared/remote-chat/views/remoteFilePreview.css": "fabb7a21c444c886f938711c288702b314d08dcc3e4ca38bbb198229cf700080",
-    "shared/provider-market/ProviderBrowser.tsx": "634aa507f14fae844887a31da92a2436ec3aa542e00aec25948947968454e3ea",
+    "shared/provider-market/ProviderBrowser.tsx": "d114096e5f0a78279393a6719014943af4736ac8532ec5bbae142507aa5f8f33",
     "shared/file-preview/workspace/ManagedBrowserSurface.tsx": "fb5f496e3678990a56fdb495313de51a1f7c3cf78219e4eff767c633ba140996",
     "shared/remote-chat/views/ChatBinaryFilePreview.tsx": "d18d95c89fcd05ddd62ce5d23297c65dede1f4712cb97af8f641650b0818ad97",
     "shared/remote-chat/filePreview.ts": "8d369c8a09c5a195afe36a072b33eba610baf26717f370c0a7911d6457314096",
@@ -1435,7 +1428,7 @@
     "shared/conversation/WorkspaceStartPage.module.less": "e6c921893d78472dc6df154aeeb4731f3770694444ae83f0428560f00ec705ee",
     "shared/provider-market/browserAddress.ts": "28602d473ca5425be305603ffe43cee27ef49a453f367043682e3ec49ce9da2f",
     "shared/provider-market/browserState.ts": "b1e243f79566f77f5607a8c01b6d147cf1eb6e0d011cd5fd171578b1de2e2d12",
-    "shared/provider-market/BrowserTabs.tsx": "90874a196ab2aba78a9885505d326e95bf42d1334b7ac71c53be78d1c331a082",
+    "shared/provider-market/BrowserTabs.tsx": "65c771eb7a068d704561f6cbcc187c73aafc47efd75d67107cb8a6753f6756ad",
     "shared/provider-market/ProviderWebsiteIcon.tsx": "33bc47efad0ae8fa4860962c64ab7ec9f4a8f6c2a1b34b1183226088fa30245d",
     "shared/provider-market/providerBrowser.css": "4f3be8c474176df9351259b8fd450bd5983d3a37779a2caf0d627a43d400ec24",
     "shared/browser/managed/ProviderBrowserSurface.tsx": "04cab9514436a8b8c474db9a0ccc931326dcb4239fb44bf60e6034e1846a4bef",
@@ -1707,7 +1700,7 @@
     "shared/remote-chat/nativePathRecovery.ts": "898970252057c8d24a955facca5330fc15298e3985c515433c646dba1d8570cd",
     "shared/chat/useDiffPagination.ts": "6c6155bcb7edcf9ec3d811717d7581a9bb97def3c43ae867f929e08881b53c8f",
     "shared/file-preview/workspace/fileLanguages.ts": "63dd42c83cd94cc87eba1450561847acf1429641a54dbfd86252f8890cab7f2e",
-    "shared/provider-market/BrowserTabItem.tsx": "5a250a11fe293fa254a2b8c5ecd0990f2fffcefa650b93ebf6bb144a3e4964c9",
+    "shared/provider-market/BrowserTabItem.tsx": "3d6fea11ba7567c31cc2021efcf9100e1f0471773566d3f405565d61d40b42e9",
     "shared/provider-market/BrowserTabIcon.tsx": "f4102ba2705249e268c752a02c999c3575bf54c37d81a5962a24449e83a57073",
     "shared/provider-market/providerWebsiteIcon.css": "9b13173df3c427d0f6dece11252ad7cdc1f76f4017c4d4e4ac279d5f5bb3d515",
     "shared/browser/managed/providerBrowserSession.ts": "1d09ead472cd5b3e8857e2168bde7b63e3a8e5ccc091be30ccd0d88e7a69ac2d",
@@ -1875,7 +1868,7 @@
     "shared/browser/searchEngine.ts": "6f3d67eabc3cb333ca29447b9e96c10f8740c58dd00ce9f357ac2194e6291bd4",
     "shared/browser/searchPreference.ts": "e735f5fd02aa753eaa37018d75d3baeb6fcdb0ba6e84c2535af4e2b5b2c8e4da",
     "shared/browser/MobileBrowserToolbar.tsx": "679584a732ebc697a51386f728221895c0a7e0362eefcac478109fe552d77760",
-    "shared/browser/BrowserPages.tsx": "abb9efb26cd9f304e6d5bdd467eefb1732264365bf597cd1d2ccc07688cf949d",
+    "shared/browser/BrowserPages.tsx": "c1fd24dfd1dab30e14b90a24a003f9ecd6b7899bcbf92dd665f68f175d4b9984",
     "shared/browser/BrowserEdgeGestures.tsx": "1577ede3c8eae8703d1c9bfebc103ae158ed8c90a432785aca6bfaa557f44748",
     "shared/browser/mobileBrowser.css": "a573e9c6e23bc123a3390f0703544a7ae0ae8f07b628cd97386e1800758bc1be",
     "shared/browser/BrowserSiteModeSetting.tsx": "83bbe064d816a63907e6c7fb43e36972b0f86d7dd39a3c67252be3420b29ba4e",
@@ -1912,7 +1905,7 @@
     "shared/browser/data/BrowserDataPanel.tsx": "6025c3253dddf90da1b4f142a2ffd9e4974781f20706fefb9ed380624a396895",
     "shared/browser/data/PasswordManager.tsx": "063a2752d351fc0b1178a908085a1dbe81d8a9d787162a935929d5b4c3e13e30",
     "shared/browser/data/PasswordCapture.tsx": "ed1ce72518bc3f3afff44b39843ceef22a99ed86dd940f4005fa650fa4f7df30",
-    "shared/browser/data/useBrowserRecords.ts": "688d6f8660dbd0b71de797bcae9b32e5718fbc091b71518b73ea42062decdd13",
+    "shared/browser/data/useBrowserRecords.ts": "3c95886a31c00878225cc58b7238b3bf5f4799806c2dd54f1daab69e542d0a16",
     "shared/browser/data/channel.ts": "50d2a16d076b8b97ba068d518aa670f7d7ca4b71582fd3144ee0139e5a58d64a",
     "shared/browser/data/store.ts": "4d20c5992a193305b528151e8ce9a4f156bb4be64ac5a80882936ee817915dcb",
     "shared/browser/data/vault.ts": "2304274200f081f95d549f854b11273a8e9b5348e6d54a75080accd8b8658a61",
@@ -2003,7 +1996,7 @@
     "shared/browser/overlays/usePopupAnchor.ts": "208325f458984cddbe84dda9adeef8a39a765ded05eb2a6332d8fad33cec229a",
     "shared/browser/overlays/popupDocument.ts": "334e4e1097634089331e68a651c544390789a868b2c652a43e746571abdfe06e",
     "shared/browser/overlays/popupPlacement.ts": "fbf094da1f2331f34bb97500cfaf7d209f8b6cab9c29213b31746b93f31d373d",
-    "shared/browser/overlays/popupRegions.ts": "6f66b09535e8c144205a6b22ab629862f7792bcfaebc335dd55c8bf2571b0d18",
+    "shared/browser/overlays/popupRegions.ts": "0b0bfe1c6487a839c3220ec2ae4dfd2c5d736ef310e1328ad970dbe0d4b18073",
     "shared/chat/useScopedDraft.ts": "fd3abae3689fc3ce72e4d4bc4ddc16befe93c4cd0e2abadafaded9ba501a0e1e",
     "shared/remote-chat/client/draftScopes.ts": "f3cacb9209c98ae2d3260bc46e5e82503cbd86728197c9d66da5c9e455804fc7",
     "apps/desktop/e2e/terminal-link-actions.ts": "86df9dbf585304dc51ff10322c84d8ab9569da0ca45dfa0a39f82d14e3a1a43d",
@@ -2071,6 +2064,9 @@
     "shared/browser/zoom/useTabZoom.ts": "64bdb5ac8f9c571203eb28e6d83522041fca36a1af9c49f6d0d7d64d89c0f27a",
     "shared/browser/zoom/zoomWheel.ts": "73d2e2174c014407cf254bcad92c326dd544c3721f848ca2bfcbb3beedd043c6",
     "shared/browser/zoom/browserZoom.css": "d6e0545b1cbf9909f7ed5cc0efdd60586697b765bcb1927d3db8cfeafc3fe1c8",
-    "shared/browser/home/zoomWheel.js": "41bff8c69e7024e9829ab6edd3383d6e6d24638adc071470a02858d869dd6ac4"
+    "shared/browser/home/zoomWheel.js": "41bff8c69e7024e9829ab6edd3383d6e6d24638adc071470a02858d869dd6ac4",
+    "shared/provider-market/BrowserTabHoverCard.tsx": "4fb993e45a94ad9e0f2edeca9b5b76171ac7d5f80aa868be90a49aed13aa7f28",
+    "shared/provider-market/useBrowserTabHover.ts": "d2eca934647ced720a74b60f20a7b8021ceddc1266d1a63e87317c9327f9c416",
+    "shared/provider-market/browserTabHover.css": "0a92068bfa12c05dab8665d46e45af9314e3bbefecaed4377e4a941d6f2e1d8e"
   }
 }

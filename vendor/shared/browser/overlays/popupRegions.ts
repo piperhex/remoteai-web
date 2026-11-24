@@ -22,7 +22,9 @@ export function popupRegions(popup: Window) {
   return [...popup.document.querySelectorAll<HTMLElement>(POPUPS)].flatMap(element => {
     const style = popup.getComputedStyle(element), rect = layoutBounds(element);
     if (style.display === 'none' || style.visibility === 'hidden' || !rect.width || !rect.height) return [];
-    const x = Math.max(0, rect.left - SHADOW_MARGIN), y = Math.max(0, rect.top - SHADOW_MARGIN);
+    // A hover card's native hit region must leave the tab above it available to the mouse.
+    const topMargin = element.dataset.browserPopup === 'tab-hover' ? 0 : SHADOW_MARGIN;
+    const x = Math.max(0, rect.left - SHADOW_MARGIN), y = Math.max(0, rect.top - topMargin);
     const right = Math.min(popup.innerWidth, rect.left + rect.width + SHADOW_MARGIN);
     const bottom = Math.min(popup.innerHeight, rect.top + rect.height + SHADOW_MARGIN);
     // rc-trigger measures newly mounted menus far outside the viewport before aligning them.

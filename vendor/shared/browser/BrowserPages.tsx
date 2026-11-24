@@ -20,7 +20,7 @@ export function BrowserPages({ browser, t, manager, compact, query, blocked, sel
   select: (id: string) => void; loadingChanged: (id: string, loading: boolean) => void;
   desktopTabs: Readonly<Record<string, boolean>>;
   home: (id: string) => boolean; bookmarks: () => void;
-  recordVisit?: (id: string, page: { url: string; title: string }) => void;
+  recordVisit?: (id: string, page: { url: string; title: string }, requested: string) => void;
 }) {
   const { tabs, activeId, Surface, commands, open } = browser;
   const { resident } = useMobileBrowserRenderers(activeId, compact && open);
@@ -79,7 +79,7 @@ export function BrowserPages({ browser, t, manager, compact, query, blocked, sel
               if (compact && page.url !== entry.url && /^https?:\/\//i.test(page.url)) {
                 observed.current.set(entry.id, { requested: entry.url, url: page.url });
               } else observed.current.delete(entry.id);
-              recordVisit?.(entry.id, page);
+              recordVisit?.(entry.id, page, entry.url);
             }}
             onLoadingChange={loading => loadingChanged(entry.id, loading)} t={t} />}
           {!mounted && manager && !home(entry.id) && <div className="pm-browser-feedback" aria-hidden>

@@ -1,5 +1,28 @@
 import { expect, test } from '@playwright/test';
 
+for (const narrow of [false, true]) {
+  test(`web background browser tab hover card ${narrow ? 'narrow' : 'wide'}`, async ({ page }, info) => {
+    await page.setViewportSize({ width: narrow ? 900 : 1440, height: 800 });
+    await page.goto(`e2e/web-browser-bookmarks-harness.html${narrow ? '?dark=1&font=20' : ''}`);
+    const url = 'https://guide.example.test/start?account=private';
+    await page.route(url, route => route.fulfill({ contentType: 'text/html', body: '<title>Guide</title>' }));
+    const browser = page.locator('.browser-main-page');
+    await browser.getByRole('combobox').fill(url);
+    await browser.getByRole('combobox').press('Enter');
+    await expect(browser.locator('iframe')).toHaveAttribute('src', url);
+    await browser.getByRole('button', { name: '新标签页', exact: true }).click();
+    await browser.getByRole('tab').first().hover();
+    const card = page.getByRole('tooltip');
+    await expect(card.locator('span')).toHaveText('guide.example.test');
+    await expect(card).not.toContainText('account');
+    await expect(card).toContainText('内存用量暂不可用');
+    await expect(browser.getByRole('tab').last()).toHaveAttribute('aria-selected', 'true');
+    await page.screenshot({ path: info.outputPath('background-tab-hover.png'), animations: 'disabled' });
+    await page.keyboard.press('Escape');
+    await expect(card).toBeHidden();
+  });
+}
+
 test('toolbar zoom resizes a cross-origin website without reloading it', async ({ page }) => {
   const url = 'https://preview.example.test/zoom';
   await page.route(url, route => route.fulfill({ contentType: 'text/html', body: '<input aria-label="draft">' }));

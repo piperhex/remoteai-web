@@ -149,7 +149,7 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
   }, [tabs]);
   return <>
     {!compact && <div className="pm-browser-titlebar">{props.history}
-    <BrowserTabs tabs={tabs} activeId={activeId} visible={open} t={t}
+    <BrowserTabs tabs={tabs} activeId={activeId} visible={open} t={t} language={props.language} visits={records.visits}
       select={props.onSelect} close={props.onCloseTab} closeTabs={props.onCloseTabs} menuChanged={setMenuOpen} />
     <button aria-label={t('market.browserNewTab')} title={t('market.browserNewTab')}
       onClick={props.onNewTab}><Plus size={17} /></button>
