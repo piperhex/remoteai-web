@@ -3,6 +3,7 @@ const BROWSER_SHORTCUT_KEYS = new Set(['r', 'p']);
 /** Suppress browser chrome while keeping application context menus and keyboard handlers reachable. */
 export function installBrowserDefaultsGuard(enabled: () => boolean = () => true) {
   const preventContextMenu = (event: MouseEvent) => {
+    if (event.target instanceof HTMLImageElement && event.target.closest('.cs-image-browser-menu')) return;
     if (enabled()) event.preventDefault();
   };
   const preventBrowserShortcut = (event: KeyboardEvent) => {

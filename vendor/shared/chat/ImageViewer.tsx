@@ -1,6 +1,6 @@
 import { remoteErrorText } from '../localization/errors';
 import { defaultText } from '../localization/messages';
-import { useState, type MouseEvent, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Download, Image as ImageIcon, LoaderCircle } from 'lucide-react';
 import { useImageViewer } from './useImageViewer';
 import type { PreviewImageLoader } from '../remote-chat/previewProgress';
@@ -12,11 +12,13 @@ import type { ImageNavigation } from './ImageGallery';
 import { ImageEditor } from './ImageEditor';
 import { usePreviewImageAnnotation } from './usePreviewImageAnnotation';
 import { getInterfaceLanguage } from '../localization/interfaceLanguage';
+import { usePreviewImageMenu, type NativeImageMenu } from './usePreviewImageMenu';
 
 interface Props {
   thumbnail: string; description: string; load: PreviewImageLoader; close: () => void;
   download?: (url: string) => void | Promise<void>;
-  contextMenu?: (event: MouseEvent, url: string) => void;
+  imageMenu?: boolean;
+  contextMenu?: NativeImageMenu;
   feedback?: string;
   translate?: (text: string) => string;
   formatError?: (error: unknown) => string;
@@ -25,10 +27,12 @@ interface Props {
   navigation?: ImageNavigation;
 }
 
-export function ImageViewer({ thumbnail, description, load, close, download, contextMenu, feedback,
+export function ImageViewer({ thumbnail, description, load, close, download, imageMenu = false, contextMenu, feedback,
   translate = defaultText, formatError = remoteErrorText, autoLoadOriginal = false,
   inlineViewControls = false, navigation }: Props) {
   const image = useImageViewer(load, autoLoadOriginal);
+  const source = image.url ?? thumbnail;
+  const menu = usePreviewImageMenu({ source, original: image.url, contextMenu, translate });
   const annotation = usePreviewImageAnnotation(image.loadOriginal);
   const [downloadError, setDownloadError] = useState('');
   const [saving, setSaving] = useState(false);
@@ -45,14 +49,10 @@ export function ImageViewer({ thumbnail, description, load, close, download, con
   if (annotation.editing) return <ImageEditor dataUrl={annotation.editing.source}
     language={getInterfaceLanguage()} translate={translate} mode={annotation.editing.mode}
     save={url => { annotation.save(url); close(); }} close={annotation.cancel} />;
-  return <ImageViewerFrame src={image.url ?? thumbnail} description={description} close={close}
-    navigation={navigation}
+  return <ImageViewerFrame src={source} description={description} close={close}
+    navigation={navigation} renderStage={imageMenu ? menu.renderStage : undefined} onEscape={menu.onEscape}
     renderToolbar={inlineViewControls ? renderEditor : undefined}
-    translate={translate} onError={image.fail} onContextMenu={(event) => {
-      if (!contextMenu) return;
-      event.preventDefault();
-      if (image.url && !image.error) contextMenu(event, image.url);
-    }}>
+    translate={translate} onError={image.fail}>
     {mobile && originalAction}
     {download && <button type="button" className="cs-image-download" disabled={saving || image.loading}
       aria-label={translate(saving ? "client.projectBrowser.saving" : "client.shared.downloadImage")} aria-busy={saving}
@@ -69,7 +69,7 @@ export function ImageViewer({ thumbnail, description, load, close, download, con
     {image.loading && <div className="cs-image-status cs-image-transfer">
       <PreviewTransferProgress progress={image.progress} label={translate("client.shared.loadingFullImage")} /></div>}
     {downloadError && <div className="cs-image-status" role="status">{formatError(downloadError)}</div>}
-    {feedback && <div className="cs-image-status" role="status">{feedback}</div>}
+    {(feedback || menu.feedback) && <div className="cs-image-status" role="status">{feedback || menu.feedback}</div>}
     {annotation.failed && <div className="cs-image-status" role="alert">
       {translate('client.shared.couldNotEditThisImageOpenItAgainToRetry')}</div>}
     {image.error && <div className="cs-image-status" role="status">{translate("client.shared.couldNotLoadFullImage")}</div>}

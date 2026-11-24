@@ -27,5 +27,5 @@ function SelectedImage({ source, description, thumbnail, options, close, inlineV
   const props = { thumbnail: image.url ?? thumbnail ?? EMPTY_IMAGE, description, load: image.original,
     download: image.save ?? downloadChatImage, close, navigation };
   return environment ? <ImagePreview {...props} prepare={remoteImageBytes} />
-    : <ImageViewer {...props} inlineViewControls={inlineViewControls} translate={displayText} />;
+    : <ImageViewer {...props} imageMenu inlineViewControls={inlineViewControls} translate={displayText} />;
 }

@@ -93,8 +93,13 @@ export function useImageGestures() {
     onPointerDown: (event: PointerEvent<HTMLDivElement>) => {
       if (event.button !== 0) return;
       // Native selection/dragging can cancel pointer capture in Chromium and WebView2.
-      event.preventDefault();
-      event.currentTarget.setPointerCapture(event.pointerId);
+      if (event.target instanceof HTMLImageElement && event.pointerType === 'touch') {
+        // Let the browser offer its image actions when the Clipboard API is unavailable.
+        event.target.setPointerCapture(event.pointerId);
+      } else {
+        event.preventDefault();
+        event.currentTarget.setPointerCapture(event.pointerId);
+      }
       pointers.current.set(event.pointerId, point(event));
       rebase();
     },

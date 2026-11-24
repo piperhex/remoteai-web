@@ -8,21 +8,24 @@ type ImageAction = "copy" | "saveAs";
 
 export function useImageMenu(prepare?: (url: string) => Promise<string>) {
   const [feedback, setFeedback] = useState("");
-  const source = useRef("");
+  const selected = useRef<{ current: () => string | undefined; original?: string }>();
   const busy = useRef(false);
-  const menu = useRef<Promise<Menu>>();
+  const menus = useRef(new Map<boolean, Promise<Menu>>());
   useEffect(() => () => {
     // Popup completion does not mean the native menu resource can be released on every platform.
-    void menu.current?.then((value) => value.close()).catch(() => console.warn("Could not release image menu"));
+    for (const menu of menus.current.values()) {
+      void menu.then(value => value.close()).catch(() => console.warn("Could not release image menu"));
+    }
   }, []);
 
   const perform = async (action: ImageAction) => {
-    if (busy.current) return;
+    const source = action === 'copy' ? selected.current?.current() : selected.current?.original;
+    if (!source || busy.current) return;
     busy.current = true;
     setFeedback(action === "copy" ? uiText("client.workspaceActions.copyingImage") : uiText("client.workspaceActions.preparingToSave"));
     try {
       const result = await invoke<{ completed: boolean }>("codex_gui_image_action", {
-        request: { source: prepare ? await prepare(source.current) : source.current, action },
+        request: { source: prepare ? await prepare(source) : source, action },
       });
       setFeedback(result.completed ? (action === "copy" ? uiText("client.workspaceActions.imageCopied") : uiText("client.workspaceActions.imageSaved")) : "");
     } catch {
@@ -30,16 +33,19 @@ export function useImageMenu(prepare?: (url: string) => Promise<string>) {
     } finally { busy.current = false; }
   };
 
-  const open = (event: MouseEvent, url: string) => {
+  const open = (event: MouseEvent, current: () => string | undefined, original?: string) => {
     event.preventDefault();
     if (busy.current) return;
-    source.current = url;
+    setFeedback('');
+    selected.current = { current, original };
+    const canSave = Boolean(original);
     const position = new LogicalPosition(event.clientX, event.clientY);
-    if (!menu.current) menu.current = Menu.new({ items: [
+    const menu = menus.current.get(canSave) ?? Menu.new({ items: [
       { text: uiText("client.workspaceActions.copyImage"), action: () => { void perform("copy"); } },
-      { text: uiText("client.composer.saveAs"), action: () => { void perform("saveAs"); } },
-    ] }).catch((error: unknown) => { menu.current = undefined; throw error; });
-    void menu.current.then((value) => value.popup(position))
+      ...(canSave ? [{ text: uiText("client.composer.saveAs"), action: () => { void perform("saveAs"); } }] : []),
+    ] }).catch((error: unknown) => { menus.current.delete(canSave); throw error; });
+    menus.current.set(canSave, menu);
+    void menu.then((value) => value.popup(position))
       .catch(() => setFeedback(uiText("client.workspaceActions.couldNotOpenTheMenuPleaseTryAgain")));
   };
   return { feedback, contextMenu: isTauri() ? open : undefined };
