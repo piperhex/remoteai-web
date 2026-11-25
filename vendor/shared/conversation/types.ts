@@ -125,6 +125,7 @@ export interface ThreadTokenUsage {
   modelContextWindow?: number | null;
 }
 export interface EventParams {
+  review?: { turnId: string; fields: import('./savedReview').ReviewFields };
   notificationEventId?: string;
   threadName?: string | null;
   serverName?: string;
