@@ -3,7 +3,7 @@
   "revision": "0fc25189af7df20cafa7711f59a1dcfef93c193c",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "0267ca04c801f04ebbf0f61945d92f5fa5f23312"
+    "revision": "f31a6b1fd9daf35ab2c8f4f04308993fa87d3916"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -49,7 +49,7 @@
     "shared/remote-chat/views/ChatProcessing.tsx": "11608c8edbb7dddbdefaa520ace75e855fbd82609c846e68c78c6206e412f682",
     "shared/remote-chat/views/ChatQuotes.tsx": "45c34d6b17e9116fa21646ec064a9404705bbbb05c6ea16635b6180bcc1ed8e3",
     "shared/conversation/ConversationChangesButton.tsx": "53d1e6db5a7fb927df2abc11f32a830e61ac6e0bcddf8642b1c0c80683d62506",
-    "shared/remote-chat/client/history.ts": "b6b740cbed1deeecc0842f874b11d5403234f718d2ef2e4e25edf567741764e2",
+    "shared/remote-chat/client/history.ts": "334d2901f8f5bed3b027f1c988f67eda844703a7cb36c36462fedc2a2175b1db",
     "shared/remote-chat/client/historyLoad.ts": "b74d39fd3369d839bfbe876b4e135663943cf2b807e10b6e57be1a7a3f5798a1",
     "shared/chat/runningTurn.ts": "f09e1ab643fe4c599251bfa6ddcca219c7c82ea6438f6584b92bcb577c9544dd",
     "apps/desktop/e2e/git-drawer-checks.ts": "1714e4fa662376954a3c86088c7a6af36cd669a4ee208338884437628bf9b344",
@@ -453,7 +453,7 @@
     "shared/chat/streamFrame.ts": "f38f706304df21419239146ea77f76053cf1a2201e1b18030c7d7bcf9c23206e",
     "shared/remote-chat/client/processing.ts": "d60e1923fe893f91fecbbd931e6f305a4fc645982c8cc098990903a593ffeab0",
     "shared/remote-chat/stringHash.ts": "28d41d3724cdaa6bd2d697178c4278165b7eee8af772b5448c7bb6ffb0e54bce",
-    "shared/remote-chat/historyPage.ts": "61fcd2d078b23c4067419d4ac47265b90ed0c803664fcd4ed336b560a8271450",
+    "shared/remote-chat/historyPage.ts": "de83baf56d089466cd52451b6a711765a7a82037d1144d70bb865a3c90ab5e9c",
     "shared/remote-chat/client/historyReader.ts": "ffc245662659b1973a30f00cdffd64134d8452056df1c815e332126214a7fd82",
     "shared/remote-chat/client/historyPreparation.ts": "b199a3f68abbe1f6d0284b2bf7f50e75621fbb2da91c3932074ca8f4174c93c9",
     "shared/remote-chat/client/historyCache.ts": "f110e76bd701b562260265d123a1e48417d4dfa32497052e4cabb73dddfaab10",
@@ -818,7 +818,7 @@
     "shared/token-usage/officialUsageChartData.ts": "67558dc854ca5897182c6c9ecf745ed9d570756fb4f413d0e15049b35ba9d6d2",
     "shared/token-usage/officialUsageChart.css": "27ecdac52c9add6eeacf9d096a02a97063d39d16b4b2df588c3a465f9a6cba94",
     "shared/conversation/requestError.ts": "35529552e5aa4cb111c1ab26e80d61aacc3408d166d1dabdb86380a5011866f3",
-    "shared/conversation/turnRequestErrors.ts": "0b2e75986f1e207a38ffb410a08d22e5867b81ad943f34bee7be15761c4ed3d8",
+    "shared/conversation/turnRequestErrors.ts": "b8a920628516ee795269be0449f7aa24e7ad7349b7c98569b74091fc128b741a",
     "shared/chat/titleSettings.ts": "bfc75b48f8c8c17a344759e76577091afb475443a8cf16df0034f13218e72058",
     "shared/remote-chat/packetCipher.ts": "4d01758d749f512a544880f39150dc142909e2b163dc5f7f9d18691c523ca45d",
     "shared/remote-chat/client/socket.ts": "926f30863b6a200a900038b4cbb15dffc852630c2dee43476c3cb776633bd5b2",
@@ -2033,7 +2033,7 @@
     "shared/chat/DownloadedFileContext.tsx": "a16cc68f65403eca9d0cbf417b92e470359240879e4f97ba9cf47ed2ec0ce941",
     "shared/downloads/previewCompletedDownload.ts": "730e94bfddb69b57b780a8c71f6b57a5c2e0e7cc7e5acbbbf9540494634e416b",
     "shared/remote-desktop/useScreenPowerStatus.ts": "58e3cb258910dd6dde15a855e0a8c59acb8e5c871f4eed22fd93725a50718e97",
-    "shared/remote-chat/client/residentHistory.ts": "7e28100a652d70367f064f858ddbcb90fd999a53e9b9957f1e2b39148fe5c930",
+    "shared/remote-chat/client/residentHistory.ts": "b8d7bdce01c1d8027e4a79e84266a1d3e1db1cfc9359fcb6e6a09002e11a2384",
     "shared/chat/useDeferredDetails.ts": "2b9e440e190dcfa0ea847d849c96f177641152923c0b09899e46817796b189e5",
     "shared/chat/historyBudget.ts": "09aee770b3cca870f710b127694517b69f893046c0f3b2177fcb3985acbe6c65",
     "shared/browser/useMobileBrowserRenderers.ts": "b83d9508424f0496313d31c852ec1dbef8bcc715f4ba952d51796f213aef5189",

@@ -50,6 +50,7 @@ for (const failure of [
     { id: 'question', type: 'userMessage', text: '检查项目修改。' },
     { id: 'before', type: 'agentMessage', phase: 'commentary', text: '这是报错前的处理过程。' },
     { id: 'command', type: 'commandExecution', command: 'git status', status: 'completed', exitCode: 0 },
+    ...(failure.name === 'connection' ? [{ id: 'reasoning', type: 'reasoning', summary: [] }] : []),
   ], plan: [{ step: '检查项目修改', status: 'inProgress' }] } });
   await emit('error', { turnId, willRetry: true,
     error: { message: failure.message } });
