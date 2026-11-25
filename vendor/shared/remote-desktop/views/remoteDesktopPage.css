@@ -13,8 +13,26 @@ main:has(> .rd-page:not([hidden])) { scrollbar-gutter: auto; }
 }
 .rd-page-header > svg { color: var(--green); flex: none; }
 .rd-page-header h1 { margin: 0; font-size: 1.2em; line-height: 1.4; font-weight: 650; }
-.rd-page-host { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted);
-  padding-inline-start: 12px; border-inline-start: 1px solid var(--line); }
+.rd-page > .rd-computer-tabs { flex: 1; min-height: 0; }
+.rd-computer-tabs.ant-tabs > .ant-tabs-nav {
+  margin: 0; padding: 6px var(--rd-page-inset) 0; background: var(--panel, var(--card));
+}
+.rd-computer-tabs.ant-tabs > .ant-tabs-nav > .ant-tabs-nav-wrap { flex: 0 1 auto; }
+.rd-computer-tabs .ant-tabs-nav .ant-tabs-tab-btn { display: flex; align-items: center; min-width: 0; }
+.rd-computer-tabs .ant-tabs-tab-btn > span[title] {
+  max-width: min(18em, 45vw); overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+.rd-computer-tabs .ant-tabs-tab-icon, .rd-computer-tabs .ant-tabs-tab-remove { display: inline-flex; }
+.rd-computer-tabs .ant-tabs-extra-content { margin-inline-start: 4px; }
+.rd-computer-tabs > .ant-tabs-content-holder { min-height: 0; }
+.rd-computer-tabs > .ant-tabs-content-holder > .ant-tabs-content,
+.rd-computer-tabs .ant-tabs-tabpane { height: 100%; }
+.rd-computer-tabs .ant-tabs-tabpane-active { display: flex; flex-direction: column; }
+.rd-add-desktop-menu { min-width: 12em; max-width: min(400px, calc(100vw - 16px)); }
+.rd-add-desktop-menu .ant-dropdown-menu { max-height: min(60vh, 24em); overflow-y: auto; }
+.rd-add-desktop-label { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.rd-add-desktop-label > span { overflow-wrap: anywhere; }
+.rd-add-desktop-label small { flex: none; }
 .rd-page-directory { flex: 1; min-height: 0; overflow: auto; padding: 20px var(--rd-page-inset); }
 .rd-page-directory > .ant-alert { margin-bottom: 12px; }
 .rd-page-directory-heading { justify-content: space-between; gap: 12px; margin-bottom: 12px; }

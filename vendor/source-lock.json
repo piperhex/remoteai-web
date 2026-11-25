@@ -3,7 +3,7 @@
   "revision": "10967f6e406daca25e948d6b997ea2b0ef5138d3",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "a4c5673ad9c4621e26ed6e552a1111f5c38ce3c9"
+    "revision": "4f00ae031c46c0f946c73de0a698e5d8b94a4fd6"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -2077,9 +2077,9 @@
     "shared/conversation/savedReview.ts": "ac076bbed5060f351cee3bad1a1e722eceb2700b84ab7acd38665ad44d958f42",
     "shared/conversation/SavedReviewFiles.tsx": "6bdbf6cce96dd877d7a6bc4ab0c2d638b14672b6408ad39c510f66383dcff63a",
     "shared/remote-chat/views/MobileChatDiff.tsx": "361b3b431e2bc46af11031f1c37d0011921ca387efbd1db643b74a259695e41e",
-    "shared/remote-desktop/views/RemoteDesktopPage.tsx": "6f2eb0673f57c13c9e9979b2df19b375807b89a8fe965f7254f3d0bbd291b522",
+    "shared/remote-desktop/views/RemoteDesktopPage.tsx": "ac65034292d8e430a6bc6892687e93ba829f2bbe9ef9de6d3129ab9c2cd2a883",
     "shared/remote-desktop/views/ConnectedDesktop.tsx": "a8dc8a6c48da69955e311f02f78f4af9e1f5fbb621f23311b4f5f0664dda1616",
-    "shared/remote-desktop/views/remoteDesktopPage.css": "ad29c1757da9ff0caf7d3e7cbdaeacbac4118c8f9d1c326d3e8379b16f2a0df7",
+    "shared/remote-desktop/views/remoteDesktopPage.css": "b6190d959046c5cd0ae44cfc4b53f1cb3fdb4700a739c85ea5f8ca5a811ffe9e",
     "shared/conversation/SavedReviewSummary.tsx": "08cde4be4591f079421c79dda024abe843d09110de72bdd186ed222048756240",
     "shared/layout/ResizableSidebar.tsx": "4150ded9b422dce5c6d0e378714bb5d3b0bb1cc7a8adbee96c2fd3904cfc9141",
     "shared/layout/useSidebarResize.ts": "c87a08718f5ae20920025d7a1b83bdcbb1b7b1172fd85a92dbe718fdd86df3ca",
@@ -2095,6 +2095,7 @@
     "shared/terminal/workspace/SshLaunchDialog.tsx": "6a5a3627e6ff420e65d308cd59dacf97604a2e4c3e742b838a2c8641a4ee4f48",
     "shared/conversation/DiffFileList.tsx": "e9cb83a7bd21cae6b30a3dacfaf692730c696cf1267589e64c2859ec72f541bb",
     "shared/terminal/workspace/SshComputerMenu.tsx": "070758b83e388bf0945e80dfcb4e42e54fb23d27442bd224f3268624c4ed4589",
-    "shared/terminal/workspace/computerMenu.css": "edeb0616719bc87c5524807f1b7aeb719fc8d7e61dbc1400b80322616ceab47a"
+    "shared/terminal/workspace/computerMenu.css": "edeb0616719bc87c5524807f1b7aeb719fc8d7e61dbc1400b80322616ceab47a",
+    "shared/remote-desktop/views/AddDesktopMenu.tsx": "f44342a994912807b3bbe52d4593950d7a96e774c696424be3ac9a8adb0a380a"
   }
 }

@@ -1,21 +1,31 @@
 import { expect, test } from '@playwright/test';
 import type { desktopTest } from './remote-desktop-fixture';
+import { checkDesktopTabs, computers, connectCaptureHosts } from './remote-desktop-tab-checks';
 
 declare global { interface Window { desktopTest: typeof desktopTest } }
 
-test('standalone desktop keeps each visited display at 1 FPS across sidebar navigation', async ({ page }, info) => {
+test.beforeEach(async ({ page }, info) => {
   test.skip(info.project.name !== 'desktop');
-  const device = { deviceId: 'office', name: 'Office PC', platform: 'Windows', online: true, capabilities: [] };
   await page.addInitScript(() => {
     localStorage.setItem('codex-switch.web.session.v1', JSON.stringify({ baseUrl: location.origin,
       email: 'viewer@example.test', accessToken: 'fixture', refreshToken: 'fixture' }));
   });
   await page.route('**/auth/me', route => route.fulfill({ json: { id: 'viewer', email: 'viewer@example.test' } }));
-  await page.route('**/devices', route => route.fulfill({ json: { devices: [device] } }));
+  await page.route('**/devices', route => route.fulfill({ json: { devices: computers } }));
   await page.route('**/devices/providers?*', route => route.fulfill({ json: { providers: [] } }));
   await page.route('**/sync/accounts/web-summary', route => route.fulfill({ json: { accounts: [] } }));
   await page.routeWebSocket('**/device-switch', socket => socket.onMessage(() =>
-    socket.send(JSON.stringify({ type: 'devices-snapshot', devices: [device] }))));
+    socket.send(JSON.stringify({ type: 'devices-snapshot', devices: computers }))));
+});
+
+test('standalone desktop retains independent computer tabs at the background frame rate', async ({ page }, info) => {
+  const hosts = await connectCaptureHosts(page, '/web/e2e/remote-desktop-fixture.ts', 'webChatConnection');
+  await page.goto('./');
+  await page.locator('.desktop-sidebar nav').getByRole('button', { name: '远程桌面', exact: true }).click();
+  await checkDesktopTabs(page, hosts, info, expect);
+});
+
+test('standalone desktop keeps each visited display at 1 FPS across sidebar navigation', async ({ page }, info) => {
   // Use the production viewer and real WebRTC with a local capture host behind the signaling adapter.
   await page.route('**/webChatConnection.ts*', route => route.fulfill({ contentType: 'application/javascript', body: `
     export function webChatConnection(session, deviceId, events) {
