@@ -16,6 +16,32 @@ async function closeMenu(page: Page) {
   }
 }
 
+test('opens the online computer desktop from its mobile menu and returns to devices', async ({ page }, info) => {
+  test.skip(info.project.name === 'desktop', 'The shortcut belongs to the mobile device menu.');
+  await page.route('**/devices/*/screen-power', route => route.fulfill({ json: { state: 'on' } }));
+  await page.goto('e2e/remote-desktop-harness.html?device-screen&touch');
+  await openMenu(page, '离线电脑');
+  await expect(deviceAction(page, '远程桌面')).toBeDisabled();
+  await closeMenu(page);
+  await openMenu(page);
+  await expect(deviceAction(page, '关闭电脑屏幕')).toBeEnabled();
+  const drawer = page.locator('.device-bottom-sheet .ant-drawer-content:visible');
+  await expect.poll(async () => {
+    const bounds = await drawer.boundingBox();
+    return bounds && Math.abs(bounds.y + bounds.height - page.viewportSize()!.height);
+  }).toBeLessThan(2);
+  await expect(deviceAction(page, '远程桌面')).toBeInViewport({ ratio: 1 });
+  await page.screenshot({ path: info.outputPath('device-desktop-menu.png') });
+  await deviceAction(page, '远程桌面').click();
+  const desktop = page.getByRole('dialog', { name: '远程桌面', exact: true });
+  await expect(desktop).toBeVisible();
+  await expect.poll(() => desktop.locator('video').evaluate(video => video.videoWidth)).toBeGreaterThan(0);
+  await page.screenshot({ path: info.outputPath('device-desktop-stream.png'), animations: 'disabled' });
+  await desktop.getByRole('button', { name: '关闭', exact: true }).click();
+  await expect(desktop).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: '设备管理', exact: true })).toBeVisible();
+});
+
 test('screen off and restore stay in device management without opening a desktop', async ({ page }, info) => {
   const requests: unknown[] = [];
   let state = 'on';

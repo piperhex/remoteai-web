@@ -19,6 +19,7 @@ interface DeviceCardProps {
   switchingModelDeviceId: string | null;
   switchingAuthDeviceId: string | null;
   onSwitchModel: (deviceId: string, onBack?: () => void) => void;
+  onOpenDesktop: (deviceId: string) => void;
   onSelectAuthAccount: (deviceId: string) => void;
   onDelete: (device: RemoteDevice) => void;
   onRevokeService: (device: RemoteDevice) => void;
@@ -137,6 +138,11 @@ export function DeviceCard(props: DeviceCardProps) {
     </Dropdown>}
   </article>
     {mobile && <DeviceBottomSheet open={optionsOpen} title={device.name} onClose={closeOptions}>
+      <button type="button" className="device-action" disabled={!device.online}
+        onClick={() => { closeOptions(); props.onOpenDesktop(device.deviceId); }}>
+        <Monitor size={20} aria-hidden /><span>{t('client.remoteDesktop.remoteDesktop')}</span>
+        <ChevronRight className="device-action-next" size={18} aria-hidden />
+      </button>
       <button type="button" className="device-action" disabled={modelDisabled}
         onClick={() => { closeOptions(); props.onSwitchModel(device.deviceId, openOptions); }}>
         <ArrowLeftRight size={20} aria-hidden /><span>{t('client.app.switchModel')}</span>

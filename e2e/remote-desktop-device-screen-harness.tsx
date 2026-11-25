@@ -1,4 +1,7 @@
 import { Provider } from 'react-redux';
+import { useState } from 'react';
+import { ChatTools } from '../src/chat/ChatTools';
+import { client } from './remote-desktop-fixture';
 import { DeviceManagementList } from '../src/devices/DeviceManagementList';
 import { useDeviceScreenControl } from '../src/devices/useDeviceScreenControl';
 import { parseDeviceStatusMessage, setActiveSession } from '../src/api';
@@ -19,11 +22,16 @@ const devices = snapshot.devices;
 
 function Devices() {
   const screenControl = useDeviceScreenControl();
-  return <DeviceManagementList devices={devices} accounts={[]} providers={[]} refreshing={false}
+  const [desktopDeviceId, setDesktopDeviceId] = useState<string>();
+  return <><DeviceManagementList devices={devices} accounts={[]} providers={[]} refreshing={false}
+    onOpenDesktop={setDesktopDeviceId}
     onBack={() => {}}
     deletingDeviceId={null} switchingModelDeviceId={null} switchingAuthDeviceId={null}
     onRefresh={async () => {}} onSwitchModel={() => {}} onSelectAuthAccount={() => {}}
-    onDelete={() => {}} onRevokeService={() => {}} screenControl={screenControl} />;
+    onDelete={() => {}} onRevokeService={() => {}} screenControl={screenControl} />
+    <div hidden><ChatTools client={client} cwd="" active={false} connected
+      closeDeviceDesktop={desktopDeviceId === 'computer' ? () => setDesktopDeviceId(undefined) : undefined} /></div>
+  </>;
 }
 
 export function DeviceScreenHarness() {

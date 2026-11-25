@@ -33,6 +33,26 @@ test.beforeEach(async ({ request }) => {
   await request.post(`${fixtureUrl}/test/reset`);
 });
 
+test('mobile device management opens another desktop without changing the selected chat computer',
+  async ({ page, request }, info) => {
+    test.skip(info.project.name !== 'mobile');
+    await provideComputers(page, computers);
+    await login(page);
+    await connect(page);
+    await connectedTo(page, '我的工作电脑');
+    await navigate(page, '设备');
+    await page.getByRole('button', { name: '另一台电脑 的更多操作' }).click();
+    await page.getByRole('button', { name: '远程桌面', exact: true }).click();
+    const desktop = page.getByRole('dialog', { name: '远程桌面', exact: true });
+    await expect(desktop).toBeVisible();
+    await expect.poll(async () => (await state(request)).connectedMobiles).toBe(2);
+    await desktop.getByRole('button', { name: '关闭', exact: true }).click();
+    await expect(desktop).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: '设备管理', exact: true })).toBeVisible();
+    await navigate(page, '聊天');
+    await connectedTo(page, '我的工作电脑');
+  });
+
 test('desktop computer search keeps its query while refreshing and recovers after a failed refresh',
   async ({ page }, info) => {
     test.skip(info.project.name !== 'desktop', 'The search bar belongs to the desktop picker.');

@@ -33,10 +33,11 @@ interface Props {
   session: AuthSession; devices: RemoteDevice[]; active: boolean; openAccounts?: () => void;
   tokenSummary: boolean; closeTokenSummary: () => void;
   sshDiscovery?: boolean; closeSshDiscovery?: () => void;
+  deviceDesktop?: { deviceId: string; close: () => void };
   acceptDownload?: boolean;
 }
 
-export function ChatPage({ session, devices, active, openAccounts,
+export function ChatPage({ session, devices, active, openAccounts, deviceDesktop,
   tokenSummary, closeTokenSummary, sshDiscovery, closeSshDiscovery, acceptDownload }: Props) {
   useLanguage();
   const preview = usePagePreview() === 'chat';
@@ -57,7 +58,8 @@ export function ChatPage({ session, devices, active, openAccounts,
   const scope = JSON.stringify([session.baseUrl, session.email]);
   const desktop = useDesktopLayout();
   const hosts = useSshHosts(scope);
-  const retained = useRetainedChatDevices({ scope, devices, selectedId: device?.deviceId, requestedId: hosts.requestedId });
+  const retained = useRetainedChatDevices({ scope, devices, selectedId: device?.deviceId,
+    requestedId: deviceDesktop?.deviceId ?? hosts.requestedId });
   const chats = device ? retained : [...retained, undefined];
   const chooseDevice = (id: string) => {
     setDeviceId(id);
@@ -74,6 +76,7 @@ export function ChatPage({ session, devices, active, openAccounts,
       return <div className="chat-device-session" hidden={!selected || (desktop && sshDiscovery)}
         key={JSON.stringify([scope, chatDevice?.deviceId])}>
         <WebChat session={session} device={chatDevice} devices={devices} selected={selected} reportHost={hosts.report}
+          deviceDesktop={deviceDesktop?.deviceId === chatDevice?.deviceId ? deviceDesktop : undefined}
           acceptDownload={acceptDownload && selected}
           tokenSummary={tokenSummary && selected} closeTokenSummary={closeTokenSummary}
           sshDiscovery={sshDiscovery && selected} closeSshDiscovery={closeSshDiscovery}
@@ -128,6 +131,7 @@ function WebChat({ session, device, selected, reportHost, ...props }: Props & {
         active={props.active && chat.foreground}
         onSynced={() => { void chat.controller.list(); }} />}
       <ChatTools client={chat.controller.guiTools} active={props.active} terminal={terminal}
+        closeDeviceDesktop={props.deviceDesktop?.close}
         desktopActions={<RemoteGuiTools controller={chat.controller} state={chat.state}
           installer={installer} active={props.active} />}
         connected={chat.state.ready} deviceName={device?.name}

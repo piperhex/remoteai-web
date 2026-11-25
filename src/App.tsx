@@ -154,7 +154,7 @@ function LoginView() {
   </main>;
 }
 
-function DevicesPage() {
+function DevicesPage({ onOpenDesktop }: { onOpenDesktop: (deviceId: string) => void }) {
   const screenControl = useDeviceScreenControl();
   const revokeService = useRevokeDesktopService();
   useLanguage();
@@ -242,6 +242,7 @@ function DevicesPage() {
   return <>
     <PullToRefresh onRefresh={performRefresh} renderText={(status) => PULL_REFRESH_TEXT[status]}>
       <DeviceManagementList devices={sorted} accounts={accounts} providers={providers}
+        onOpenDesktop={onOpenDesktop}
         onBack={() => dispatch(pageChanged('discover'))}
         screenControl={screenControl}
         refreshing={refreshing} onRefresh={performRefresh} deletingDeviceId={deletingDeviceId}
@@ -307,6 +308,8 @@ function AppShell() {
   const { session } = useAppSelector((state) => state.auth);
   const lounge = useWebLounge(session);
   const { page, profile, devices, refreshing, error } = useAppSelector((state) => state.data);
+  const [desktopDeviceId, setDesktopDeviceId] = useState<string>();
+  useEffect(() => { setDesktopDeviceId(undefined); }, [page, session?.baseUrl, session?.email]);
   useSyncDownloadAccount(session ? downloadOwner(session) : '');
   const desktopLayout = useDesktopLayout();
   const [browserTabBarHost, setBrowserTabBarHost] = useState<HTMLDivElement | null>(null);
@@ -402,7 +405,7 @@ function AppShell() {
         onReference={() => { dispatch(pageChanged('chat')); downloadsBack.current = 'discover'; }} onBack={() => {
         dispatch(pageChanged(downloadsBack.current)); downloadsBack.current = 'discover';
       }} /></>,
-    accounts: session && <AccountsPage session={session} />, devices: <DevicesPage />,
+    accounts: session && <AccountsPage session={session} />, devices: <DevicesPage onOpenDesktop={setDesktopDeviceId} />,
     totp: <TotpPage manager={totpManager} onBack={() => dispatch(pageChanged('discover'))} />,
     settings: <SettingsPage totpManager={totpManager} loungeController={lounge.controller} />,
   };
@@ -496,6 +499,8 @@ function AppShell() {
       <main className="main-content">
         <PrimaryPagePager page={page} onChange={changePrimaryPage} pages={{
           chat: session && <ChatPage key={session.baseUrl + session.email} session={session} devices={devices}
+            deviceDesktop={page === 'devices' && desktopDeviceId
+              ? { deviceId: desktopDeviceId, close: () => setDesktopDeviceId(undefined) } : undefined}
             acceptDownload={page === 'downloads' && !desktopLayout}
             openAccounts={openAccounts}
             active={page === 'chat' || page === 'ssh'} tokenSummary={page === 'token-summary'}

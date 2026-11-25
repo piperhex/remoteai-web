@@ -20,6 +20,7 @@ import './desktopTools.css';
 interface Props {
   client: GuiToolsClient; cwd: string; active: boolean; connected: boolean; deviceName?: string;
   desktopActions?: ReactNode;
+  closeDeviceDesktop?: () => void;
   terminal?: ReturnType<typeof useRemoteTerminalLauncher>;
 }
 export function ChatTools(props: Props) {
@@ -29,6 +30,17 @@ export function ChatTools(props: Props) {
   const browsers = useProjectBrowsers();
   const git = useRetainedProjects();
   const desktop = useDesktopLauncher();
+  const closeDeviceDesktop = props.closeDeviceDesktop;
+  const launcher: typeof desktop = closeDeviceDesktop ? { ...desktop, opened: true, minimized: false,
+    close: () => { desktop.close(); closeDeviceDesktop(); },
+    setMinimized: update => {
+      const minimized = typeof update === 'function' ? update(false) : update;
+      if (!minimized) return;
+      desktop.open();
+      desktop.hide();
+      closeDeviceDesktop();
+    },
+  } : desktop;
   const desktopLayout = useDesktopLayout();
   const wide = desktopLayout && Boolean(props.desktopActions);
   const workspace = useContext(WorkspaceDrawerContext);
@@ -60,8 +72,8 @@ export function ChatTools(props: Props) {
       disabled: (!props.connected || !props.cwd) && !opened.files, open: openFiles },
   ];
   return <>
-    <GuiRemoteDesktop client={props.client.desktop} active={props.active} connected={props.connected}
-      launcher={desktop} hideTrigger={!wide} keepAlive />
+    <GuiRemoteDesktop client={props.client.desktop} active={props.active || !!closeDeviceDesktop}
+      connected={props.connected} launcher={launcher} hideTrigger={!wide} keepAlive />
     {wide && props.desktopActions}
     {!wide && <Popover trigger="click" placement="bottomRight" arrow={false}
       open={menu && props.active} onOpenChange={setMenu} styles={{ root: { maxWidth: 400 } }}
