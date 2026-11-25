@@ -3,7 +3,7 @@
   "revision": "0fc25189af7df20cafa7711f59a1dcfef93c193c",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "0db6c354ad6d4a2257c57989090db7b5f612944d"
+    "revision": "3c491703a6a550c63000d8e9c1c565aeeec23ddf"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -907,7 +907,7 @@
     "apps/desktop/e2e/demo-conversation-sync.ts": "e485a2a1baf234b199a7ff7e916b784dfb593804fb72a0d83653a476d07ee263",
     "shared/chat/useWorkspaceDrawer.ts": "061839fca9573f0e66dec6d4226cde6f06211ecdc2766367628932ef770e21ed",
     "shared/chat/WorkspaceDrawerTabs.tsx": "9d633f9edff0fe88ae4e3a0d04dba14b3fe0e683dac55e5429e40e782c856ef3",
-    "shared/conversation/DiffDocument.tsx": "b3b7e27d4093fea2803c8a38f76f058bb3a0ebc3c011c3cb17a27aae9d6daaeb",
+    "shared/conversation/DiffDocument.tsx": "717dd274df3c6c180a1b8c8f101008cefeb19a8d352849a3922b8a5e2149a32b",
     "shared/conversation/useDrawerResize.ts": "09cd5a75e88502f387f732212d2c7fc0369ddb1e452191a157a58786444aaa26",
     "shared/conversation/guiAppearance.ts": "1d7515c0cc7f2d9f505b554e95610f3c69290caeecfd392be5cd2c61db39dc1b",
     "shared/conversation/useDetailsPanel.ts": "c421071fd45666b2492d17f27beafd859c488c583c7e9e3d7118ef051c09a35d",
@@ -1416,7 +1416,7 @@
     "apps/desktop/e2e/gui-settings-fixture.ts": "7746b82167cb95fd0553e804fb8a5c98974192d89d585f55341d603758eba8e2",
     "shared/chat/WorkspaceDrawerTabItem.tsx": "f7e4d2161ec15b5827f1aa33d52883e6ddeee268a8ec2c877a22333840c09ade",
     "shared/conversation/CopyButton.tsx": "948ac52dc2a10d6e71cb3d0909c53c610988a384ab3d862799b919e6ad9b55b3",
-    "shared/chat/diffGroups.ts": "4200c354b53dd86e0c2eb0eb0b80c1fb3eb4c8d679dc9681188e7e182d851462",
+    "shared/chat/diffGroups.ts": "7191760e40bf88b285faf89a8ccf5afe2a1615f766840877762529dd4e409df5",
     "shared/chat/useDiffAutoLoad.ts": "c0fbd74a2bc4df364405365d5ca517e2c96da6ceb77c5a929c3cceb87c1ff747",
     "shared/conversation/CodeHighlight.tsx": "99e1b2976e1c430a05d38b567e495a74acb6f947fc98d9fa7aa197502569c649",
     "shared/conversation/DiffView.module.less": "f6d514ef3f24d88e03552ae4fbb9058a22cfcbdce38a9b469b1391bb18eb0f55",
@@ -2071,11 +2071,11 @@
     "shared/browser/managed/deviceViewport.ts": "6c49d6313724cf8954628f7537120abf30ba54e4b5693cdfae1fc04754479dfc",
     "shared/browser/managed/ViewportHandles.tsx": "b67621ce82c739b93ddce635c9de5bb606c2ba151c51a77039717f4ecc395142",
     "shared/conversation/turnReview.ts": "3942845198a935f7176e4bc5c7382ea8f3b5436ac49b49c2bafa3bd887ab0f5d",
-    "shared/conversation/ChangesReview.tsx": "9fc33481bcf3e382f213c717427079741750fe13ec2e376b9b229be2c2a97cee",
+    "shared/conversation/ChangesReview.tsx": "3053c09b68905d58d49de8854f7f892f98dd055c0f62e6d2ba2accb61b24b291",
     "shared/conversation/TurnReviewNotice.tsx": "a0a5ed0da08c0851735b207a9611e5de814bf3d641edf12f7abef7df69c25ca9",
     "shared/conversation/ChangesReview.module.less": "723995d21a0369e38997e57f60c6935be324f8828c9596297b85e0c92ffa67ca",
     "shared/conversation/savedReview.ts": "ac076bbed5060f351cee3bad1a1e722eceb2700b84ab7acd38665ad44d958f42",
-    "shared/conversation/SavedReviewFiles.tsx": "24989a651e66029db286b1d70da40cd9806c2dac9a609fb734614b56e2784d06",
+    "shared/conversation/SavedReviewFiles.tsx": "6bdbf6cce96dd877d7a6bc4ab0c2d638b14672b6408ad39c510f66383dcff63a",
     "shared/remote-chat/views/MobileChatDiff.tsx": "361b3b431e2bc46af11031f1c37d0011921ca387efbd1db643b74a259695e41e",
     "shared/remote-desktop/views/RemoteDesktopPage.tsx": "6f2eb0673f57c13c9e9979b2df19b375807b89a8fe965f7254f3d0bbd291b522",
     "shared/remote-desktop/views/ConnectedDesktop.tsx": "a8dc8a6c48da69955e311f02f78f4af9e1f5fbb621f23311b4f5f0664dda1616",
@@ -2092,6 +2092,7 @@
     "shared/testing/bookmarkFolderPages.mts": "aba18228531d4b3ec1f86b6f33ff8e99022312fcbace09be0943cbf1e4cb8723",
     "shared/browser/bookmarks/BookmarkFolderPicker.tsx": "ce54cdef8ba4b29eb25032f9657a1d89c07472aeb702f175508c85f5eaedd64a",
     "shared/terminal/workspace/useSshHosts.ts": "0039142f29ca215bef00779d1dcf88a39ebee30f19f72a63bbad149acc91ec30",
-    "shared/terminal/workspace/SshLaunchDialog.tsx": "2cc9388ed51feb609219ab1bee77d6f2e9ecc14e5d06556f6bf8cb626c2acc24"
+    "shared/terminal/workspace/SshLaunchDialog.tsx": "2cc9388ed51feb609219ab1bee77d6f2e9ecc14e5d06556f6bf8cb626c2acc24",
+    "shared/conversation/DiffFileList.tsx": "e9cb83a7bd21cae6b30a3dacfaf692730c696cf1267589e64c2859ec72f541bb"
   }
 }

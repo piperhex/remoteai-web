@@ -1,23 +1,14 @@
-import { memo, useMemo, useState } from "react";
-import { ChevronDown, FileDiff, Folder } from "lucide-react";
+import { memo, useMemo } from "react";
+import { DiffFileList } from "./DiffFileList";
 import type { DiffFile, DiffLine } from "./diff";
 import { pairDiffLines } from "./diff";
 import { CopyButton } from "./CopyButton";
 import { useDiffText } from "../chat/diffText";
-import { groupDiffFiles } from "../chat/diffGroups";
 import { useDiffAutoLoad } from "../chat/useDiffAutoLoad";
 import { fileLanguage, HighlightedCode } from "./CodeHighlight";
 import styles from "./DiffView.module.less";
 
-const KIND_LABELS: Record<string, string> = { add: "client.git.added", delete: "client.projectBrowser.deleted", update: "client.git.modified" };
 const REDUNDANT_DIFF_HEADER = /^(diff --git |index |--- |\+\+\+ |new file mode |deleted file mode )/;
-
-function Counts({ added, removed }: { added: number; removed: number }) {
-  const t = useDiffText();
-  return <span className={styles.counts} aria-label={t("client.chat.linesAddedLinesRemoved", { added, removed })}>
-    <span className={styles.added}>+{added}</span><span className={styles.removed}>−{removed}</span>
-  </span>;
-}
 
 function UnifiedLine({ line, language }: { line: DiffLine; language: string }) {
   const sign = { add: "+", remove: "−", context: " ", hunk: " ", meta: " " }[line.kind];
@@ -67,62 +58,16 @@ export function DiffContent({ file, split }: { file: DiffFile; split: boolean })
   </>;
 }
 
-const FileCard = memo(function FileCard({ file, split, initialOpen }: {
-  file: DiffFile; split: boolean; initialOpen: boolean;
-}) {
-  const t = useDiffText();
-  const [open, setOpen] = useState(initialOpen);
-  const label = file.previousPath ? "client.projectBrowser.renamed" : KIND_LABELS[file.kind] ?? "client.git.modified";
-  return <section className={styles.file}>
-    <button className={styles.fileHeader} aria-expanded={open} onClick={() => setOpen(!open)}>
-      <FileDiff size={15} /><span className={styles.path}>{file.path.split(/[\\/]/).pop()}</span>
-      <span className={styles.kind}>{t(label)}</span><Counts added={file.added} removed={file.removed} />
-      <ChevronDown size={14} className={open ? styles.rotated : undefined} />
-    </button>
-    {open && <DiffContent file={file} split={split} />}
-  </section>;
-});
-
 export interface DiffDocumentProps {
   files: readonly DiffFile[]; title?: string; status?: string; initialOpen?: boolean; continuous?: boolean;
   filePath?: string;
 }
 
-export function DiffModeButtons({ split, setSplit }: { split: boolean; setSplit: (value: boolean) => void }) {
-  const t = useDiffText();
-  return <div className={styles.modes} role="group" aria-label={t("client.chat.diffDisplayMode")}>
-    <button aria-pressed={!split} onClick={() => setSplit(false)}>{t("client.chat.unified")}</button>
-    <button aria-pressed={split} onClick={() => setSplit(true)}>{t("client.chat.sideBySide")}</button>
-  </div>;
-}
-
 export const DiffDocument = memo(function DiffDocument({ files: allFiles, title = "client.shared.fileChanges", status,
   initialOpen = false, continuous = false, filePath }: DiffDocumentProps) {
-  const t = useDiffText();
-  const [split, setSplit] = useState(false);
-  const files = filePath === undefined ? allFiles : allFiles.filter((file) => file.path === filePath);
-  if (!files.length) return null;
-  const added = files.reduce((sum, file) => sum + file.added, 0);
-  const removed = files.reduce((sum, file) => sum + file.removed, 0);
-  const fileCount = new Set(files.map((file) => file.path)).size;
-  return <div className={`${styles.diff} ${continuous ? styles.continuous : ""}`}>
-    <div className={styles.toolbar}><strong>{t(title)}</strong><span>{t("client.chat.files", { count: fileCount })}</span>
-      <Counts added={added} removed={removed} />
-      {status && <span role="status">{t(status)}</span>}
-      <DiffModeButtons split={split} setSplit={setSplit} />
-    </div>
-    {groupDiffFiles(files).map((group) => <section key={group.directory} className={styles.folderGroup}
-      aria-label={group.directory || t("client.runtimeErrors.rootFolder")}>
-      <header className={styles.folderHeader}>
-        <Folder size={16} aria-hidden="true" />
-        <div className={styles.folderInfo}>
-          <h3 className={styles.folderName}>
-            {group.directory && group.directory !== "/" ? group.name : t("client.runtimeErrors.rootFolder")}</h3>
-          <p className={styles.folderPath}>{group.directory || "."}</p>
-        </div>
-      </header>
-      {group.entries.map(({ file, index }) => <FileCard key={`${file.path}:${index}`} file={file} split={split}
-        initialOpen={initialOpen && (filePath !== undefined || index === 0)} />)}
-    </section>)}
-  </div>;
+  const files = useMemo(() => filePath === undefined ? allFiles : allFiles.filter(file => file.path === filePath),
+    [allFiles, filePath]);
+  return <DiffFileList files={files} title={title} status={status} continuous={continuous}
+    initialFile={initialOpen ? (filePath === undefined ? 0 : 'all') : undefined}
+    renderBody={(index, split) => <DiffContent file={files[index]} split={split} />} />;
 });

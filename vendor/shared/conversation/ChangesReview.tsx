@@ -8,7 +8,7 @@ import type { GitChange, GitDiff, GitReviewScope } from '../remote-chat/gitTypes
 import { readWorkspaces, workspacePath, type GitWorkspaceState } from '../remote-chat/gitWorkspaceModel';
 import { DiffContent, DiffDocument } from './DiffDocument';
 import { turnReview } from './turnReview';
-import { SavedReview } from './SavedReviewFiles';
+import { SavedReviewDocument } from './SavedReviewFiles';
 import { useTurnChangedFiles } from './useTurnChangedFiles';
 import type { DiffPanelEntry } from './detailsContext';
 import type { Turn } from './types';
@@ -116,8 +116,8 @@ export function ChangesReview({ entry, workspace }: { entry: DiffPanelEntry; wor
         <span>{turn.summary} <code>{turn.turnId.slice(0, 8)}</code>{turn.cwd && <small>{turn.cwd}</small>}</span></div>}
       {turn?.result !== 'net' && <p>{t('client.changeReview.' + (turn?.turnId ? turn.result : 'noTurn'))}</p>}
       {turn?.deferred && turn.threadId && turn.turnId && workspace.git.savedReview &&
-        <SavedReview key={JSON.stringify([turn.threadId, turn.turnId, turn.cwd])} read={workspace.git.savedReview}
-          threadId={turn.threadId} turnId={turn.turnId} selectedFile={entry.savedFile} />}
+        <SavedReviewDocument key={JSON.stringify([turn.threadId, turn.turnId, turn.cwd])} read={workspace.git.savedReview}
+          threadId={turn.threadId} turnId={turn.turnId} selectedFile={entry.savedFile} status={entry.status} />}
       {!!files.length && <DiffDocument files={files} title={entry.title} filePath={entry.filePath}
         status={entry.status} continuous initialOpen />}
       {!turn?.deferred && !!turn?.activity?.length && <details className={styles.observed}><summary>{t('client.chat.activity')}</summary>
