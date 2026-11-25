@@ -3,7 +3,7 @@ import { useCliGui } from '../../cli-gui/context';
 import { guiAccountSelectionForEngine, isGuiAccountSelected } from '../../remote-chat/guiAccounts';
 import { uiText } from "../../localization/uiText";
 import { remoteErrorText } from "../../localization/errors";
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { RefreshCw, Settings } from 'lucide-react';
 import type { GuiAccountsClient, SelectableGuiAccount } from '../../remote-chat/guiAccounts';
 import { useGuiAccounts } from '../../remote-chat/client/useGuiAccounts';
@@ -14,18 +14,31 @@ import { RemoteAccountSummary } from './RemoteAccountSummary';
 import type { GuiComputerNavigation } from './types';
 import styles from '../ProxyAccountPicker.module.less';
 
-const ACCOUNT_REFRESH_MS = 60_000;
+export const ACCOUNT_REFRESH_MS = 60_000;
+export const RemoteGuiAccountsContext = createContext<ReturnType<typeof useGuiAccounts> | null>(null);
 
-export function RemoteAccountPicker({ active, ready, client, computers, privacyMode, renderSettings }: {
+interface Props {
   active: boolean; ready: boolean; client: GuiAccountsClient; computers: GuiComputerNavigation; privacyMode: boolean;
   renderSettings?: (onClose: () => void) => ReactNode;
-}) {
+}
+
+export function RemoteAccountPicker(props: Props) {
+  const accounts = useContext(RemoteGuiAccountsContext);
+  return accounts ? <AccountPicker {...props} accounts={accounts} /> : <StandaloneAccountPicker {...props} />;
+}
+
+function StandaloneAccountPicker(props: Props) {
+  const accounts = useGuiAccounts(props.client, props.ready && props.active, ACCOUNT_REFRESH_MS);
+  return <AccountPicker {...props} accounts={accounts} />;
+}
+
+function AccountPicker({ active, ready, computers, privacyMode, renderSettings, accounts }:
+  Props & { accounts: ReturnType<typeof useGuiAccounts> }) {
   const [open, setOpen] = useState(false);
   const cli = useCliGui();
   const [notice, noticeContext] = message.useMessage();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);
-  const accounts = useGuiAccounts(client, ready && active, ACCOUNT_REFRESH_MS);
   const selection = guiAccountSelectionForEngine(accounts.snapshot?.selection,
     accounts.snapshot?.choices ?? [], cli?.state.engine);
   const current = accounts.snapshot?.choices.find(choice => isGuiAccountSelected(choice, selection));

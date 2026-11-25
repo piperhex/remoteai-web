@@ -1,5 +1,6 @@
 import { uiText } from "../localization/uiText";
-import { type ReactNode, type RefObject } from 'react';
+import { useContext, useImperativeHandle, type ReactNode, type RefObject } from 'react';
+import { GuiAccountMenuRef } from './GuiAccountPrompt';
 import { Popover, Spin } from 'antd';
 import type { GuiComputerNavigation } from './remote/types';
 import { GuiDevicePicker } from './GuiDevicePicker';
@@ -15,6 +16,11 @@ interface Props {
 
 /** Local and remote accounts share one panel with an independent device dropdown. */
 export function GuiAccountMenu(props: Props) {
+  const menu = useContext(GuiAccountMenuRef);
+  useImperativeHandle(menu, () => () => {
+    props.trigger.current?.focus();
+    props.onOpenChange(true);
+  });
   const width = useAccountPickerWidth(props.active);
   const visible = props.open && props.active;
   const close = () => { props.onOpenChange(false); props.trigger.current?.focus(); };

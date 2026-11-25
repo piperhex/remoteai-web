@@ -2,6 +2,20 @@ import { expect, test } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { connect, login } from './chat-helpers';
+import { checkRemoteAccountPrompt } from '../../desktop/e2e/gui-account-prompt-check';
+
+test('Agent Hub Web prompts to choose a GUI account even with cached models', async ({ page, request }, info) => {
+  const fixture = process.env.CHAT_TEST_FIXTURE_URL ?? 'http://127.0.0.1:1498';
+  await page.setViewportSize({ width: 1280, height: 800 });
+  try {
+    expect((await request.post(fixture + '/test/reset', { data: { noGuiAccount: true } })).ok()).toBe(true);
+    await login(page);
+    await connect(page);
+    await checkRemoteAccountPrompt(page, info, 'web', expect);
+  } finally {
+    await request.post(fixture + '/test/reset');
+  }
+});
 
 for (const large of [false, true]) {
   test(`Agent Hub Web navigation ${large ? 'dark enlarged narrow' : 'light default'}`, async ({ page }) => {

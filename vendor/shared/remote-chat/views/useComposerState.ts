@@ -84,7 +84,7 @@ export function useComposerState(props: ComposerProps) {
   const action = composerAction({ running: running && !hasContent,
     interrupted: !!props.interrupted && !goalMode.enabled, hasDraft: hasContent });
   const actionDisabled = dictationBusy || (action === 'pause' ? !ready || pausing : disabled || busy || props.goalBusy
-    || Boolean(modelSelectionError(props.models, selection))
+    || !!props.chooseAccount || Boolean(modelSelectionError(props.models, selection))
     || (goalMode.enabled && running) || (action === 'send' && !hasContent));
   useEffect(() => { if (active && ready && threadId) void goals.load(threadId); }, [goals, threadId, active, ready]);
   useEffect(() => { setError(''); }, [threadId]);

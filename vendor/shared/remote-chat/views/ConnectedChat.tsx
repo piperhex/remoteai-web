@@ -1,6 +1,10 @@
 import { displayText } from '../../localization/browserClient';
-import { TaskRecoveryPrompt } from '../../conversation/recovery/TaskRecoveryPrompt';
 import { displayError } from '../../localization/browserClient';
+import { TaskRecoveryPrompt } from '../../conversation/recovery/TaskRecoveryPrompt';
+import { GuiAccountMenuRef, GuiAccountNotice, useOpenGuiAccountMenu,
+  visibleAccountError } from '../../conversation/GuiAccountPrompt';
+import { ACCOUNT_REFRESH_MS, RemoteGuiAccountsContext } from '../../conversation/remote/RemoteAccountPicker';
+import { useGuiAccounts } from '../client/useGuiAccounts';
 import { ImageAiContext } from '../../chat/ImageAiContext';
 import { DesktopUsageContext } from '../../chat/DesktopUsageContext';
 import { ProcessDetailsContext } from '../../chat/DeferredProcessDetails';
@@ -126,10 +130,16 @@ function ConnectedChatContent({ chat, device, devices, active, scope, email, cho
   const closeList = () => { if (desktop) setSidebar(false); else drawerMotion.closeDrawer(); };
   const selectedFromList = () => { workspacePage?.onClose(); if (!desktop) drawerMotion.closeDrawer(); };
   const ready = state.ready;
+  const hasAccountPicker = desktop || Boolean(renderSidebar);
+  const accounts = useGuiAccounts(controller.guiAccounts, hasAccountPicker && ready && active && foreground,
+    ACCOUNT_REFRESH_MS);
+  const accountRequired = hasAccountPicker && ready && accounts.snapshot?.running === true
+    && accounts.snapshot.selection.kind === 'none';
+  const accountMenu = useOpenGuiAccountMenu(desktop ? () => setSidebar(true) : drawerMotion.openDrawer);
   const usageSnapshot = useVisibleChatUsage(controller.readUsage, desktop && active && foreground && ready);
   const installer = useRemoteCliInstaller(controller.guiTools,
     cliVersion === undefined && desktop && active && foreground && ready);
-  const error = visibleChatError(state.error, state);
+  const error = visibleAccountError(visibleChatError(state.error, state), accountRequired);
   const connectionInfo = <ChatConnectionInfo state={state} controller={controller} device={device}
     active={active && foreground} chooseDevice={() => setPickingDevice(true)} />;
   const cwd = state.selected?.cwd ?? state.draftProject?.cwd ?? '';
@@ -188,7 +198,9 @@ function ConnectedChatContent({ chat, device, devices, active, scope, email, cho
       threadId={state.selected?.id ?? null} draftScope={state.draftScope} models={state.models} selection={state.settings}
       readUsage={controller.readUsage} tokenUsage={state.selected?.tokenUsage}
       readConversationMetrics={controller.readConversationMetrics}
-      settingsBusy={state.settingsBusy || !!state.workspaceBusy} settingsError={state.settingsError}
+      chooseAccount={accountRequired ? accountMenu.open : undefined}
+      settingsBusy={state.settingsBusy || !!state.workspaceBusy}
+      settingsError={visibleAccountError(state.settingsError, accountRequired)}
       updateSettings={(settings) => controller.setSettings(settings)}
       refreshModels={controller.refreshModels}
       active={conversationActive} ready={ready && !state.selectedArchived} sending={state.sending} running={running}
@@ -286,6 +298,7 @@ function ConnectedChatContent({ chat, device, devices, active, scope, email, cho
     <div className="cli-gui-codex-content" hidden={external}>
     <div className="chat-scroll chat-notices"><div className="chat-notice-content">
       <ChatTaskStatus state={state} />
+      {accountRequired && !workspacePage && <div><GuiAccountNotice /></div>}
       {!!error && <p role="alert" className="chat-error">{displayError(error)}</p>}
       {state.desktopOnly && <p className="chat-muted">
         {t("client.remoteDesktop.theDesktopIsReadyOpenRemoteDesktopAndSignIn")}</p>}
@@ -307,6 +320,8 @@ function ConnectedChatContent({ chat, device, devices, active, scope, email, cho
     </div>
     {conversationFooter}
     </ChatTerminalLayout>
+    <RemoteGuiAccountsContext.Provider value={hasAccountPicker ? accounts : null}>
+    <GuiAccountMenuRef.Provider value={accountMenu.menu}>
     <ChatSidebar desktop={desktop} open={listOpen} onClose={closeList} customHeading={Boolean(renderSidebar)}
       motion={drawerMotion}
       headingExtra={!renderSidebar && <>
@@ -320,6 +335,7 @@ function ConnectedChatContent({ chat, device, devices, active, scope, email, cho
         openSearch={() => setSearching(true)} accountPicker={accountPicker ?? (desktop ? profileMenu : undefined)}
         profile={!desktop && profileMenu} />}
     </ChatSidebar>
+    </GuiAccountMenuRef.Provider></RemoteGuiAccountsContext.Provider>
     {searching && <ChatSearch state={state} controller={controller} onClose={() => setSearching(false)}
       select={thread => { cli?.controller.showCodex(); workspacePage?.onClose(); setSearching(false);
         drawerMotion.closeDrawer(); void controller.select(thread); }} />}

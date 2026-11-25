@@ -15,6 +15,7 @@ import { requestSpeedSuffix } from '../requestSpeed';
 import { useDesktopLayout } from '../../layout/useDesktopLayout';
 import { ComposerAccess, ComposerDesktopStatus } from './ComposerDesktopControls';
 import { ComposerModelPicker } from './ComposerModelPicker';
+import { ChooseGuiAccount } from '../../conversation/GuiAccountPrompt';
 import { ComposerSpeedIndicator } from './ComposerSpeedIndicator';
 import { ChatSettings } from './ChatSettings';
 import { ModelRefreshButton } from './ModelRefreshButton';
@@ -206,10 +207,11 @@ export function ChatComposer(props: ComposerProps) {
           <div className="chat-composer-trailing">
             {desktop && <ComposerDesktopStatus key={`status:${threadId}:${cwd}:${active}`} props={props}
               beforeOpen={closeMenus} metrics={metrics} />}
-            {desktop ? <ComposerModelPicker key={`model:${threadId}:${cwd}:${active}`} models={models}
-              ready={ready} refreshModels={props.refreshModels}
-              selection={selection} updateSettings={updateSettings} settingsBusy={settingsBusy} beforeOpen={closeMenus} />
-              : <button type="button" className="chat-model" onPointerDown={event => event.preventDefault()}
+            {props.chooseAccount && <ChooseGuiAccount onClick={props.chooseAccount} />}
+            {desktop && !props.chooseAccount && <ComposerModelPicker key={`model:${threadId}:${cwd}:${active}`}
+              models={models} ready={ready} refreshModels={props.refreshModels} selection={selection}
+              updateSettings={updateSettings} settingsBusy={settingsBusy} beforeOpen={closeMenus} />}
+            {!desktop && !props.chooseAccount && <button type="button" className="chat-model" onPointerDown={event => event.preventDefault()}
               aria-label={t("client.chat.chatSettings", {
                 value1: label, value2: requestSpeedSuffix(selection.speed, displayText) })}
               onClick={showSettings}>

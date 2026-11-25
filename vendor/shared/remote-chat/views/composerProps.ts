@@ -44,6 +44,7 @@ export interface ComposerProps {
   readConversationMetrics: ReadConversationMetrics;
   contextSettings: ContextSettingsApi;
   models: Model[];
+  chooseAccount?: () => void;
   selection: ComposerSettings;
   settingsBusy: boolean;
   settingsError: string;
