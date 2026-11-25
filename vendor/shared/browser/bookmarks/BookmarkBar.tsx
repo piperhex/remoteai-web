@@ -5,11 +5,11 @@ import { useTabOverflow } from '../../project-browser/useTabOverflow';
 import { BrowserWebsiteIcon } from '../icons/BrowserWebsiteIcon';
 import type { Bookmark } from './model';
 import { BookmarkContextMenu, type BookmarkActions } from './BookmarkContextMenu';
-import { useBookmarks } from './context';
-import { useBookmarkDrag } from './useBookmarkDrag';
+import type { useBookmarkDrag } from './useBookmarkDrag';
+import { useThreadLongPress } from '../../chat/useThreadLongPress';
 
 interface Props extends BookmarkActions {
-  entries: Bookmark[]; dragChanged: (dragging: boolean) => void;
+  entries: Bookmark[];
 }
 
 function childrenOf(entries: Bookmark[], parentId: string) {
@@ -63,15 +63,24 @@ function BookmarkOverflowMenu({ items, t, menuChanged }: Pick<Props, 't' | 'menu
   </Dropdown>;
 }
 
-export function BookmarkBar(props: Props) {
-  const { entries, t, dragChanged } = props;
-  const { store } = useBookmarks();
+export function BookmarkBar({ drag, newFolder, newFolderLabel, ...props }: Props & {
+  drag: ReturnType<typeof useBookmarkDrag>; newFolder: () => void; newFolderLabel: string;
+}) {
+  const { entries, t } = props;
+  const blankMenu = useThreadLongPress(press => {
+    press.target.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true,
+      clientX: press.x, clientY: press.y }));
+  }, { nativeContextMenu: true });
   const roots = childrenOf(entries, '');
   const overflow = useTabOverflow(roots.map(entry => ({ path: entry.id })));
   const hidden = new Set(overflow.hiddenPaths);
-  const drag = useBookmarkDrag({ entries, axis: 'x', reorder: store.reorder });
-  useEffect(() => { dragChanged(drag.dragging); return () => dragChanged(false); }, [drag.dragging, dragChanged]);
   return <div {...drag.handlers} className="browser-bookmark-bar" role="navigation" aria-label={t('market.bookmarkBar')}>
+    <Dropdown trigger={['contextMenu']} onOpenChange={props.menuChanged} overlayClassName="browser-bookmark-menu"
+      menu={{ items: [{ key: 'folder', label: newFolderLabel, onClick: newFolder }] }}>
+      <span {...blankMenu} className="browser-bookmark-background" onPointerDown={event => {
+        if (event.pointerType !== 'mouse') blankMenu.onPointerDown(event);
+      }} />
+    </Dropdown>
     <div className="browser-bookmark-strip" ref={overflow.bar}>
       <div className="browser-bookmark-items" ref={overflow.viewport}>
         {roots.map(entry => <BookmarkButton {...props} entry={entry} hidden={hidden.has(entry.id)}

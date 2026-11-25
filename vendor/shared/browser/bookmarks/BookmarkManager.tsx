@@ -14,7 +14,7 @@ export function BookmarkManager({ t, close, edit, create, visit }: {
   const { entries, store } = useBookmarks();
   const { token } = theme.useToken();
   const [query, setQuery] = useState('');
-  const drag = useBookmarkDrag({ entries, axis: 'y', reorder: store.reorder });
+  const drag = useBookmarkDrag(store, 'y');
   const filtered = entries.filter(entry => `${entry.title} ${entry.url}`.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
   const move = (entry: Bookmark, direction: number) => {
     const siblings = entries.filter(item => item.parentId === entry.parentId);

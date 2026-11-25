@@ -1,5 +1,11 @@
 import { expect, test } from '@playwright/test';
 import { verifyBookmarkOverflow } from '../../../shared/testing/bookmarkOverflow.mts';
+import { verifyBookmarkFolders } from '../../../shared/testing/bookmarkFolders.mts';
+
+test('web bookmark folder creation and drops', async ({ page }, info) => {
+  await verifyBookmarkFolders(page, info, { label: 'web-desktop',
+    harness: 'e2e/web-browser-bookmarks-harness.html' });
+});
 
 test('web bookmark overflow follows the sidebar width', async ({ page }, info) => {
   await verifyBookmarkOverflow(page, info, { scope: 'web-bookmarks', label: 'web-desktop',

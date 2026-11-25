@@ -100,6 +100,7 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
     return () => { document.documentElement.style.overscrollBehaviorX = previous; };
   }, [compact, open]);
   const bookmarks = useBrowserBookmarks({ tab: displayTab, t,
+    newFolderLabel: uiText('client.projectBrowser.newFolder', {}, props.language),
     settingsContent: dismiss => <>
       {(compact || props.mainBrowser) && <BrowserSiteModeSetting desktop={!compact || !!desktopTabs[activeId]} t={t}
         disabled={!compact}
@@ -147,7 +148,7 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
       return next.size === current.size ? current : next;
     });
   }, [tabs]);
-  const tabBar = !compact && <div className="pm-browser-titlebar"
+  const tabBar = !compact && <div className="pm-browser-titlebar" {...bookmarks.tabDragHandlers(tabs)}
     data-tauri-drag-region={props.windowControls ? true : undefined}>
     {props.tabBarStart}
     <BrowserTabs tabs={tabs} activeId={activeId} visible={open} t={t} language={props.language} visits={records.visits}

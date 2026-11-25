@@ -1,31 +1,52 @@
 import { useEffect, useRef, useState, type MouseEvent, type PointerEvent } from 'react';
-import type { Bookmark } from './model';
+import { bookmarkInFolder, pageBookmark, type Bookmark, type BookmarkDragSource } from './model';
+import type { BookmarkStore } from './store';
 
 const DRAG_THRESHOLD = 6;
-interface Drag { id: string; x: number; y: number; pointer: number; element: HTMLElement; moved: boolean }
-interface Target { id: string; after: boolean }
+const FOLDER_EDGE = 0.25;
+interface Drag {
+  source: BookmarkDragSource; x: number; y: number; pointer: number; element: HTMLElement; moved: boolean;
+}
+type Target = { id: string; placement: 'before' | 'after' } | { id: string; placement: 'inside'; link: Bookmark };
+type Axis = 'x' | 'y';
+type Page = { id: string; url: string; title: string };
+
+function dropTarget(drag: Drag, event: globalThis.PointerEvent, root: HTMLElement, options: {
+  axis: Axis; entries: Bookmark[];
+}): Target | undefined {
+  const hit = root.ownerDocument.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>('[data-bookmark-id]');
+  if (!hit || !root.contains(hit)) return;
+  const target = options.entries.find(entry => entry.id === hit.dataset.bookmarkId);
+  if (!target) return;
+  const bounds = hit.getBoundingClientRect();
+  const fraction = options.axis === 'x' ? (event.clientX - bounds.left) / bounds.width
+    : (event.clientY - bounds.top) / bounds.height;
+  const source = drag.source;
+  const center = fraction >= FOLDER_EDGE && fraction <= 1 - FOLDER_EDGE;
+  if (center || 'page' in source) {
+    const link = bookmarkInFolder(options.entries, source, target);
+    if (link) return { id: target.id, placement: 'inside', link };
+  }
+  if (!('bookmarkId' in source) || source.bookmarkId === target.id) return;
+  const entry = options.entries.find(item => item.id === source.bookmarkId);
+  if (entry?.parentId === target.parentId) return { id: target.id, placement: fraction > 0.5 ? 'after' : 'before' };
+}
 
 /** Pointer sorting also works in Windows WebViews where native file drag handlers own HTML drops. */
-export function useBookmarkDrag(options: {
-  entries: Bookmark[]; axis: 'x' | 'y'; reorder: (id: string, targetId: string, after: boolean) => void;
-}) {
+export function useBookmarkDrag(store: BookmarkStore, axis: Axis) {
   const root = useRef<HTMLDivElement>(null);
   const drag = useRef<Drag>();
-  const target = useRef<Target>();
   const suppressClick = useRef(false);
-  const latest = useRef(options); latest.current = options;
-  const [preview, setPreview] = useState<{ source: string; target?: Target }>();
+  const [preview, setPreview] = useState<{ source: BookmarkDragSource; target?: Target }>();
   useEffect(() => {
-    const owner = root.current?.ownerDocument ?? document;
-    const eventWindow = owner.defaultView ?? window;
-    const finish = (cancelled: boolean) => {
+    const view = root.current?.ownerDocument.defaultView ?? window;
+    const resolve = (current: Drag, event: globalThis.PointerEvent) => root.current
+      ? dropTarget(current, event, root.current, { axis, entries: store.snapshot().entries }) : undefined;
+    const cancel = () => {
       const current = drag.current;
       drag.current = undefined;
       if (current?.element.hasPointerCapture(current.pointer)) current.element.releasePointerCapture(current.pointer);
-      if (current?.moved && target.current && !cancelled) {
-        latest.current.reorder(current.id, target.current.id, target.current.after);
-      }
-      target.current = undefined; setPreview(undefined);
+      setPreview(undefined);
     };
     const move = (event: globalThis.PointerEvent) => {
       const current = drag.current;
@@ -33,49 +54,63 @@ export function useBookmarkDrag(options: {
       if (!current.moved && Math.hypot(event.clientX - current.x, event.clientY - current.y) < DRAG_THRESHOLD) return;
       current.moved = true; suppressClick.current = true; event.preventDefault();
       current.element.setPointerCapture(current.pointer);
-      const hit = owner.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>('[data-bookmark-id]');
-      const source = latest.current.entries.find(entry => entry.id === current.id);
-      const destination = latest.current.entries.find(entry => entry.id === hit?.dataset.bookmarkId);
-      target.current = undefined;
-      if (hit && root.current?.contains(hit) && source && destination && source.id !== destination.id
-        && source.parentId === destination.parentId) {
-        const bounds = hit.getBoundingClientRect();
-        const after = latest.current.axis === 'x' ? event.clientX > bounds.left + bounds.width / 2
-          : event.clientY > bounds.top + bounds.height / 2;
-        target.current = { id: destination.id, after };
-      }
-      setPreview({ source: current.id, target: target.current });
+      setPreview({ source: current.source, target: resolve(current, event) });
     };
-    const up = (event: globalThis.PointerEvent) => { if (drag.current?.pointer === event.pointerId) finish(false); };
-    const cancel = () => finish(true);
-    const key = (event: KeyboardEvent) => { if (event.key === 'Escape') cancel(); };
-    eventWindow.addEventListener('pointermove', move, { passive: false });
-    eventWindow.addEventListener('pointerup', up); eventWindow.addEventListener('pointercancel', cancel);
-    eventWindow.addEventListener('blur', cancel); eventWindow.addEventListener('keydown', key);
-    return () => {
-      eventWindow.removeEventListener('pointermove', move); eventWindow.removeEventListener('pointerup', up);
-      eventWindow.removeEventListener('pointercancel', cancel); eventWindow.removeEventListener('blur', cancel);
-      eventWindow.removeEventListener('keydown', key);
+    const up = (event: globalThis.PointerEvent) => {
       const current = drag.current;
-      if (current?.element.hasPointerCapture(current.pointer)) current.element.releasePointerCapture(current.pointer);
+      if (!current || current.pointer !== event.pointerId) return;
+      const target = current.moved && resolve(current, event);
+      cancel();
+      if (!target) return;
+      if (target.placement === 'inside') store.save(target.link);
+      else if ('bookmarkId' in current.source) {
+        store.reorder(current.source.bookmarkId, target.id, target.placement === 'after');
+      }
     };
-  }, []);
-  const start = (event: PointerEvent<HTMLDivElement>) => {
+    const key = (event: KeyboardEvent) => { if (event.key === 'Escape') cancel(); };
+    view.addEventListener('pointermove', move, { passive: false });
+    view.addEventListener('pointerup', up); view.addEventListener('pointercancel', cancel);
+    view.addEventListener('blur', cancel); view.addEventListener('keydown', key);
+    view.addEventListener('contextmenu', cancel, true);
+    return () => {
+      view.removeEventListener('pointermove', move); view.removeEventListener('pointerup', up);
+      view.removeEventListener('pointercancel', cancel); view.removeEventListener('blur', cancel);
+      view.removeEventListener('keydown', key); view.removeEventListener('contextmenu', cancel, true);
+      cancel();
+    };
+  }, [axis, store]);
+  const start = (event: PointerEvent, tabs?: Page[]) => {
     suppressClick.current = false;
-    if (event.pointerType !== 'mouse' || event.button !== 0 || !event.isPrimary) return;
-    const handle = (event.target as Element).closest('[data-bookmark-drag]');
-    const element = handle?.closest<HTMLElement>('[data-bookmark-id]');
-    if (!element?.dataset.bookmarkId || !root.current?.contains(element)) return;
-    drag.current = { id: element.dataset.bookmarkId, x: event.clientX, y: event.clientY,
-      pointer: event.pointerId, element, moved: false };
+    if (!root.current || event.button !== 0 || !event.isPrimary) return;
+    const hit = event.target as Element;
+    const element = tabs ? hit.closest<HTMLElement>('[role=tab]')
+      : hit.closest('[data-bookmark-drag]')?.closest<HTMLElement>('[data-bookmark-id]');
+    if (!element) return;
+    let source: BookmarkDragSource;
+    if (tabs) {
+      const id = element.closest<HTMLElement>('[data-path]')?.dataset.path;
+      const tab = tabs.find(item => item.id === id);
+      const page = tab && pageBookmark(tab, () => crypto.randomUUID());
+      if (!page) return;
+      source = { page };
+    } else {
+      if (!element.dataset.bookmarkId || !root.current.contains(element)) return;
+      source = { bookmarkId: element.dataset.bookmarkId };
+    }
+    drag.current = { source, x: event.clientX, y: event.clientY, pointer: event.pointerId, element, moved: false };
+  };
+  const click = (event: MouseEvent) => {
+    if (suppressClick.current && event.detail) { event.preventDefault(); event.stopPropagation(); }
   };
   return {
     dragging: !!preview,
-    className: (id: string) => [preview?.source === id && 'bookmark-dragging', preview?.target?.id === id
-      && (preview.target.after ? 'bookmark-drop-after' : 'bookmark-drop-before')].filter(Boolean).join(' '),
-    handlers: { ref: root, onPointerDownCapture: start, onDragStart: (event: React.DragEvent) => event.preventDefault(),
-      onClickCapture: (event: MouseEvent) => {
-        if (suppressClick.current && event.detail) { event.preventDefault(); event.stopPropagation(); }
-      } },
+    className: (id: string) => {
+      if (preview && 'bookmarkId' in preview.source && preview.source.bookmarkId === id) return 'bookmark-dragging';
+      return preview?.target?.id === id ? `bookmark-drop-${preview.target.placement}` : '';
+    },
+    tabHandlers: (tabs: Page[]) => ({ onPointerDownCapture: (event: PointerEvent) => start(event, tabs),
+      onClickCapture: click }),
+    handlers: { ref: root, onPointerDownCapture: (event: PointerEvent) => start(event),
+      onDragStart: (event: React.DragEvent) => event.preventDefault(), onClickCapture: click },
   };
 }

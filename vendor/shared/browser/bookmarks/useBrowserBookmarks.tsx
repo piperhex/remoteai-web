@@ -14,13 +14,14 @@ import { bookmarkStatusKeys } from './status';
 import { BookmarkDrawer } from './BookmarkDrawer';
 import { useCompactBrowser } from './useCompactBrowser';
 import { useCurrentBookmark } from './useCurrentBookmark';
+import { useBookmarkDrag } from './useBookmarkDrag';
 import { BrowserSettingsAction, BrowserSettingsPanel } from '../BrowserSettings';
 import './bookmarks.css';
 
 
 export function useBrowserBookmarks(options: {
   tab?: BrowserTab; t: MarketText; navigate: (url: string) => void; newTab: (url: string) => void;
-  reload?: () => void;
+  reload?: () => void; newFolderLabel: string;
   settingsContent?: (dismiss: () => void) => ReactNode;
 }) {
   const { tab, t } = options;
@@ -33,7 +34,7 @@ export function useBrowserBookmarks(options: {
   const [manager, setManager] = useState(false);
   const [editor, setEditor] = useState<Bookmark>();
   const [deleting, setDeleting] = useState<Bookmark>();
-  const [dragging, setDragging] = useState(false);
+  const drag = useBookmarkDrag(store, 'x');
   const address = tab && bookmarkUrl(tab.url);
   const saved = address && entries.find(entry => entry.kind === 'link' && entry.url === address);
   const current = useCurrentBookmark({ url: tab?.url ?? '', title: tab?.title ?? '', newId: () => crypto.randomUUID() });
@@ -50,7 +51,8 @@ export function useBrowserBookmarks(options: {
   const remove = (entry: Bookmark) => { setMenu(false); setDeleting(entry); };
   return {
     manage,
-    overlayOpen: settings || menu || manager || !!editor || !!deleting || dragging,
+    tabDragHandlers: drag.tabHandlers,
+    overlayOpen: settings || menu || manager || !!editor || !!deleting || drag.dragging,
     star: <button type="button" aria-label={t(saved ? 'market.bookmarkEdit' : 'market.bookmarkAdd')}
       title={t(saved ? 'market.bookmarkEdit' : 'market.bookmarkAdd')} disabled={!address} aria-pressed={!!saved}
       className="browser-bookmark-star" onClick={() => saved ? edit(saved) : create('link', true)}>
@@ -86,7 +88,8 @@ export function useBrowserBookmarks(options: {
         <Settings size={17} /></button>
     </Popover>,
     bar: showBar && <BookmarkBar entries={entries} t={t} visit={visit} edit={edit} remove={remove}
-      manage={manage} menuChanged={setMenu} dragChanged={setDragging} />,
+      manage={manage} menuChanged={setMenu} drag={drag} newFolderLabel={options.newFolderLabel}
+      newFolder={() => { setMenu(false); create('folder'); }} />,
     overlays: <>{manager && (compact
       ? <BookmarkDrawer t={t} close={() => setManager(false)} visit={visit} add={() => create('link', true)} />
       : <BookmarkManager t={t} close={() => setManager(false)} edit={edit} create={create} visit={visit} />)}

@@ -1,5 +1,9 @@
-.browser-bookmark-bar { display: flex; align-items: center; gap: 6px; min-width: 0; padding: 3px 10px;
+.browser-bookmark-bar { position: relative; display: flex; align-items: center; gap: 6px; min-width: 0; padding: 3px 10px;
   border-bottom: 1px solid var(--border, #dce1e8); }
+.browser-bookmark-background { position: absolute; inset: 0; user-select: none; }
+.browser-bookmark-strip { position: relative; pointer-events: none; }
+.browser-bookmark-strip :is(button, .browser-bookmark-context) { pointer-events: auto; }
+.browser-bookmark-all { position: relative; }
 .browser-bookmark-strip, .browser-bookmark-items { display: flex; align-items: center; gap: 3px; flex: 1; min-width: 0; }
 .browser-bookmark-items { overflow: clip; }
 /* Keep overflowed buttons measurable as the panel, font size or bookmark titles change. */
@@ -8,11 +12,14 @@
 .browser-bookmark-items > .browser-bookmark-context { flex-shrink: 0; }
 .browser-bookmark-menu .browser-bookmark-context { display: flex; }
 [data-bookmark-drag] { user-select: none; }
+.browser-bookmark-item[data-bookmark-drag], .pm-browser-tab [role=tab] { touch-action: none; }
 .bookmark-dragging { opacity: .45; cursor: grabbing !important; }
 .browser-bookmark-item.bookmark-drop-before { box-shadow: -2px 0 0 var(--accent, #6175db); }
 .browser-bookmark-item.bookmark-drop-after { box-shadow: 2px 0 0 var(--accent, #6175db); }
 .browser-bookmark-row.bookmark-drop-before { box-shadow: 0 -2px 0 var(--accent, #6175db); }
 .browser-bookmark-row.bookmark-drop-after { box-shadow: 0 2px 0 var(--accent, #6175db); }
+.bookmark-drop-inside { outline: 2px solid var(--accent, #6175db); outline-offset: -2px;
+  background-color: color-mix(in srgb, var(--accent, #6175db) 14%, transparent) !important; }
 .pm-browser .browser-bookmark-item { min-width: 0; max-width: 180px; gap: 6px; padding: 4px 7px; }
 .browser-bookmark-item > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .browser-bookmark-item svg { flex-shrink: 0; }
