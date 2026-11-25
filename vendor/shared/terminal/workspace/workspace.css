@@ -29,6 +29,11 @@
 .sshw-profiles .ssh-profile-heading { padding-inline: 4px; }
 .sshw-profiles .ssh-profile-card { padding-block: 10px; }
 .sshw-profiles .ssh-profile-card:hover:not(:disabled) { border-color: var(--ssh-line); }
+.sshw-profile-arrow { flex: none; color: var(--ssh-muted); }
+.sshw-profiles .ssh-profile-card[aria-expanded="true"] {
+  border-color: var(--ssh-line); background: var(--ssh-accent-soft);
+}
+.sshw-profiles .ssh-profile-card[aria-expanded="true"] .sshw-profile-arrow { color: var(--ssh-accent); }
 .sshw-main { flex: 1; background: var(--ssh-surface); }
 .sshw-session-menu.ant-dropdown-menu { max-height: min(60dvh, 420px); overflow-y: auto; }
 .sshw-session-label { display: block; overflow-wrap: anywhere; }

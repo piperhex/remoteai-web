@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactElement } from 'react';
 import { Alert, Button, Tooltip } from 'antd';
 import { ArrowUpRight, FolderTree, Home, KeyRound, Plus, RefreshCw, Server, Settings2, Terminal } from 'lucide-react';
 import { displayText as t } from '../../localization/messages';
@@ -8,8 +8,10 @@ import { enqueueSshDownload } from '../../downloads/sshDownload';
 import { ResizableSidebar } from '../../layout/ResizableSidebar';
 import type { SidebarSizing } from '../../layout/useSidebarResize';
 import { SshConnectionDialog } from '../SshConnectionDialog';
-import { SshLaunchDialog, type SshHostDirectory } from './SshLaunchDialog';
-import type { SshHost } from './useSshHosts';
+import { SshLaunchDialog } from './SshLaunchDialog';
+import type { ChatComputer } from '../../remote-chat/devices';
+import { SshComputerMenu } from './SshComputerMenu';
+import type { SshHost, SshHostDirectory } from './useSshHosts';
 import { SshProjectBrowser } from '../SshProjectBrowser';
 import { SshProfileList } from '../SshProfileList';
 import { sshLabel, type SshProfile } from '../sshProfiles';
@@ -48,7 +50,7 @@ export function SshWorkspace({ defaultHost, directory, active, scope, login }: P
   const recent = useRecentSshProfiles(scope);
   const uploads = useSshDropQueue(sessions.tabs.map(tab => tab.id));
   const [editor, setEditor] = useState<WorkspaceDialog>();
-  const [connecting, setConnecting] = useState<SshProfile>();
+  const [connecting, setConnecting] = useState<{ profile: SshProfile; device: ChatComputer }>();
   const [files, setFiles] = useState(true);
   useEffect(() => { if (!active) { setEditor(undefined); setConnecting(undefined); } }, [active]);
   const current = sessions.tabs.find(tab => tab.id === sessions.selected);
@@ -57,15 +59,22 @@ export function SshWorkspace({ defaultHost, directory, active, scope, login }: P
   const closeDialog = () => { setEditor(undefined); setConnecting(undefined); };
   const adopt = (info: TerminalInfo, host = defaultHost) => {
     sessions.adopt(info, host);
-    const profile = connecting ?? saved.profiles.find(p => info.ssh && sshLabel(p) === sshLabel(info.ssh));
+    const profile = connecting?.profile ?? saved.profiles.find(p => info.ssh && sshLabel(p) === sshLabel(info.ssh));
     if (profile) recent.remember(profile.id);
     setFiles(true);
   };
-  const choose = (profile?: SshProfile) => {
+  const create = () => {
     if (login) { login(); return; }
-    if (!profile) { setEditor({ kind: 'new' }); return; }
-    if (canConnect) setConnecting(profile);
+    setEditor({ kind: 'new' });
   };
+  const connect = (profile: SshProfile, device: ChatComputer) => {
+    if (!canConnect || !device.online) return;
+    directory.request(device.deviceId);
+    setConnecting({ profile, device });
+  };
+  const computerMenu = (profile: SshProfile, trigger: ReactElement) =>
+    <SshComputerMenu key={profile.id} disabled={!canConnect || saved.loading} directory={directory}
+      choose={device => connect(profile, device)}>{trigger}</SshComputerMenu>;
   const recentProfiles = recent.ids.flatMap(id => saved.profiles.find(p => p.id === id) ?? []);
   const showFiles = Boolean(current && files);
   return <section className="ssh-workspace" aria-label={t('client.discovery.ssh')} hidden={!active}>
@@ -93,7 +102,7 @@ export function SshWorkspace({ defaultHost, directory, active, scope, login }: P
         <div className="sshw-profiles" hidden={showFiles}>
           <SshProfileList profiles={saved.profiles} disabled={saved.loading || !canConnect} loading={saved.loading} inlineCreate
             onAction={active && !showFiles && !login && !saved.error ? (kind, profile) => setEditor({ kind, profile }) : undefined}
-            choose={choose} selected={connecting} />
+            choose={create} selected={connecting?.profile} renderPicker={active && !showFiles ? computerMenu : undefined} />
         </div>
         {sessions.tabs.map(tab => <div className="sshw-files" key={tab.id} hidden={!showFiles || tab.id !== current?.id}>
           <SshProjectBrowser id={tab.id} api={tab.host.api.ssh!} active={active && showFiles && tab.id === current?.id}
@@ -108,19 +117,20 @@ export function SshWorkspace({ defaultHost, directory, active, scope, login }: P
             <Home size={17} /></button></Tooltip>
           <TerminalTabStrip tabs={sessions.tabs} selected={sessions.selected} select={sessions.select}
             visible={active} remove={sessions.remove} removeTabs={sessions.removeTabs} translate={t} />
-          {active && <SshSessionMenu profiles={saved.profiles} canConnect={canConnect && !saved.loading} choose={choose} />}
+          {active && <SshSessionMenu profiles={saved.profiles} canConnect={canConnect && !saved.loading}
+            directory={directory} connect={connect} create={create} />}
         </div>
-        {!current && <div className="sshw-home"><div className="sshw-launch">
+        {active && !current && <div className="sshw-home"><div className="sshw-launch">
           <span className="sshw-hero-icon"><Terminal size={30} /></span>
           <h2>{t('client.ssh.connection')}</h2><p>{t('client.ssh.createHint')}</p>
-          <Button type="primary" icon={<Plus size={15} />} onClick={() => choose()}>{t('client.ssh.createTitle')}</Button>
+          <Button type="primary" icon={<Plus size={15} />} onClick={create}>{t('client.ssh.createTitle')}</Button>
           {(recentProfiles.length > 0 || saved.profiles.length > 0) && <div className="sshw-quick">
             <h3>{t(recentProfiles.length ? 'client.chat.recent' : 'client.ssh.savedConnections')}</h3>
-            <div>{(recentProfiles.length ? recentProfiles : saved.profiles.slice(0, 6)).map(profile =>
-              <button key={profile.id} onClick={() => choose(profile)} disabled={!canConnect}>
+            <div>{(recentProfiles.length ? recentProfiles : saved.profiles.slice(0, 6)).map(profile => computerMenu(profile,
+              <button type="button" disabled={!canConnect}>
                 <KeyRound size={15} /><span><strong>{profile.name || profile.host}</strong>
                   <small>{sshLabel(profile)}</small></span><ArrowUpRight size={14} />
-              </button>)}</div></div>}
+              </button>))}</div></div>}
         </div></div>}
         <div className="sshw-console" hidden={!current}>
           {sessions.tabs.map(tab => <TerminalPane key={tab.id} tab={tab} api={tab.host.api} translate={t}
@@ -138,7 +148,9 @@ export function SshWorkspace({ defaultHost, directory, active, scope, login }: P
       api={ssh} projectCwd={SSH_WORKSPACE} initial={editor.profile} manage={editor.kind === 'manage'}
       settingsOnly={editor.kind === 'edit' || (editor.kind === 'new' && !available)} allowConnect={available && !limit}
       connected={adopt} dispose={api.close} changed={() => void saved.refresh()} close={closeDialog} />}
-    {active && connecting && <SshLaunchDialog profile={connecting} directory={directory} projectCwd={SSH_WORKSPACE}
+    {active && connecting && <SshLaunchDialog key={connecting.device.deviceId} profile={connecting.profile}
+      chosen={connecting.device} choose={device => connect(connecting.profile, device)}
+      directory={directory} projectCwd={SSH_WORKSPACE}
       connected={adopt} close={closeDialog} />}
   </section>;
 }

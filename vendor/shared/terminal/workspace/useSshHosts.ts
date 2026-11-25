@@ -1,5 +1,7 @@
 import { useCallback, useState } from 'react';
 import type { TerminalApi } from '../types';
+import type { ComputerListRefresh } from '../../remote-chat/ComputerSearchBar';
+import type { ChatComputer } from '../../remote-chat/devices';
 
 export interface SshHost {
   deviceId: string;
@@ -9,6 +11,14 @@ export interface SshHost {
   error?: string;
 }
 export type ReportSshHost = (id: string, host?: SshHost) => void;
+
+export interface SshHostDirectory {
+  devices: ChatComputer[];
+  localDeviceId?: string;
+  get: (id: string) => SshHost | undefined;
+  request: (id: string) => void;
+  refresh?: ComputerListRefresh;
+}
 
 /** Reuse each computer's authenticated transport independently of the visible chat. */
 export function useSshHosts(scope: string) {

@@ -3,7 +3,7 @@
   "revision": "10967f6e406daca25e948d6b997ea2b0ef5138d3",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "385be5b117c61108dcbc0fed1a9fc1ab78cb8d75"
+    "revision": "a4c5673ad9c4621e26ed6e552a1111f5c38ce3c9"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -842,7 +842,7 @@
     "shared/terminal/ssh.css": "af8be8da9523b54d293e419f4d89d6f29a69da7de870ca6dff4a66ab13b0119b",
     "shared/terminal/SshHostKeyDialog.tsx": "9624905a7fcf49f0bcc9309d1c48cfc1befb678775f2d071fb41f338f7e7ab5c",
     "shared/terminal/SshConnectionFields.tsx": "9dad8b926b1772e45de735343dca8e180d3255c6428109f8bc9e9693ddb7e44a",
-    "shared/terminal/SshProfileList.tsx": "89a744c5c56accf61ca0ebe13b71096198620972680c4a6d712546c99e598099",
+    "shared/terminal/SshProfileList.tsx": "98400c5dd92c7511ca7424a3183e8f2fd19548eb7651ae85ccebd1c9febed107",
     "shared/terminal/ssh-dialog.css": "de27c7a58e7556ac25ea79104fef66ea0b9c05596d4c2ea47c0606e7c878a03c",
     "shared/downloads/downloadFeedback.css": "8fca1dd3b0a47b343d0c02737604f3e19c1ec0401372f14adef5dca86fda6798",
     "shared/downloads/completion.ts": "c03036cb7b980d50d699ab4187f27ac3646161cc2ad9d9d1a0550995c04354b3",
@@ -2044,15 +2044,15 @@
     "shared/chat/DraftImagePreviews.tsx": "eea0f77dfdcac6e4c31ac390f20ca53465d758e275b0986a8c8163ae8cb9e8fb",
     "shared/chat/draftImagePreviews.css": "270456f3e565703fc5fa7e54c3799ef3ce31932317f8c1d32e7f8a2dd6f6cbce",
     "shared/terminal/views/terminalClipboard.ts": "aca3d9ca51f3c75b9681ab65c4a3d7d7f8dbb56fd0a2208b4e9d33b598109aa6",
-    "shared/terminal/workspace/SshWorkspace.tsx": "3a62fe69e8780eb244b444db751a33d245714db6717dd25626d32d06250579d2",
+    "shared/terminal/workspace/SshWorkspace.tsx": "f3dc3914660c3daff8b5d21c5767e2958d070528c6aed8030f87b7824e6e58af",
     "shared/terminal/workspace/useSshSessions.ts": "0ee59ddb49018bd8833960ab3e6bd7445b2d37637aa134e995c12fafabd277f5",
-    "shared/terminal/workspace/workspace.css": "8d0e1a37875ded190aed812ad553f9b6f8a1b16d9ff32d03851bd8da713ea67d",
+    "shared/terminal/workspace/workspace.css": "224cb0d3e5053e53bbca80e94cc9589d9a266ac2d83256ad25ab5c471f6c4ec6",
     "shared/terminal/workspace/ServerMonitor.tsx": "a92ef0c540b34b4e5d0adab80446ccb315b19c8e2cbff58eaafc7b2da17d5505",
     "shared/terminal/workspace/serverMetrics.ts": "fc688eced613dae86b4326454e2f9d15d060eb60c271bd368dc09351e6cb86cf",
     "shared/terminal/workspace/useServerMonitor.ts": "f44d5162c1824d491e23edf40c405489ff1f19a874cab9035e597f029d24ab95",
     "shared/terminal/workspace/SshRemoveProfileDialog.tsx": "2fc187003df8ff907b077782268b7237c1dfbc8cfbcaa9fc046974aade250133",
-    "shared/terminal/workspace/SshSessionMenu.tsx": "7cf324ee27adf1814d631340eb4446964b046250348add6d794e6705884179c9",
-    "shared/terminal/SshProfileRow.tsx": "fdaec36fc5bc02219bb955f5f40ec9848255c04bdba19d4a243f346c0d364dde",
+    "shared/terminal/workspace/SshSessionMenu.tsx": "3e3f184adc60757de5edf9486d63a450a338ea6f3d90f9ab539cd42f4874f30d",
+    "shared/terminal/SshProfileRow.tsx": "6ca273aa4c05809f3be15ec44694ab22051b12a67baba6aef92c5b4377355202",
     "shared/browser/data/usePasswordPopupPlacement.ts": "3983d89f6dfd94a16516b58534bf14593e881e38c3d5b4ac3f197f61d5c280cd",
     "shared/browser/data/passwordSuggestions.css": "822f5ae6c428390cf96ae774a457421c180b2e04c7cbe736c7ef64f1a3d1972f",
     "shared/browser/zoom/nativeZoom.ts": "a80902a5081e81d1a3fec4155634f807cdfb6104626e28f6ca9ab294db47ac2e",
@@ -2091,8 +2091,10 @@
     "shared/testing/bookmarkFolders.mts": "355f7363a1247d65028bb51ca9d52bc0714180a387647afac8c12b0d33595b37",
     "shared/testing/bookmarkFolderPages.mts": "aba18228531d4b3ec1f86b6f33ff8e99022312fcbace09be0943cbf1e4cb8723",
     "shared/browser/bookmarks/BookmarkFolderPicker.tsx": "ce54cdef8ba4b29eb25032f9657a1d89c07472aeb702f175508c85f5eaedd64a",
-    "shared/terminal/workspace/useSshHosts.ts": "0039142f29ca215bef00779d1dcf88a39ebee30f19f72a63bbad149acc91ec30",
-    "shared/terminal/workspace/SshLaunchDialog.tsx": "2cc9388ed51feb609219ab1bee77d6f2e9ecc14e5d06556f6bf8cb626c2acc24",
-    "shared/conversation/DiffFileList.tsx": "e9cb83a7bd21cae6b30a3dacfaf692730c696cf1267589e64c2859ec72f541bb"
+    "shared/terminal/workspace/useSshHosts.ts": "12738c9d315206ef5bd287d513399e1a0da18c1f5829483c54a3f8d971e24c07",
+    "shared/terminal/workspace/SshLaunchDialog.tsx": "6a5a3627e6ff420e65d308cd59dacf97604a2e4c3e742b838a2c8641a4ee4f48",
+    "shared/conversation/DiffFileList.tsx": "e9cb83a7bd21cae6b30a3dacfaf692730c696cf1267589e64c2859ec72f541bb",
+    "shared/terminal/workspace/SshComputerMenu.tsx": "070758b83e388bf0945e80dfcb4e42e54fb23d27442bd224f3268624c4ed4589",
+    "shared/terminal/workspace/computerMenu.css": "edeb0616719bc87c5524807f1b7aeb719fc8d7e61dbc1400b80322616ceab47a"
   }
 }

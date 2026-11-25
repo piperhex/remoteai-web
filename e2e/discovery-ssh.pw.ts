@@ -18,12 +18,11 @@ test('desktop sidebar opens saved SSH sessions independently of the chat termina
   await expect(workspace.locator('.ssh-profile-card')).toBeEnabled({ timeout: 25_000 });
   await screenshot(page, info, 'web-desktop-ssh-sidebar');
   await workspace.locator('.ssh-profile-card').click();
-  const picker = page.getByRole('dialog', { name: testText('client.settings.chooseAComputer') });
+  const picker = page.getByRole('menu', { name: testText('client.settings.chooseAComputer') });
   await expect(picker).toBeVisible();
-  await expect(picker).not.toHaveClass(/-(?:appear|enter)(?:\s|$|-)/);
-  await expect(picker).toHaveCSS('opacity', '1');
+  await expect(page.locator('.ant-dropdown:visible')).not.toHaveClass(/-(?:appear|enter)(?:\s|$|-)/);
   await screenshot(page, info, 'web-desktop-ssh-device-picker');
-  await picker.getByRole('button', { name: '另一台电脑 在线', exact: true }).click();
+  await picker.getByRole('menuitem', { name: '另一台电脑 在线', exact: true }).click();
   await expect(workspace.getByRole('tab').locator('small')).toHaveText('另一台电脑', { timeout: 25_000 });
   await expect(workspace.locator('.xterm-rows:visible')).toContainText('SSH ready');
   // Older connected computers can keep serving a terminal without reporting host metrics.
@@ -54,6 +53,11 @@ test('desktop sidebar opens saved SSH sessions independently of the chat termina
   await expect(items.nth(1)).toContainText('开发服务器');
   await expect(page.locator('.ant-dropdown:visible')).not.toHaveClass(/-(?:appear|enter)(?:\s|$|-)/);
   await screenshot(page, info, 'web-desktop-ssh-session-menu');
+  await items.nth(1).click();
+  const secondComputer = page.getByRole('menuitem', { name: '另一台电脑 在线', exact: true });
+  await secondComputer.click({ trial: true });
+  await expect(secondComputer).toBeInViewport({ ratio: 1 });
+  await screenshot(page, info, 'web-desktop-ssh-session-computers');
   await items.first().click();
   await expect(editor.getByLabel('IP 或主机名', { exact: true })).toHaveValue('');
   await editor.getByRole('button', { name: '取消', exact: true }).click();

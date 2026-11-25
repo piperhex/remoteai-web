@@ -1,0 +1,17 @@
+.sshw-computer-menu.ant-dropdown-menu, .sshw-computer-menu > .ant-dropdown-menu {
+  box-sizing: border-box;
+  width: min(18em, 400px, calc(100vw - 24px));
+  max-height: min(65dvh, 380px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.sshw-computer { display: flex; align-items: center; gap: 12px; }
+.sshw-computer > span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.sshw-computer small { flex: none; font-size: .9em; opacity: .7; }
+.ant-dropdown-menu-item-disabled .sshw-computer small { opacity: 1; }
+.sshw-computer-menu .ant-dropdown-menu-item-group { position: sticky; bottom: 0; background: inherit; }
+.sshw-computer-menu .ant-dropdown-menu-item-group-title {
+  margin-top: 4px; border-top: 1px solid var(--line, #8883); padding: 4px 0 0;
+}
+.sshw-computer-menu .ant-dropdown-menu-item-group-title p { margin: 6px 10px; overflow-wrap: anywhere; }
+.sshw-computer-menu .ant-input-affix-wrapper { height: auto; font-size: inherit; }
