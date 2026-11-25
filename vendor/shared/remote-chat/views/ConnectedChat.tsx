@@ -260,6 +260,7 @@ function ConnectedChatContent({ chat, device, devices, active, scope, email, cho
         value={state.selected?.turns ? { turns: state.selected.turns } : undefined} />)}
       {headerEnd}
       {(desktop || draggableHeader) && <RunningConversations entries={remoteRunningConversations(state)}
+        readMetrics={active && foreground && ready && usageSnapshot.visible ? controller.readConversationMetrics : undefined}
         selected={state.selected?.id ?? null} disabled={state.sending || !ready}
         onSelect={id => {
           if (state.archived || state.search) void controller.list({ archived: false, search: '' });
