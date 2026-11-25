@@ -36,6 +36,8 @@
 .sshw-profiles .ssh-profile-card[aria-expanded="true"] .sshw-profile-arrow { color: var(--ssh-accent); }
 .sshw-main { flex: 1; background: var(--ssh-surface); }
 .sshw-session-menu.ant-dropdown-menu { max-height: min(60dvh, 420px); overflow-y: auto; }
+.sshw-session-menu .ant-dropdown-menu-submenu-title { align-items: center; }
+.sshw-session-menu .ant-dropdown-menu-submenu-expand-icon { display: flex; }
 .sshw-session-label { display: block; overflow-wrap: anywhere; }
 .sshw-session-label small { display: block; opacity: .72; }
 .sshw-profile-name { overflow-wrap: anywhere; }

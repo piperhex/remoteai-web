@@ -3,7 +3,7 @@
   "revision": "10967f6e406daca25e948d6b997ea2b0ef5138d3",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "4f00ae031c46c0f946c73de0a698e5d8b94a4fd6"
+    "revision": "14ffa467061b062accec9028712432b5d51c38f0"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -2046,7 +2046,7 @@
     "shared/terminal/views/terminalClipboard.ts": "aca3d9ca51f3c75b9681ab65c4a3d7d7f8dbb56fd0a2208b4e9d33b598109aa6",
     "shared/terminal/workspace/SshWorkspace.tsx": "f3dc3914660c3daff8b5d21c5767e2958d070528c6aed8030f87b7824e6e58af",
     "shared/terminal/workspace/useSshSessions.ts": "0ee59ddb49018bd8833960ab3e6bd7445b2d37637aa134e995c12fafabd277f5",
-    "shared/terminal/workspace/workspace.css": "224cb0d3e5053e53bbca80e94cc9589d9a266ac2d83256ad25ab5c471f6c4ec6",
+    "shared/terminal/workspace/workspace.css": "18f61b8d145847c255d76d7c57f947b3e0f41ea1496a4e45793fa84778f9b4ec",
     "shared/terminal/workspace/ServerMonitor.tsx": "a92ef0c540b34b4e5d0adab80446ccb315b19c8e2cbff58eaafc7b2da17d5505",
     "shared/terminal/workspace/serverMetrics.ts": "fc688eced613dae86b4326454e2f9d15d060eb60c271bd368dc09351e6cb86cf",
     "shared/terminal/workspace/useServerMonitor.ts": "f44d5162c1824d491e23edf40c405489ff1f19a874cab9035e597f029d24ab95",
