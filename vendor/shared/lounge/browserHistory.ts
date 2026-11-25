@@ -4,6 +4,7 @@ import { historyKey, historyPage, historyPageLimit, historyScope, historyText, h
 import { parseMessage, type LoungeMessage } from './types';
 import { mergeContact, parseContact, type LoungeContact } from './contacts';
 import { mergeDelivery, needsDeliveryWork } from './delivery';
+import type { GroupAttempt, GroupAttemptStore } from './groupAttempts';
 
 const DATABASE = 'remoteai-lounge-history-v1';
 const META = 'metadata';
@@ -105,9 +106,31 @@ async function search(scope: string, query: HistoryQuery) {
 export function browserLoungeHistory(baseUrl: string, account: string): LoungeHistoryStore {
   const scope = historyScope(baseUrl, account);
   return { save: message => save(scope, message), page: query => search(scope, query),
-    contacts: () => contacts(scope), saveContact: contact => saveContact(scope, contact),
+    groupAttempts: groupAttempts(scope), contacts: () => contacts(scope), saveContact: contact => saveContact(scope, contact),
     get: key => get(scope, key), deleteConversation: (peer, generation) => deleteConversation(scope, peer, generation),
     deletions: () => deletions(scope), deleteBefore: (peer, time) => deleteBefore(scope, peer, time) };
+}
+
+function groupAttempts(scope: string): GroupAttemptStore {
+  // These non-timeline records share the content database but never enter the history metadata index.
+  async function change(key: string, id: string, candidate?: GroupAttempt) {
+    const db = await openDatabase();
+    const tx = db.transaction(CONTENT, 'readwrite');
+    const done = complete(tx), store = tx.objectStore(CONTENT);
+    const path = [scope, 'group-attempt', key];
+    const read = store.get(path);
+    let attempt = candidate;
+    read.onsuccess = () => {
+      const previous = read.result as GroupAttempt | undefined;
+      if (candidate && !previous) store.put(candidate, path);
+      if (!candidate && previous?.id === id) store.delete(path);
+      attempt = previous ?? candidate;
+    };
+    await done;
+    return attempt;
+  }
+  return { claim: async (key, candidate) => (await change(key, candidate.id, candidate))!,
+    finish: async (key, id) => { await change(key, id); } };
 }
 
 async function deletions(scope: string) {

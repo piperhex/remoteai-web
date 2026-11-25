@@ -1,3 +1,4 @@
+import type { LoungeMessage } from './types';
 import { useEffect, useRef, useState } from 'react';
 import { Download, File } from 'lucide-react';
 import type { LoungeAttachment as Attachment } from './attachments';
@@ -8,13 +9,13 @@ import './attachments.css';
 import { LoungeFileCard } from './LoungeFileCard';
 
 export function LoungeAttachment(props: {
-  file: Attachment; controller: LoungeController; preview: (uri: string) => void; onLoad?: () => void;
+  file: Attachment; message?: LoungeMessage; controller: LoungeController; preview: (uri: string) => void; onLoad?: () => void;
   mobile?: boolean;
 }) {
   return props.file.kind === 'file' ? <LoungeFileCard {...props} /> : <ImageAttachment {...props} />;
 }
-function ImageAttachment({ file, controller, preview, onLoad }: {
-  file: Attachment; controller: LoungeController; preview: (uri: string) => void; onLoad?: () => void;
+function ImageAttachment({ file, message, controller, preview, onLoad }: {
+  file: Attachment; message?: LoungeMessage; controller: LoungeController; preview: (uri: string) => void; onLoad?: () => void;
 }) {
   const [uri, setUri] = useState(''), [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState(0), [failed, setFailed] = useState(false);
@@ -24,9 +25,10 @@ function ImageAttachment({ file, controller, preview, onLoad }: {
     const abort = new AbortController(); active.current = abort;
     setBusy(true); setFailed(false); setProgress(0);
     try {
-      const value = file.kind === 'image' ? await controller.attachments.image(file)
+      const value = file.kind === 'image' ? await controller.attachments.image(file, message)
         : await controller.attachments.download(file, await browserAttachmentSink(file),
           { signal: abort.signal, progress: setProgress });
+      if (message && !abort.signal.aborted) controller.imageLoaded(message);
       if (abort.signal.aborted) return;
       if (file.kind === 'image') setUri(value); else saveAttachmentUrl(value, file.name);
     } catch { if (!abort.signal.aborted) setFailed(true); }
@@ -35,7 +37,7 @@ function ImageAttachment({ file, controller, preview, onLoad }: {
   useEffect(() => {
     if (file.kind === 'image') void download();
     return () => { active.current?.abort(); active.current = undefined; };
-  }, [file.id, controller]);
+  }, [file.id, controller, message?.delivery?.imagesStored]);
   if (uri) return <button type="button" className="lounge-image" aria-label={t('client.lounge.previewImage')}
     onClick={() => preview(uri)}><img src={uri} alt={t('client.lounge.image')} onLoad={onLoad} /></button>;
   return <div className="lounge-image-transfer">

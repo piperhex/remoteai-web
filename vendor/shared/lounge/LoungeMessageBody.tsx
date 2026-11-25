@@ -25,7 +25,7 @@ export function LoungeMessageBody({ message, preview, onImageLoad, actions, cont
     tabIndex={actions ? 0 : undefined}>
     {message.reply && <LoungeReplyPreview reply={message.reply} controller={controller} locate={locate} />}
     {message.text && <div className="lounge-text">{message.text}</div>}
-    {controller && message.attachments?.map(file => <LoungeAttachment key={file.id} file={file}
+    {controller && message.attachments?.map(file => <LoungeAttachment key={file.id} file={file} message={message}
       controller={controller} preview={preview} onLoad={onImageLoad} mobile={mobile} />)}
     {message.images.map((source, index) => <button type="button" key={index}
       className="lounge-image" aria-label={t('client.lounge.previewImage')} onClick={() => preview(source)}>
