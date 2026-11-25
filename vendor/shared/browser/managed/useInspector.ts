@@ -6,7 +6,7 @@ import { inspectorCommand, inspectorSession, type InspectorDock, type InspectorS
   type InspectorTarget } from './inspectorSession';
 
 export function useInspector({ id, kind, enabled, active }: InspectorTarget & { enabled: boolean; active: boolean },
-  viewport: DeviceViewport | undefined) {
+  deviceName: string, viewport: DeviceViewport | undefined) {
   const [{ open, mobile }, setStatus] = useState<InspectorStatus>({ open: false, mobile: false });
   const [switching, setSwitching] = useState(false);
   const [deviceFailed, setDeviceFailed] = useState(false);
@@ -72,7 +72,7 @@ export function useInspector({ id, kind, enabled, active }: InspectorTarget & { 
     if (switching) return;
     setSwitching(true);
     setDeviceFailed(false);
-    void inspectorCommand({ id, kind }, { action: 'setMobile', enabled: !mobile })
+    void inspectorCommand({ id, kind }, { action: 'setMobile', enabled: !mobile, name: deviceName })
       .catch(() => setDeviceFailed(true)).finally(() => setSwitching(false));
   };
   return { open: enabled && open, mobile, switching, deviceFailed, toggleMobile, dock, setDock, failed, close, host };

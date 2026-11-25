@@ -3,7 +3,7 @@
   "revision": "e59c612a238f8a438254b394741f40729e04a4fa",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "0992e4f9e224d65c2f8b7e1717f84aa44d3fc0fb"
+    "revision": "e1167ef2cf585e152e52a53c5e191a9bdfdb718a"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -1892,9 +1892,9 @@
     "shared/browser/managed/nativeSurfaceSession.ts": "a46254adafc8285cb66433b9984131a6dd2dbd7d69b66a6e93a2b3a6b2547211",
     "shared/browser/managed/useNativeBrowserPreview.ts": "9fbc6be08de4a4e3df85a5a040f118d870dfe6eef95a8afc83e3a94ec2e188e9",
     "shared/browser/managed/nativeBrowserPreview.css": "8992184a0f5abd3f0a298d8a2692ba2a3b6f9597db8372ad5a49b3658e316401",
-    "shared/browser/managed/BrowserInspector.tsx": "d14d55f6e944f8a178ac199f72c279756efb371b0758e4478f65325e3fede04f",
-    "shared/browser/managed/useInspector.ts": "17bf9e467a8a35e486fb3511c792467e2926e1ab429a2fdcecdbe35770bfcda3",
-    "shared/browser/managed/inspectorSession.ts": "49b110cd93bd1006c6b1e15177d9a7639b896e050da429f183cf7108d8cd9411",
+    "shared/browser/managed/BrowserInspector.tsx": "cfa50f40758e9860095d20a330cf14be40fde186563aeca1d8dcce9525825d0d",
+    "shared/browser/managed/useInspector.ts": "eb5346039c4c4721ebe639d0e18bd81a40e88856824a9345242123442529bd46",
+    "shared/browser/managed/inspectorSession.ts": "cec5be3f827e0e55b099064b0268aae74392c1fb04b1861f87b71346b4a298e1",
     "shared/browser/managed/browserInspector.css": "853d7d4f55bcae0495aa798574439f65fd29daab7522723f47e6dbb302d7d285",
     "shared/browser/BrowserFullscreenControl.tsx": "ae09e0409f5429329f519e2dd0d16b555159fbe75132a2552405dd8fa7063f3d",
     "shared/browser/useFullscreenControl.ts": "11d6cfd8855b21c1486c2ced59c4be5cc0b34b9dd9436b7c7c4c7069a51d6974",
@@ -2070,7 +2070,7 @@
     "shared/chat/usePreviewImageMenu.tsx": "8dba0b1e70f4b543f6e8ba13fef79ef675a37738edaef2c860fe388ae9a53a4a",
     "shared/clipboardImage.ts": "3dea6ee8e9355443fd050ac7612a8965bdfa91374ffa5849a05015c6084815f5",
     "shared/browser/managed/DeviceToolbar.tsx": "ef0e304d51d7478266fba526e26d5abd5025612dca6bcc2e50670c82c43d62d9",
-    "shared/browser/managed/deviceViewport.ts": "6786c27749d1c36feba8851db1f59d9903e3c15b4d301085aabae660c2329a4e",
+    "shared/browser/managed/deviceViewport.ts": "6c49d6313724cf8954628f7537120abf30ba54e4b5693cdfae1fc04754479dfc",
     "shared/browser/managed/ViewportHandles.tsx": "b67621ce82c739b93ddce635c9de5bb606c2ba151c51a77039717f4ecc395142",
     "shared/conversation/turnReview.ts": "3942845198a935f7176e4bc5c7382ea8f3b5436ac49b49c2bafa3bd887ab0f5d",
     "shared/conversation/ChangesReview.tsx": "2f888ca3637e7d6d43a31f70c8ac34f990a8a3c974581fabb663d45ae87bcd33",

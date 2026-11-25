@@ -1,8 +1,8 @@
 import type { MarketKey } from '../../provider-market/i18n';
 
 export interface ViewportSize { width: number; height: number }
-export interface DeviceViewport extends ViewportSize { scale: number }
 export interface DeviceSelection extends ViewportSize { name: string }
+export interface DeviceViewport extends DeviceSelection { scale: number }
 
 export const minDimension = 50;
 export const maxDimension = 4096;

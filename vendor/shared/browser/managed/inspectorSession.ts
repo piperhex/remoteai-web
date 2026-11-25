@@ -9,7 +9,8 @@ export interface InspectorPlacement {
   viewport?: DeviceViewport;
 }
 export interface InspectorStatus { open: boolean; mobile: boolean }
-type Command = InspectorPlacement | { action: 'status' | 'close' } | { action: 'setMobile'; enabled: boolean };
+type Command = InspectorPlacement | { action: 'status' | 'close' }
+  | { action: 'setMobile'; enabled: boolean; name: string };
 const operations = new Map<string, Promise<InspectorStatus>>();
 const owners = new Map<string, symbol>();
 const targetKey = (target: InspectorTarget) => `${target.kind}:${target.id}`;
@@ -28,7 +29,7 @@ export function inspectorCommand(target: InspectorTarget, command: Command) {
 function samePlacement(previous: InspectorPlacement | undefined, next: InspectorPlacement) {
   return previous?.dock === next.dock && previous.visible === next.visible
     && previous.viewport?.width === next.viewport?.width && previous.viewport?.height === next.viewport?.height
-    && previous.viewport?.scale === next.viewport?.scale
+    && previous.viewport?.scale === next.viewport?.scale && previous.viewport?.name === next.viewport?.name
     && previous.bounds.x === next.bounds.x && previous.bounds.y === next.bounds.y
     && previous.bounds.width === next.bounds.width && previous.bounds.height === next.bounds.height;
 }

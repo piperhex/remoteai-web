@@ -23,9 +23,8 @@ export function BrowserInspector(props: InspectorTarget & {
   const [device, setDevice] = useState(initialDevice);
   const [scaleLimit, setScaleLimit] = useState(1);
   const scale = Math.min(scaleLimit, available.width / device.width, available.height / device.height);
-  const viewport = useMemo(() => scale > 0 ? { width: device.width, height: device.height, scale } : undefined,
-    [device.width, device.height, scale]);
-  const inspector = useInspector(props, viewport);
+  const viewport = useMemo(() => scale > 0 ? { ...device, scale } : undefined, [device, scale]);
+  const inspector = useInspector(props, device.name, viewport);
   const { open, dock, setDock, close, failed, host } = inspector;
   const mobile = open && inspector.mobile;
   const responsive = mobile && device.name === responsiveDevice;
