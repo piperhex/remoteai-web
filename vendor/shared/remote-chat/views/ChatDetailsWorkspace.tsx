@@ -24,7 +24,7 @@ export function ChatDetailsWorkspace({ selected, active, enabled, readSavedRevie
   const translate = useMemo<DiffTranslate>(() => (source, values) => displayText(source, values), [language]);
   return <DiffTextContext.Provider value={translate}>
     <RemoteBrowserResourceContext.Provider value={resource}>
-    <DetailsWorkspace selected={selected} active={active} enabled={enabled}
+    <DetailsWorkspace selected={selected} active={active} enabled={enabled} readSavedReview={readSavedReview}
       renderRemoteFile={files ? props => <ChatRemoteFilePreview {...props} context={files}
         key={`${props.target.threadId}:${props.target.path}:${props.target.line ?? ''}`} /> : undefined}
       className="chat-diff-workspace" contentClassName="chat-diff-layout">

@@ -4,7 +4,11 @@ import type { Turn } from '../../remote-chat/views/types';
 import { useTaskReview } from '../../remote-chat/useTaskReview';
 import { completedTurnFiles } from '../../chat/turnPresentation';
 import { AdaptiveSheet } from '../../layout/AdaptiveSheet';
-import { ChatDiff } from '../../remote-chat/views/ChatDiff';
+import { ChatDiff, ChatDiffContent } from '../../remote-chat/views/ChatDiff';
+import { useContext } from 'react';
+import { DetailsContext } from '../../conversation/detailsContext';
+import { SavedReviewFiles } from '../../conversation/SavedReviewFiles';
+import { useTaskReviewContext } from '../../remote-chat/TaskReviewContext';
 import { TaskReviewChecks } from './TaskReviewChecks';
 import { TaskReviewDelivery, TaskReviewRestore } from './TaskReviewDelivery';
 import './review.css';
@@ -12,6 +16,8 @@ import './review.css';
 export function TaskReviewPanel({ turn }: { turn: Turn }) {
   useLanguage();
   const model = useTaskReview(turn);
+  const read = useContext(DetailsContext)?.readSavedReview;
+  const threadId = useTaskReviewContext()?.threadId;
   const comment = model.comment;
   return <div className="chat-review-panel">
     {!model.enabled && <p className="chat-review-notice">{t("client.taskReview.connectToYourComputerToRunChecksSendFeedbackOr")}</p>}
@@ -22,7 +28,10 @@ export function TaskReviewPanel({ turn }: { turn: Turn }) {
     <section className="chat-review-section"><h3>{t("client.taskReview.thisTurnSChanges")}</h3>
       <p className="chat-muted chat-review-notice">{t("client.taskReview.leaveFeedbackBesideAChangedLineToContinueFixingIt")}</p>
       {model.sent && <p role="status">{t("client.taskReview.feedbackSentToTheOriginalConversation")}</p>}
-      <ChatDiff files={completedTurnFiles(turn)} onComment={model.selectLine} />
+      {turn.reviewDeferred && read && threadId
+        ? <SavedReviewFiles key={JSON.stringify([threadId, turn.id])} read={read} threadId={threadId}
+          turnId={turn.id} renderDiff={file => <ChatDiffContent file={file} onComment={model.selectLine} />} />
+        : <ChatDiff files={completedTurnFiles(turn)} onComment={model.selectLine} />}
     </section>
     <TaskReviewRestore model={model} />
     <TaskReviewDelivery model={model} turn={turn} />

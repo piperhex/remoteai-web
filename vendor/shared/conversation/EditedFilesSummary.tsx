@@ -17,37 +17,48 @@ function Counts({ added, removed }: { added: number; removed: number }) {
   </span>;
 }
 
-export function EditedFilesSummary({ files, title, status, onReview, onReviewFile, undo, beforeReview, renderFile }: {
-  files: readonly DiffFile[]; title: string; status?: string; onReview: () => void;
+interface CardActions {
+  title: string; status?: string; onReview: () => void;
   onReviewFile: (path: string) => void;
   undo?: ReactNode;
   beforeReview?: ReactNode;
   renderFile?: (props: { path: string; className: string; onReview: () => void }) => ReactNode;
+}
+
+export function EditedFilesSummary({ files, ...actions }: CardActions & { files: readonly DiffFile[] }) {
+  return <EditedFilesCard {...actions} {...summarizeDiffFiles(files)} />;
+}
+
+export function EditedFilesCard({ files, added, removed, partial, footer, title, status,
+  onReview, onReviewFile, undo, beforeReview, renderFile }: CardActions & {
+  files: readonly { path: string; added?: number; removed?: number }[];
+  added?: number; removed?: number; partial?: boolean; footer?: ReactNode;
 }) {
   const t = useDiffText();
   const listId = useId();
   const [expanded, setExpanded] = useState(false);
-  const { files: summary, added, removed } = summarizeDiffFiles(files);
   const changed = !UNAPPLIED_STATUSES.some(key => status === key || status === t(key));
-  const hiddenCount = summary.length - COLLAPSED_FILE_COUNT;
-  const visibleFiles = expanded ? summary : summary.slice(0, COLLAPSED_FILE_COUNT);
+  const hiddenCount = files.length - COLLAPSED_FILE_COUNT;
+  const visibleFiles = expanded ? files : files.slice(0, COLLAPSED_FILE_COUNT);
+  const counted = !partial && added !== undefined && removed !== undefined;
+  const label = changed ? "client.chat.edited" : status ?? "client.chat.edited";
   return <section className={styles.card} aria-label={t(title)}>
     <header className={styles.header}>
       <span className={styles.icon}><FileDiff size={21} aria-hidden="true" /></span>
       <div className={styles.overview}>
-        <strong>{t(changed ? "client.chat.edited" : status ?? "client.chat.edited")} {t("client.chat.files", { count: summary.length })}</strong>
-        <Counts added={added} removed={removed} />
+        <strong>{partial ? t(title) : <>{t(label)} {t("client.chat.files", { count: files.length })}</>}</strong>
+        {counted && <Counts added={added} removed={removed} />}
       </div>
       {undo}{beforeReview}<button type="button" className={styles.review} onClick={onReview}
-        aria-label={t("client.chat.viewFilesLinesAddedLinesRemoved",
-          { title: t(title), count: summary.length, added, removed })}>{t("client.chat.review")}</button>
+        aria-label={counted ? t("client.chat.viewFilesLinesAddedLinesRemoved",
+          { title: t(title), count: files.length, added, removed }) : t("client.chat.review")}>{t("client.chat.review")}</button>
     </header>
     <ul className={styles.files} id={listId}>
       {visibleFiles.map((file) => <li key={file.path}>
         {renderFile ? renderFile({ path: file.path, className: styles.path, onReview: () => onReviewFile(file.path) })
           : <button type="button" className={styles.path} onClick={() => onReviewFile(file.path)}
             aria-label={t("client.chat.viewDiffFor", { path: file.path })}>{file.path}</button>}
-        <Counts added={file.added} removed={file.removed} />
+        {file.added !== undefined && file.removed !== undefined && <Counts added={file.added} removed={file.removed} />}
       </li>)}
     </ul>
     {hiddenCount > 0 && <button type="button" className={styles.toggle} aria-expanded={expanded}
@@ -55,5 +66,6 @@ export function EditedFilesSummary({ files, title, status, onReview, onReviewFil
       {expanded ? t("client.chat.collapseFileList") : t("client.chat.showMoreFiles", { count: hiddenCount })}
       <ChevronDown size={16} className={expanded ? styles.rotated : undefined} aria-hidden="true" />
     </button>}
+    {footer}
   </section>;
 }

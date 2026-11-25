@@ -15,6 +15,7 @@ function createController(session: AuthSession, deviceId: string) {
   const controller = new ChatController(events => webChatConnection(session, deviceId, events),
     undefined, createBrowserHistoryVersions(), createWebSshProfiles(session));
   controller.deferToolDetails = true;
+  controller.pagedTurnReviews = true;
   controller.directoryStorage = browserDirectoryStorage(JSON.stringify([session.baseUrl, session.email]), deviceId);
   controller.deferProcessDetails = true;
   controller.previewDownloads = createPreviewDownloads({ owner: downloadOwner(session), deviceId });

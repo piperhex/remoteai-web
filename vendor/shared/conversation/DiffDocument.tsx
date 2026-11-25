@@ -88,6 +88,14 @@ export interface DiffDocumentProps {
   filePath?: string;
 }
 
+export function DiffModeButtons({ split, setSplit }: { split: boolean; setSplit: (value: boolean) => void }) {
+  const t = useDiffText();
+  return <div className={styles.modes} role="group" aria-label={t("client.chat.diffDisplayMode")}>
+    <button aria-pressed={!split} onClick={() => setSplit(false)}>{t("client.chat.unified")}</button>
+    <button aria-pressed={split} onClick={() => setSplit(true)}>{t("client.chat.sideBySide")}</button>
+  </div>;
+}
+
 export const DiffDocument = memo(function DiffDocument({ files: allFiles, title = "client.shared.fileChanges", status,
   initialOpen = false, continuous = false, filePath }: DiffDocumentProps) {
   const t = useDiffText();
@@ -101,10 +109,7 @@ export const DiffDocument = memo(function DiffDocument({ files: allFiles, title 
     <div className={styles.toolbar}><strong>{t(title)}</strong><span>{t("client.chat.files", { count: fileCount })}</span>
       <Counts added={added} removed={removed} />
       {status && <span role="status">{t(status)}</span>}
-      <div className={styles.modes} role="group" aria-label={t("client.chat.diffDisplayMode")}>
-        <button aria-pressed={!split} onClick={() => setSplit(false)}>{t("client.chat.unified")}</button>
-        <button aria-pressed={split} onClick={() => setSplit(true)}>{t("client.chat.sideBySide")}</button>
-      </div>
+      <DiffModeButtons split={split} setSplit={setSplit} />
     </div>
     {groupDiffFiles(files).map((group) => <section key={group.directory} className={styles.folderGroup}
       aria-label={group.directory || t("client.runtimeErrors.rootFolder")}>

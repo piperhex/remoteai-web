@@ -18,7 +18,7 @@ export function MobileChatDiff({ entry, readSavedReview, onClose }: {
       {files.length > 0 && <ChatDiff files={files} status={entry.status} />}
       {turn?.deferred && readSavedReview && turn.threadId && turn.turnId
         ? <SavedReview key={JSON.stringify([turn.threadId, turn.turnId])} read={readSavedReview}
-          threadId={turn.threadId} turnId={turn.turnId} />
+          threadId={turn.threadId} turnId={turn.turnId} selectedFile={entry.savedFile} />
         : !files.length && turn && <p>{t('client.changeReview.' + (turn.deferred ? 'incomplete' : turn.result))}</p>}
     </AdaptiveSheet>
   </DetailsContext.Provider></WorkspaceDrawerContext.Provider>;

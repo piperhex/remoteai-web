@@ -1,20 +1,23 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Button, Spin } from 'antd';
 import { ChevronDown, ChevronRight, FileDiff } from 'lucide-react';
 import { parseFileChange, parseUnifiedDiff } from '../chat/diffParser';
 import { useDiffText } from '../chat/diffText';
 import { remoteErrorText } from '../localization/errors';
-import { DiffContent } from './DiffDocument';
+import { DiffContent, DiffModeButtons } from './DiffDocument';
+import type { DiffFile } from '../chat/diff';
 import type { ReadSavedReview, SavedReviewFile, SavedReviewTarget } from './savedReview';
 import styles from './ChangesReview.module.less';
 
-interface Props { read: ReadSavedReview; threadId: string; turnId: string; activity?: boolean }
-function fileInfo(file: SavedReviewFile) {
-  if (file.header) return parseUnifiedDiff(file.header)[0];
-  return { path: file.kind?.movePath ?? file.path ?? '', kind: file.kind?.type ?? 'update' };
+type RenderDiff = (file: DiffFile) => ReactNode;
+interface Props { read: ReadSavedReview; threadId: string; turnId: string; activity?: boolean; renderDiff?: RenderDiff }
+export function fileInfo(file: SavedReviewFile): Pick<DiffFile, 'path' | 'previousPath' | 'kind'> {
+  const header = file.header && parseUnifiedDiff(file.header)[0];
+  return header || { path: file.kind?.movePath ?? file.path ?? '', kind: file.kind?.type ?? 'update',
+    previousPath: file.kind?.movePath ? file.path : undefined };
 }
 
-function usePage(read: ReadSavedReview, target: SavedReviewTarget) {
+export function useSavedReviewPage(read: ReadSavedReview | undefined, target: SavedReviewTarget) {
   const [offset, setOffset] = useState(0);
   const [attempt, retry] = useState(0);
   const [busy, setBusy] = useState(true);
@@ -24,6 +27,7 @@ function usePage(read: ReadSavedReview, target: SavedReviewTarget) {
   const [text, setText] = useState('');
   const { threadId, turnId, activity, file } = target;
   useEffect(() => {
+    if (!read) return;
     let current = true;
     setBusy(true); setError('');
     read({ threadId, turnId, activity, file, offset }).then(page => {
@@ -36,42 +40,57 @@ function usePage(read: ReadSavedReview, target: SavedReviewTarget) {
     return () => { current = false; };
   }, [read, threadId, turnId, activity, file, offset, attempt]);
   const more = error ? () => retry(value => value + 1) : next != null ? () => setOffset(next) : undefined;
-  return { text, files, busy, error, more };
+  return { text, files, busy, error, more, next };
 }
 
-function PageControls({ busy, error, more }: ReturnType<typeof usePage>) {
+export function PageControls({ busy, error, more }: ReturnType<typeof useSavedReviewPage>) {
   const t = useDiffText();
   if (busy) return <Spin size="small" />;
   return <>{error && <p role="alert">{error}</p>}{more && <Button size="small" onClick={more}>
     {t(error ? 'client.lounge.historyRetry' : 'client.chat.loadMore')}</Button>}</>;
 }
 
-function SavedBody({ read, target, entry }: { read: ReadSavedReview; target: SavedReviewTarget; entry: SavedReviewFile }) {
-  const page = usePage(read, target);
+function SavedBody({ read, target, entry, renderDiff }: {
+  read: ReadSavedReview; target: SavedReviewTarget; entry: SavedReviewFile; renderDiff?: RenderDiff;
+}) {
+  const page = useSavedReviewPage(read, target);
   const file = useMemo(() => {
     const info = fileInfo(entry);
-    return parseFileChange({ path: info.path, kind: { type: info.kind }, diff: page.text }, Boolean(entry.header));
+    return parseFileChange({ path: info.previousPath ?? info.path, kind: {
+      type: info.kind, movePath: info.previousPath ? info.path : undefined }, diff: page.text }, Boolean(entry.header));
   }, [page.text, entry]);
-  return <>{page.text && <DiffContent file={file} split={false} />}<PageControls {...page} /></>;
+  return <>{page.text && (renderDiff ? renderDiff(file) : <DiffContent file={file} split={false} />)}
+    <PageControls {...page} /></>;
 }
 
-export function SavedReviewFiles({ read, threadId, turnId, activity = false }: Props) {
+export function SavedReviewFiles({ read, threadId, turnId, activity = false, selectedFile, renderDiff }:
+  Props & { selectedFile?: number }) {
   const target = { threadId, turnId, activity };
-  const page = usePage(read, target);
-  const [open, setOpen] = useState<number>();
+  const page = useSavedReviewPage(read, target);
+  const [open, setOpen] = useState(selectedFile);
+  const selected = useRef<HTMLButtonElement>(null);
+  const reached = selectedFile !== undefined && selectedFile < page.files.length;
+  useEffect(() => {
+    if (!reached && selectedFile !== undefined && !page.busy && !page.error) page.more?.();
+  }, [selectedFile, reached, page.busy, page.error, page.more]);
+  useEffect(() => { if (reached) selected.current?.scrollIntoView?.({ block: 'nearest' }); }, [reached]);
   return <>{page.files.map((entry, index) => <section key={index} className={styles.file}>
-    <button type="button" aria-expanded={index === open} onClick={() => setOpen(index === open ? undefined : index)}>
+    <button type="button" aria-expanded={index === open} ref={index === selectedFile ? selected : undefined}
+      onClick={() => setOpen(index === open ? undefined : index)}>
       {index === open ? <ChevronDown size={15} /> : <ChevronRight size={15} />}<FileDiff size={16} />
       <span>{fileInfo(entry).path}</span>
     </button>
-    {open === index && <SavedBody read={read} target={{ ...target, file: index }} entry={entry} />}
+    {open === index && <SavedBody read={read} target={{ ...target, file: index }} entry={entry} renderDiff={renderDiff} />}
   </section>)}<PageControls {...page} /></>;
 }
 
-export function SavedReview({ read, threadId, turnId }: Props) {
+export function SavedReview({ read, threadId, turnId, selectedFile }: Props & { selectedFile?: number }) {
   const t = useDiffText();
   const [activity, showActivity] = useState(false);
-  return <><SavedReviewFiles read={read} threadId={threadId} turnId={turnId} />
+  const [split, setSplit] = useState(false);
+  return <><DiffModeButtons split={split} setSplit={setSplit} />
+    <SavedReviewFiles read={read} threadId={threadId} turnId={turnId} selectedFile={selectedFile}
+      renderDiff={file => <DiffContent file={file} split={split} />} />
     <details className={styles.observed} onToggle={event => showActivity(event.currentTarget.open)}>
       <summary>{t('client.chat.activity')}</summary>
       {activity && <SavedReviewFiles read={read} threadId={threadId} turnId={turnId} activity />}

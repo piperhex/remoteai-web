@@ -10,7 +10,7 @@ import { ChatFilesSummary } from './ChatFilesSummary';
 import { useDiffAutoLoad } from '../../chat/useDiffAutoLoad';
 
 const PAGE_LINES = 160;
-function DiffContent({ file, onComment }: { file: DiffFile; onComment?: (file: DiffFile, line: DiffLine) => void }) {
+export function ChatDiffContent({ file, onComment }: { file: DiffFile; onComment?: (file: DiffFile, line: DiffLine) => void }) {
   useLanguage();
   const { limit, loadMore, endRef, onScroll } = useDiffAutoLoad(file.lines.length, PAGE_LINES);
   return <div className="chat-diff-content">
@@ -46,7 +46,7 @@ export function ChatDiff({ files, status, onComment }: {
           <b className="chat-added">+{file.added}</b><b className="chat-removed">−{file.removed}</b>
           <ChevronDown size={15} /></summary>}>
         {() => <>{file.previousPath && <p className="chat-muted">{t("client.chat.originalPath")}{file.previousPath}</p>}
-          <DiffContent file={file} onComment={onComment} /></>}
+          <ChatDiffContent file={file} onComment={onComment} /></>}
       </DeferredDetails>)}
     </section>)}</div>;
 }

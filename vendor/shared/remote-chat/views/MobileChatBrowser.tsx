@@ -45,7 +45,7 @@ function MobileChatBrowserRoutes({ children, active, readSavedReview }: Props) {
   };
   const close = () => setReview(null);
   const context = { ...(panel ?? { open: setReview, update: updateReview, setConversationChanges: ignoreWorkspaceChanges,
-    showingChanges: !!review, visible: !!review, close }), openFile, openRemoteFile: openFile, openResource,
+    showingChanges: !!review, visible: !!review, close }), readSavedReview, openFile, openRemoteFile: openFile, openResource,
     openWebsite: (url: string, options?: { resolved?: boolean }) => navigation.openWebsite(url,
       { ...options, resolve: environment?.resolveWebsite }),
   };

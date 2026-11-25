@@ -14,10 +14,12 @@ export interface TurnReview {
 export interface DiffPanelEntry {
   id: string; title: string; files: readonly DiffFile[]; status?: string; filePath?: string;
   turnReview?: TurnReview;
+  savedFile?: number;
   workspaceReview?: { git: import('../remote-chat/gitTypes').GitClient; cwd: string; turns?: import('./types').Turn[] };
   initialReview?: 'turn';
 }
 interface DetailsContextValue {
+  readSavedReview?: import('./savedReview').ReadSavedReview;
   open: (entry: DiffPanelEntry) => void;
   update: (entry: DiffPanelEntry) => void;
   setConversationChanges: (entry: DiffPanelEntry) => void;

@@ -1,5 +1,3 @@
-import type { DiffFile } from './diff';
-
 export interface DiffFileSummary { readonly path: string; readonly added: number; readonly removed: number }
 export interface DiffSummary {
   readonly files: readonly DiffFileSummary[];
@@ -8,9 +6,9 @@ export interface DiffSummary {
 }
 
 // Lifetime follows the immutable parsed list; this cache cannot keep discarded conversations alive.
-const summaries = new WeakMap<readonly DiffFile[], DiffSummary>();
+const summaries = new WeakMap<readonly DiffFileSummary[], DiffSummary>();
 
-export function summarizeDiffFiles(files: readonly DiffFile[]): DiffSummary {
+export function summarizeDiffFiles(files: readonly DiffFileSummary[]): DiffSummary {
   const cached = summaries.get(files);
   if (cached) return cached;
   const paths = new Map<string, DiffFileSummary>();

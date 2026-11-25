@@ -19,6 +19,10 @@ function mergeItem(snapshot: Item, live: Item, before?: Item): Item {
     const includesUnloadedTail = !before && liveValue && readValue?.includes(liveValue);
     if (readValue && (!liveValue || readValue.startsWith(liveValue) || includesUnloadedTail)) merged[field] = readValue;
   }
+  if (snapshot.type === 'fileChange' && snapshot.detailsRef) {
+    merged.detailsRef = snapshot.detailsRef;
+    merged.changes = snapshot.changes;
+  }
   return merged;
 }
 
@@ -39,6 +43,8 @@ function mergeTurn(snapshot: Turn, live: Turn, before: Turn | undefined, options
   const order = mergeItemOrder(snapshotItems, liveItems.filter(item => items.has(item.id)));
   // Live events can carry an estimated start; the PC snapshot corrects it once timing is available.
   return { ...snapshot, ...live, startedAt: snapshot.startedAt ?? live.startedAt,
+    ...(snapshot.reviewDeferred && { reviewDeferred: snapshot.reviewDeferred, diff: snapshot.diff,
+      reviewEdits: snapshot.reviewEdits }),
     status: terminal, items: order.map(id => items.get(id)!) };
 }
 

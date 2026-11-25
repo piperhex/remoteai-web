@@ -29,10 +29,11 @@ export interface RemoteFilePreviewProps {
 }
 
 export function DetailsWorkspace({ selected, active, children, enabled = true, className = '', contentClassName = '',
-  renderRemoteFile }: {
+  renderRemoteFile, readSavedReview }: {
   selected: string | null; active: boolean; children: ReactNode;
   enabled?: boolean; className?: string; contentClassName?: string;
   renderRemoteFile?: (props: RemoteFilePreviewProps) => ReactNode;
+  readSavedReview?: import('./savedReview').ReadSavedReview;
 }) {
   const t = useDiffText();
   const startTitle = marketText(guiLanguage())('market.browserNewTab');
@@ -44,6 +45,7 @@ export function DetailsWorkspace({ selected, active, children, enabled = true, c
   const panelId = useId();
   const panel = useDetailsPanel({ selected, enabled, active, remoteFiles: Boolean(renderRemoteFile), drawer: drawer.tabs });
   const { entry, preview, viewId, expanded, showingChanges } = panel;
+  const details = useMemo(() => ({ ...panel.context, readSavedReview }), [panel.context, readSavedReview]);
   const hasChanges = Boolean(enabled && (entry?.files.length || panel.hasConversationChanges));
   const showingPreview = drawer.tabs.selected === "preview";
   const showingStart = enabled && drawer.tabs.selected === 'start';
@@ -74,7 +76,7 @@ export function DetailsWorkspace({ selected, active, children, enabled = true, c
   useEffect(() => { if (visible) closeButton.current?.focus(); }, [visible]);
   useEffect(() => { if (!visible || expanded) resize.cancel(); }, [visible, expanded, resize.cancel]);
   return <ConfigProvider theme={{ token: { fontSize } }}>
-    <DetailsContext.Provider value={enabled ? panel.context : null}>
+    <DetailsContext.Provider value={enabled ? details : null}>
     <WorkspaceDrawerContext.Provider value={workspace}>
     <WorkspaceLaunchersContext.Provider value={launchers.register}>
     <div ref={host} className={`${styles.host} ${className}`} data-dragging={resize.dragging || undefined}

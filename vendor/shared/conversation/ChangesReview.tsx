@@ -117,7 +117,7 @@ export function ChangesReview({ entry, workspace }: { entry: DiffPanelEntry; wor
       {turn?.result !== 'net' && <p>{t('client.changeReview.' + (turn?.turnId ? turn.result : 'noTurn'))}</p>}
       {turn?.deferred && turn.threadId && turn.turnId && workspace.git.savedReview &&
         <SavedReview key={JSON.stringify([turn.threadId, turn.turnId, turn.cwd])} read={workspace.git.savedReview}
-          threadId={turn.threadId} turnId={turn.turnId} />}
+          threadId={turn.threadId} turnId={turn.turnId} selectedFile={entry.savedFile} />}
       {!!files.length && <DiffDocument files={files} title={entry.title} filePath={entry.filePath}
         status={entry.status} continuous initialOpen />}
       {!turn?.deferred && !!turn?.activity?.length && <details className={styles.observed}><summary>{t('client.chat.activity')}</summary>
