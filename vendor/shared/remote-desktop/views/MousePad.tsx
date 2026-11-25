@@ -45,6 +45,8 @@ function MouseIcon({ pointer, viewport, panel }: Props) {
 
 function MousePad({ pointer, viewport, panel, scroll, contained }: MousePadProps) {
   const buttons = useMouseButtons(pointer, viewport, panel, contained);
+  const leftLabel = buttons.dragging && !contained ? 'client.remoteDesktop.dragging' : 'client.remoteDesktop.left';
+  const padLabel = buttons.dragging && contained ? 'client.remoteDesktop.dragging' : 'client.remoteDesktop.swipeToMove';
   const wheel = useScrollButton(scroll);
   const pad = useTrackpad({ pointer, viewport, panel, id: 'pad', cancel: buttons.cancel });
   const grip = useTrackpad({ pointer, viewport, panel, id: 'grip', click: false, cancel: buttons.cancel });
@@ -55,8 +57,8 @@ function MousePad({ pointer, viewport, panel, scroll, contained }: MousePadProps
       <button key={button} aria-label={t(button === 'left' ? "client.remoteDesktop.leftMouseButton" : "client.remoteDesktop.rightMouseButton")}
         aria-pressed={button === 'left' && buttons.dragging}
         {...buttons.handlers(button)}>
-        {t(button === 'left' ? (buttons.dragging ? "client.remoteDesktop.dragging" : "client.remoteDesktop.left") : "client.remoteDesktop.right")}</button>)}</div>
-    <div className="rd-pad" {...pad}>{t("client.remoteDesktop.swipeToMove")}</div>
+        {t(button === 'left' ? leftLabel : 'client.remoteDesktop.right')}</button>)}</div>
+    <div className="rd-pad" {...pad}>{t(padLabel)}</div>
     <button className="rd-wheel" aria-label={t("client.remoteDesktop.holdAndDragToScroll")} {...wheel}>
       <ChevronUp size={18} /><ChevronDown size={18} /></button>
     <button className="rd-grip" aria-label={t("client.remoteDesktop.moveMousePanel")} {...grip}><GripHorizontal size={22} /></button>

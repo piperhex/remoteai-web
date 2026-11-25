@@ -3,7 +3,7 @@
   "revision": "10967f6e406daca25e948d6b997ea2b0ef5138d3",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "c97055b7198437077a5c906fd4c654f79069143a"
+    "revision": "9ec14805de4dc399048784be88e60216b1bd72c0"
   },
   "retainedTestSources": {
     "repository": "https://github.com/piperhex/remoteai",
@@ -785,7 +785,7 @@
     "shared/remote-desktop/views/DesktopTitlebar.tsx": "f47bfa9d37d6cc7636a1a1ebe5b05719320247e047e1d74558565e276ab54df9",
     "shared/remote-desktop/views/useDesktopWindow.ts": "134dfb8c53a60b530f75881afea3523b2a353d7e03d90bb7d2c1971f0fa62c83",
     "shared/remote-desktop/views/DesktopStats.tsx": "7d4cbfa3f694839145315b80a167627fc0610f5b672f48e96bdac8cdba7cb2bb",
-    "shared/remote-desktop/views/MousePad.tsx": "742585d96e9ec0ad48efd693bb1f829dd98471e24d878ac19877e57c0bccf1d6",
+    "shared/remote-desktop/views/MousePad.tsx": "1752d0ff2219782150a2cc833db02807ddc38b5b3c88f90c74759a1944c623c6",
     "shared/remote-desktop/views/useTrackpad.ts": "febe0e3a0263401d1627328772ab91b3d507e3c496fd0b0e844f89834212669a",
     "shared/remote-desktop/views/useVideoViewport.ts": "27fc1e5684e036355d7c9a4d784a07d3efb922ba485b716362462c05ee95ce0b",
     "shared/remote-desktop/useMousePanel.ts": "2037c627c2658fcb8660c2a75c664f361c496afbb94f6ec2015d3244096e1fa8",
