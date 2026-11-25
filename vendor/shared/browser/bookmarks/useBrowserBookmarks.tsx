@@ -4,7 +4,7 @@ import { isTauri } from '@tauri-apps/api/core';
 import { BookMarked, Check, ChevronRight, Cloud, PanelTop, RotateCw, Settings, Star } from 'lucide-react';
 import type { BrowserTab } from '../../provider-market/browserState';
 import type { MarketText } from '../../provider-market/i18n';
-import { bookmarkUrl, type Bookmark } from './model';
+import { bookmarkUrl, pageBookmark, type Bookmark } from './model';
 import { useBookmarks } from './context';
 import { BookmarkBar } from './BookmarkBar';
 import { BookmarkEditor } from './BookmarkEditor';
@@ -32,22 +32,25 @@ export function useBrowserBookmarks(options: {
   const [settings, setSettings] = useState(false);
   const [menu, setMenu] = useState(false);
   const [manager, setManager] = useState(false);
-  const [editor, setEditor] = useState<Bookmark>();
+  const [editor, setEditor] = useState<{ entry: Bookmark; addingPage?: boolean }>();
   const [deleting, setDeleting] = useState<Bookmark>();
   const drag = useBookmarkDrag(store, 'x');
   const address = tab && bookmarkUrl(tab.url);
   const saved = address && entries.find(entry => entry.kind === 'link' && entry.url === address);
   const current = useCurrentBookmark({ url: tab?.url ?? '', title: tab?.title ?? '', newId: () => crypto.randomUUID() });
-  const create = (kind: Bookmark['kind'], current = false) => {
-    setEditor({ id: crypto.randomUUID(), kind, title: current ? tab?.title || (address ? new URL(address).hostname : '') : '',
-      url: current ? address ?? '' : '', parentId: '', position: Math.max(-1, ...entries.map(entry => entry.position)) + 1 });
+  const create = (kind: Bookmark['kind'], prefill = false, folder?: Bookmark) => {
+    const id = crypto.randomUUID();
+    const page = prefill && tab ? pageBookmark(tab, () => id) : undefined;
+    setMenu(false);
+    setEditor({ addingPage: !!folder, entry: { id, kind, title: page?.title ?? '', url: page?.url ?? '',
+      parentId: folder?.id ?? '', position: Math.max(-1, ...entries.map(entry => entry.position)) + 1 } });
   };
   const visit = (entry: Bookmark, newTab = false) => {
     setMenu(false); setSettings(false); setManager(false);
     if (newTab || !tab) options.newTab(entry.url); else options.navigate(entry.url);
   };
   const manage = () => { setMenu(false); setSettings(false); setManager(true); };
-  const edit = (entry: Bookmark) => { setMenu(false); setEditor(entry); };
+  const edit = (entry: Bookmark) => { setMenu(false); setEditor({ entry }); };
   const remove = (entry: Bookmark) => { setMenu(false); setDeleting(entry); };
   return {
     manage,
@@ -89,7 +92,7 @@ export function useBrowserBookmarks(options: {
     </Popover>,
     bar: showBar && <BookmarkBar entries={entries} t={t} visit={visit} edit={edit} remove={remove}
       manage={manage} menuChanged={setMenu} drag={drag} newFolderLabel={options.newFolderLabel}
-      newFolder={() => { setMenu(false); create('folder'); }} />,
+      newFolder={() => create('folder')} addPage={folder => create('link', true, folder)} />,
     overlays: <>{manager && (compact
       ? <BookmarkDrawer t={t} close={() => setManager(false)} visit={visit} add={() => create('link', true)} />
       : <BookmarkManager t={t} close={() => setManager(false)} edit={edit} create={create} visit={visit} />)}
@@ -99,6 +102,6 @@ export function useBrowserBookmarks(options: {
         <p>{t('market.bookmarkDeleteConfirm')}</p>
         <span style={{ overflowWrap: 'anywhere', color: token.colorTextSecondary }}>{deleting.title}</span>
       </Modal>}
-      {editor && <BookmarkEditor key={editor.id} entry={editor} t={t} close={() => setEditor(undefined)} />}</>,
+      {editor && <BookmarkEditor key={editor.entry.id} {...editor} t={t} close={() => setEditor(undefined)} />}</>,
   };
 }

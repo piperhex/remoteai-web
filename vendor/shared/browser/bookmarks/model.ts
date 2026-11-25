@@ -46,7 +46,7 @@ export function readBookmarkDocument(value: unknown): BookmarkDocument | undefin
   return { revision: doc.revision, entries: doc.entries };
 }
 
-function hasValidParents(entry: Bookmark, entries: Map<string, Bookmark>) {
+export function hasValidBookmarkParents(entry: Bookmark, entries: ReadonlyMap<string, Bookmark>) {
   const seen = new Set([entry.id]);
   let parent = entry.parentId;
   while (parent) {
@@ -61,7 +61,7 @@ function hasValidParents(entry: Bookmark, entries: Map<string, Bookmark>) {
 export function mergeBookmarks(remote: Bookmark[], edits: BookmarkEdits): Bookmark[] {
   const entries = new Map(remote.map(entry => [entry.id, entry]));
   Object.entries(edits).forEach(([id, entry]) => { if (entry) entries.set(id, entry); else entries.delete(id); });
-  return [...entries.values()].map(entry => hasValidParents(entry, entries) ? entry : { ...entry, parentId: '' })
+  return [...entries.values()].map(entry => hasValidBookmarkParents(entry, entries) ? entry : { ...entry, parentId: '' })
     .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id));
 }
 
@@ -76,7 +76,7 @@ export function bookmarkInFolder(entries: Bookmark[], source: BookmarkDragSource
   const children = entries.filter(entry => entry.parentId === folder.id);
   if ('page' in source && (entries.length >= MAX_BOOKMARKS || children.some(entry => entry.url === link.url))) return;
   const next = { ...link, parentId: folder.id, position: Math.max(-1, ...children.map(entry => entry.position)) + 1 };
-  return hasValidParents(next, byId) ? next : undefined;
+  return hasValidBookmarkParents(next, byId) ? next : undefined;
 }
 
 export function bookmarkDescendants(entries: Bookmark[], id: string): Set<string> {

@@ -2,10 +2,13 @@ import { useRef, useState } from 'react';
 import { Alert, Button, Input, Modal, Select, type InputRef } from 'antd';
 import type { MarketText } from '../../provider-market/i18n';
 import { useBrowserOverlay } from '../overlays/BrowserOverlayProvider';
-import { bookmarkDescendants, bookmarkUrl, type Bookmark } from './model';
+import { bookmarkDescendants, bookmarkUrl, hasValidBookmarkParents, type Bookmark } from './model';
 import { useBookmarks } from './context';
+import { BookmarkFolderPicker } from './BookmarkFolderPicker';
 
-export function BookmarkEditor({ entry, t, close }: { entry: Bookmark; t: MarketText; close: () => void }) {
+export function BookmarkEditor({ entry, t, close, addingPage }: {
+  entry: Bookmark; t: MarketText; close: () => void; addingPage?: boolean;
+}) {
   const { store, entries } = useBookmarks();
   const nativePopup = useBrowserOverlay();
   const nameRef = useRef<InputRef>(null);
@@ -15,14 +18,16 @@ export function BookmarkEditor({ entry, t, close }: { entry: Bookmark; t: Market
   const [error, setError] = useState(false);
   const excluded = bookmarkDescendants(entries, entry.id);
   const existing = entries.some(item => item.id === entry.id);
+  const canSaveHere = !addingPage || hasValidBookmarkParents({ ...entry, parentId }, new Map(entries.map(e => [e.id, e])));
   const submit = () => {
+    if (!canSaveHere) return;
     const address = entry.kind === 'link' ? bookmarkUrl(url.trim()) : '';
     if (!title.trim() || entry.kind === 'link' && !address || !store.save({ ...entry,
       title: title.trim(), url: address ?? '', parentId })) { setError(true); return; }
     close();
   };
-  return <Modal open className="browser-chrome"
-    title={t(entry.kind === 'folder' ? 'market.bookmarkFolder' : 'market.bookmarkEdit')}
+  const editorTitle = entry.kind === 'folder' ? 'market.bookmarkFolder' : 'market.bookmarkEdit';
+  return <Modal open className="browser-chrome" title={t(addingPage ? 'market.bookmarkAddPage' : editorTitle)}
     afterOpenChange={open => {
       const input = nameRef.current?.input;
       // In the native popup, the dialog focuses its wrapper when the opening animation finishes.
@@ -30,7 +35,8 @@ export function BookmarkEditor({ entry, t, close }: { entry: Bookmark; t: Market
     }}
     onCancel={close} width={400} zIndex={1800} footer={<>
       {existing && <Button danger onClick={() => { store.remove(entry.id); close(); }}>{t('market.bookmarkDelete')}</Button>}
-      <Button onClick={close}>{t('market.cancel')}</Button><Button type="primary" onClick={submit}>{t('market.save')}</Button>
+      <Button onClick={close}>{t('market.cancel')}</Button>
+      <Button type="primary" disabled={!canSaveHere} onClick={submit}>{t('market.save')}</Button>
     </>}>
     <form className="browser-bookmark-form" onSubmit={event => { event.preventDefault(); submit(); }}>
       <label>{t('market.bookmarkName')}<Input ref={nameRef} autoFocus={!nativePopup} value={title} maxLength={200}
@@ -42,10 +48,12 @@ export function BookmarkEditor({ entry, t, close }: { entry: Bookmark; t: Market
         aria-label={t('market.bookmarkName')} onChange={event => setTitle(event.target.value)} /></label>
       {entry.kind === 'link' && <label>{t('market.browserAddress')}<Input value={url} maxLength={4096}
         aria-label={t('market.browserAddress')} onChange={event => setUrl(event.target.value)} /></label>}
-      <label>{t('market.bookmarkLocation')}<Select value={parentId} aria-label={t('market.bookmarkLocation')}
+      {addingPage ? <BookmarkFolderPicker entries={entries} label={t('market.bookmarkLocation')}
+        barLabel={t('market.bookmarkBar')} value={parentId} onChange={setParentId} />
+        : <label>{t('market.bookmarkLocation')}<Select value={parentId} aria-label={t('market.bookmarkLocation')}
         onChange={setParentId} options={[{ value: '', label: t('market.bookmarkBar') },
           ...entries.filter(item => item.kind === 'folder' && !excluded.has(item.id))
-            .map(item => ({ value: item.id, label: item.title }))]} /></label>
+            .map(item => ({ value: item.id, label: item.title }))]} /></label>}
       {error && <Alert type="error" showIcon message={t('market.bookmarkInvalid')} />}
     </form>
   </Modal>;
