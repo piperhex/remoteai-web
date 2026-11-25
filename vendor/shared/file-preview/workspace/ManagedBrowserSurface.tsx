@@ -25,8 +25,9 @@ export function WebsiteBrowserSurface(props: BrowserSurfaceProps) {
 function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, obscured }: BrowserSurfaceProps) {
   const client = useContext(BrowserClientContext);
   const host = useRef<HTMLDivElement>(null);
-  const current = useRef({ active, onNavigate, onLoadingChange, obscured });
-  current.current = { active, onNavigate, onLoadingChange, obscured };
+  const [pageFullscreen, setPageFullscreen] = useState(false);
+  const current = useRef({ active, onNavigate, onLoadingChange, obscured, pageFullscreen });
+  current.current = { active, onNavigate, onLoadingChange, obscured, pageFullscreen };
   const { image: overlayImage, preview } = useNativeBrowserPreview();
   const [image, setImage] = useState('');
   const [failed, setFailed] = useState(false);
@@ -57,7 +58,6 @@ function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, ob
     if (!client.native || !host.current) return;
     const element = host.current;
     let stopped = false;
-    let pageFullscreen = false;
     const session = nativeSurfaceSession<Parameters<typeof placeBrowser>[0] & { preservePreview: boolean }>({
       apply: async ({ preservePreview: _preview, ...request }) => {
         await placeBrowser(request);
@@ -78,7 +78,7 @@ function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, ob
       const visible = current.current.active && !document.hidden && !modal && bounds.width > 0 && bounds.height > 0;
       session.update({ threadId: tab.automationThread, tabId: tab.id,
         visible, preservePreview: Boolean(current.current.obscured || modal),
-        bounds: nativeSurfaceBounds(bounds, pageFullscreen && visible) });
+        bounds: nativeSurfaceBounds(bounds, current.current.pageFullscreen && visible) });
     };
     refresh.current = sync;
     const observer = new ResizeObserver(sync); observer.observe(element);
@@ -92,7 +92,7 @@ function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, ob
     const listener = listen<PageEvent>(
       `conversation-browser-${tab.id}`, ({ payload }) => {
       zoom?.(payload);
-      if (typeof payload.pageFullscreen === 'boolean') { pageFullscreen = payload.pageFullscreen; sync(); }
+      if (typeof payload.pageFullscreen === 'boolean') setPageFullscreen(payload.pageFullscreen);
       if (!payload.popup && payload.url) rememberWebsiteIcons(payload.url, payload.icons);
       if (!payload.popup && payload.url) current.current.onNavigate(payload.url);
     });
@@ -108,7 +108,7 @@ function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, ob
         .catch(error => console.debug('Browser preview already closed', error));
     };
   }, [client, tab.id, tab.automationThread, preview]);
-  useEffect(() => { refresh.current?.(); }, [active, obscured]);
+  useEffect(() => { refresh.current?.(); }, [active, obscured, pageFullscreen]);
   useEffect(() => {
     if (client.native || !active || !tab.automationThread) return;
     let stopped = false;
@@ -129,7 +129,8 @@ function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, ob
     void read();
     return () => { stopped = true; clearTimeout(timer); };
   }, [client, tab.id, tab.automationThread, active]);
-  return <BrowserInspector id={tab.id} kind="conversation" enabled={client.native} active={active && !obscured} t={t}>
+  return <BrowserInspector id={tab.id} kind="conversation" enabled={client.native} active={active && !obscured}
+    pageFullscreen={pageFullscreen} t={t}>
     <div ref={host} className="pm-browser-surface">
     {client.native && overlayImage && !failed && <img className="native-browser-overlay-preview" src={overlayImage}
       alt="" aria-hidden draggable={false} />}

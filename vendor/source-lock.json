@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "fe1198c5791d720284830b0da27e06f3ca0a7372",
+  "revision": "c7dcf748e94600055e857ba20c8617f6689ce100",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "7342d60b5176e8604f0deda7169c692b662dc45c"
+    "revision": "cc7b19dc828c22d3c86a361f8606799409d1d5e2"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -920,7 +920,7 @@
     "shared/file-preview/workspace/preview.module.less": "ab254b31294a88ac66379927c40523f47cf90756c44da0f2670b9509890d8701",
     "shared/remote-chat/views/remoteFilePreview.css": "fabb7a21c444c886f938711c288702b314d08dcc3e4ca38bbb198229cf700080",
     "shared/provider-market/ProviderBrowser.tsx": "be9fb6b3aaf37f4df5fc062d9af8eab684e7711d218a35f68bb6cd37f9bf016d",
-    "shared/file-preview/workspace/ManagedBrowserSurface.tsx": "b7358e456118b0874e2d756ecd7586a1be9e2ee309810a1a299b3fed1efb3ce3",
+    "shared/file-preview/workspace/ManagedBrowserSurface.tsx": "de910114dc9c467b7ea9a69332da83b2fdbc71c4000117d4ff6ef2c03534e3ae",
     "shared/remote-chat/views/ChatBinaryFilePreview.tsx": "d18d95c89fcd05ddd62ce5d23297c65dede1f4712cb97af8f641650b0818ad97",
     "shared/remote-chat/filePreview.ts": "8d369c8a09c5a195afe36a072b33eba610baf26717f370c0a7911d6457314096",
     "shared/file-preview/ResourceDownloadCard.tsx": "0b82b12a2fd3c2ac7149abcec77059a6a3b878f5515cc9efd5f890425d6b5387",
@@ -1428,7 +1428,7 @@
     "shared/provider-market/BrowserTabs.tsx": "e00caf9740e353d398ed253d4f997e852238d66651f8e658306fdfd831332aea",
     "shared/provider-market/ProviderWebsiteIcon.tsx": "33bc47efad0ae8fa4860962c64ab7ec9f4a8f6c2a1b34b1183226088fa30245d",
     "shared/provider-market/providerBrowser.css": "1fe23a105360a04af50416aefa590e52681c5eb9f380a8a4ba744adf50fc8c4c",
-    "shared/browser/managed/ProviderBrowserSurface.tsx": "35e909c2b0b7aa579fb80b4b7bd9aa76d2bdf638f5d5ddc04c3b965633777307",
+    "shared/browser/managed/ProviderBrowserSurface.tsx": "a7d07b2a91f42fd4503670b6847d8430dbd3683fe41884b7021a9608f3c0c361",
     "shared/browser/managed/browserOverlays.ts": "7049ab695b456b6b81304be6a4d09ee9f789c3e20e5762799c86a3f56c507a4f",
     "shared/file-preview/workspace/nativeBrowserPlacement.ts": "1c92017b8a513a44853dc406d12c1213895a66842db6a3c82259dc8d81336967",
     "shared/file-preview/resourceDownloadCard.css": "814b092087b2377aab8e9e883a629d8743671980e2c3e87b44af5dff1345a3ce",
@@ -1890,8 +1890,8 @@
     "shared/browser/managed/nativeSurfaceSession.ts": "a46254adafc8285cb66433b9984131a6dd2dbd7d69b66a6e93a2b3a6b2547211",
     "shared/browser/managed/useNativeBrowserPreview.ts": "9fbc6be08de4a4e3df85a5a040f118d870dfe6eef95a8afc83e3a94ec2e188e9",
     "shared/browser/managed/nativeBrowserPreview.css": "8992184a0f5abd3f0a298d8a2692ba2a3b6f9597db8372ad5a49b3658e316401",
-    "shared/browser/managed/BrowserInspector.tsx": "cfa50f40758e9860095d20a330cf14be40fde186563aeca1d8dcce9525825d0d",
-    "shared/browser/managed/useInspector.ts": "eb5346039c4c4721ebe639d0e18bd81a40e88856824a9345242123442529bd46",
+    "shared/browser/managed/BrowserInspector.tsx": "38edc563249dc223eacc375910c0d09d0ef8b4e7e7afe077b1c28efcfa9c52ea",
+    "shared/browser/managed/useInspector.ts": "8d75301ffb354fb98c9c12e55cf3fe264c269deba0d0a6ad3eafeb9657391d3c",
     "shared/browser/managed/inspectorSession.ts": "cec5be3f827e0e55b099064b0268aae74392c1fb04b1861f87b71346b4a298e1",
     "shared/browser/managed/browserInspector.css": "853d7d4f55bcae0495aa798574439f65fd29daab7522723f47e6dbb302d7d285",
     "shared/browser/BrowserFullscreenControl.tsx": "ae09e0409f5429329f519e2dd0d16b555159fbe75132a2552405dd8fa7063f3d",

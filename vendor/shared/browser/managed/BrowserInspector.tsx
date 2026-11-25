@@ -1,8 +1,8 @@
 import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from 'react';
 import { MonitorSmartphone, PanelBottom, PanelRight, ExternalLink, X } from 'lucide-react';
 import type { MarketKey, MarketText } from '../../provider-market/i18n';
-import { useInspector } from './useInspector';
-import type { InspectorDock, InspectorTarget } from './inspectorSession';
+import { useInspector, type InspectorSurface } from './useInspector';
+import type { InspectorDock } from './inspectorSession';
 import { DeviceToolbar } from './DeviceToolbar';
 import { initialDevice, responsiveDevice, type ViewportSize } from './deviceViewport';
 import { ViewportHandles } from './ViewportHandles';
@@ -15,9 +15,7 @@ const KEYBOARD_STEP = 2;
 const clampShare = (value: number) => Math.max(MIN_SHARE, Math.min(MAX_SHARE, value));
 
 /** The actual inspector stays native; this shared shell owns its placement and accessible splitter. */
-export function BrowserInspector(props: InspectorTarget & {
-  enabled: boolean; active: boolean; t: MarketText; children: ReactNode;
-}) {
+export function BrowserInspector(props: InspectorSurface & { t: MarketText; children: ReactNode }) {
   const stage = useRef<HTMLDivElement>(null);
   const [available, setAvailable] = useState<ViewportSize>({ width: 0, height: 0 });
   const [device, setDevice] = useState(initialDevice);

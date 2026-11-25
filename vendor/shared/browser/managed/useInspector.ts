@@ -5,7 +5,9 @@ import type { DeviceViewport } from './deviceViewport';
 import { inspectorCommand, inspectorSession, type InspectorDock, type InspectorStatus,
   type InspectorTarget } from './inspectorSession';
 
-export function useInspector({ id, kind, enabled, active }: InspectorTarget & { enabled: boolean; active: boolean },
+export type InspectorSurface = InspectorTarget & { enabled: boolean; active: boolean; pageFullscreen: boolean };
+
+export function useInspector({ id, kind, enabled, active, pageFullscreen }: InspectorSurface,
   deviceName: string, viewport: DeviceViewport | undefined) {
   const [{ open, mobile }, setStatus] = useState<InspectorStatus>({ open: false, mobile: false });
   const [switching, setSwitching] = useState(false);
@@ -14,7 +16,9 @@ export function useInspector({ id, kind, enabled, active }: InspectorTarget & { 
   const [failed, setFailed] = useState(false);
   const host = useRef<HTMLDivElement>(null);
   const refresh = useRef<() => void>();
-  const current = useRef({ active, dock, viewport, mobile }); current.current = { active, dock, viewport, mobile };
+  const showInspector = active && (dock === 'window' || !pageFullscreen);
+  const current = useRef({ showInspector, dock, viewport, mobile });
+  current.current = { showInspector, dock, viewport, mobile };
   useEffect(() => {
     if (!enabled) return;
     let stopped = false;
@@ -39,8 +43,8 @@ export function useInspector({ id, kind, enabled, active }: InspectorTarget & { 
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
         const bounds = element.getBoundingClientRect();
-        const { active, dock, mobile, viewport } = current.current;
-        const visible = active && !document.hidden && !hasBrowserOverlay(element)
+        const { showInspector, dock, mobile, viewport } = current.current;
+        const visible = showInspector && !document.hidden && !hasBrowserOverlay(element)
           && element.getClientRects().length > 0;
         session.update({ action: 'place', dock, visible, viewport: mobile ? viewport : undefined, bounds: {
           x: Math.max(0, bounds.x), y: Math.max(0, bounds.y),
@@ -63,7 +67,7 @@ export function useInspector({ id, kind, enabled, active }: InspectorTarget & { 
       void session.stop().catch(error => console.debug('Inspector surface already closed', error));
     };
   }, [enabled, open, id, kind]);
-  useEffect(() => { refresh.current?.(); }, [active, dock, mobile, viewport]);
+  useEffect(() => { refresh.current?.(); }, [showInspector, dock, mobile, viewport]);
   const close = () => {
     void inspectorCommand({ id, kind }, { action: 'close' }).then(status => { setStatus(status); setDock('right'); })
       .catch(() => setFailed(true));

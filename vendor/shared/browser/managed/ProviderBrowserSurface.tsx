@@ -26,10 +26,12 @@ export function ProviderBrowserSurface(props: BrowserSurfaceProps) {
   const [failed, setFailed] = useState(false);
   const [unsupported, setUnsupported] = useState(false);
   const [attempt, setAttempt] = useState(0);
+  const [pageFullscreen, setPageFullscreen] = useState(false);
   const desktop = isTauri();
   const { image, preview } = useNativeBrowserPreview();
-  const state = useRef({ tab, active, onNavigate, onPopup, onLoadingChange, obscured, onVisit: props.onVisit });
-  state.current = { tab, active, onNavigate, onPopup, onLoadingChange, obscured, onVisit: props.onVisit };
+  const latest = { tab, active, pageFullscreen, onNavigate, onPopup, onLoadingChange, obscured, onVisit: props.onVisit };
+  const state = useRef(latest);
+  state.current = latest;
   const refresh = useRef<() => void>();
   const nativeNavigation = useRef('');
   const lastCommand = useRef(0);
@@ -44,7 +46,6 @@ export function ProviderBrowserSurface(props: BrowserSurfaceProps) {
     }, preview);
     let frame = 0;
     let modalVisible = false;
-    let pageFullscreen = false;
     const sync = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
@@ -55,7 +56,7 @@ export function ProviderBrowserSurface(props: BrowserSurfaceProps) {
         session.update({ url: current.tab.url, headers: current.tab.headers,
           headerOrigin: current.tab.headerOrigin, visible, preservePreview: current.obscured || modalVisible,
           navigate: nativeNavigation.current !== current.tab.url,
-          bounds: nativeSurfaceBounds(bounds, pageFullscreen && visible) });
+          bounds: nativeSurfaceBounds(bounds, current.pageFullscreen && visible) });
       });
     };
     refresh.current = sync;
@@ -63,7 +64,7 @@ export function ProviderBrowserSurface(props: BrowserSurfaceProps) {
       visited?: boolean; icons?: string[] } & NativeZoomEvent & NativePageFullscreenEvent>(
       `provider-browser-${tab.id}`, ({ payload }) => {
         zoom?.(payload);
-        if (typeof payload.pageFullscreen === 'boolean') { pageFullscreen = payload.pageFullscreen; sync(); }
+        if (typeof payload.pageFullscreen === 'boolean') setPageFullscreen(payload.pageFullscreen);
         if (payload.popup && payload.url) { state.current.onPopup(payload.url); return; }
         if (typeof payload.loading === 'boolean') state.current.onLoadingChange?.(payload.loading);
         if (payload.visited && payload.url) state.current.onVisit?.({ url: payload.url, title: payload.title ?? '' });
@@ -98,7 +99,7 @@ export function ProviderBrowserSurface(props: BrowserSurfaceProps) {
       void session.close().catch((error) => console.error('Provider browser close failed', error));
     };
   }, [desktop, tab.id, attempt, hideForModal, preview]);
-  useEffect(() => { refresh.current?.(); }, [active, tab.url, obscured]);
+  useEffect(() => { refresh.current?.(); }, [active, tab.url, obscured, pageFullscreen]);
   useEffect(() => {
     if (!command || command.sequence === lastCommand.current) return;
     lastCommand.current = command.sequence;
@@ -110,7 +111,8 @@ export function ProviderBrowserSurface(props: BrowserSurfaceProps) {
       .catch(() => { state.current.onLoadingChange?.(false); setFailed(true); });
   }, [command, desktop, tab.id]);
   const feedback = browserFeedback({ url: tab.url, unsupported, needsDesktop, failed });
-  return <BrowserInspector id={tab.id} kind="provider" enabled={desktop} active={active && !obscured} t={t}>
+  return <BrowserInspector id={tab.id} kind="provider" enabled={desktop} active={active && !obscured}
+    pageFullscreen={pageFullscreen} t={t}>
     <div className="pm-browser-surface" ref={host}>
     {desktop && image && !feedback && <img className="native-browser-overlay-preview" src={image}
       alt="" aria-hidden draggable={false} />}
