@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import type { TerminalInfo } from '../types';
 
 export const MAX_TERMINAL_TABS = 8;
-export interface TerminalTab { id: string; cwd: string; session?: TerminalInfo; npmScript?: string; exited?: boolean }
+export interface TerminalTab { id: string; cwd: string; subtitle?: string; session?: TerminalInfo; npmScript?: string; exited?: boolean }
 
 export function useTerminalPanel(cwd: string) {
   const [tabs, setTabs] = useState<TerminalTab[]>([]);

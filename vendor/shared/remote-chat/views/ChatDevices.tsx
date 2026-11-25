@@ -6,9 +6,9 @@ import { ComputerSearchBar, type ComputerListRefresh } from '../ComputerSearchBa
 import { useDesktopLayout } from '../../layout/useDesktopLayout';
 import { useChatSurfaceTheme } from './useChatSurfaceTheme';
 
-export function ChatDevices({ devices, choose, chooseLocal, onClose, refresh }: {
+export function ChatDevices({ devices, choose, chooseLocal, localDeviceId, onClose, refresh }: {
   devices: ChatComputer[]; choose: (id: string) => void; onClose: () => void; chooseLocal?: () => void;
-  refresh?: ComputerListRefresh;
+  refresh?: ComputerListRefresh; localDeviceId?: string;
 }) {
   useLanguage();
   const surfaceTheme = useChatSurfaceTheme();
@@ -24,7 +24,8 @@ export function ChatDevices({ devices, choose, chooseLocal, onClose, refresh }: 
         <strong>{t("client.composer.thisComputer")}</strong></button>}
       {matches.map((device) => <button type="button" key={device.deviceId} className="chat-setting-entry"
         disabled={!device.online} onClick={() => choose(device.deviceId)}>
-        <strong>{device.name}</strong><span>{device.online ? t("client.chat.online") : t("client.chat.offline")}</span>
+        <strong>{device.name}</strong><span>{device.deviceId === localDeviceId
+          ? t("client.composer.thisComputer") : t(device.online ? "client.chat.online" : "client.chat.offline")}</span>
       </button>)}
       {!devices.length && <p className="chat-muted">{t("client.chat.openRemoteAiOnYourComputerAndSignInWith")}</p>}
       {!!keyword && !showLocal && !matches.length

@@ -1,33 +1,35 @@
 import { useEffect, useRef, useState } from 'react';
 import { sshError } from '../ssh';
-import type { TerminalApi, TerminalInfo } from '../types';
+import type { SshHost } from './useSshHosts';
+import type { TerminalInfo } from '../types';
 import { useTerminalPanel } from '../views/useTerminalPanel';
 
 /** Only terminals explicitly opened by this workspace belong to it. */
-export function useSshSessions(api: TerminalApi) {
+export function useSshSessions() {
   const panel = useTerminalPanel('');
-  const owned = useRef(new Set<string>());
+  const owned = useRef(new Map<string, SshHost>());
   const closing = useRef(new Set<string>());
   const [error, setError] = useState('');
   useEffect(() => {
     const sessions = owned.current;
     return () => {
-      for (const id of sessions) {
+      for (const [id, { api }] of sessions) {
         if (!closing.current.has(id)) void api.close(id).catch(() => console.warn('SSH session cleanup failed'));
       }
       sessions.clear();
     };
-  }, [api]);
-  const adopt = (info: TerminalInfo) => {
-    owned.current.add(info.id);
+  }, []);
+  const adopt = (info: TerminalInfo, host: SshHost) => {
+    owned.current.set(info.id, host);
     setError('');
     panel.adopt(info);
   };
   const remove = async (id: string) => {
-    if (!owned.current.has(id) || closing.current.has(id)) return;
+    const host = owned.current.get(id);
+    if (!host || closing.current.has(id)) return;
     closing.current.add(id);
     try {
-      await api.close(id);
+      await host.api.close(id);
       owned.current.delete(id);
       panel.remove(id);
       setError('');
@@ -38,7 +40,11 @@ export function useSshSessions(api: TerminalApi) {
       } else setError(sshError(failure, 'client.ssh.connectionFailed'));
     } finally { closing.current.delete(id); }
   };
-  return { ...panel, adopt, error, remove, removeTabs: (ids: string[]) => { ids.forEach(id => void remove(id)); } };
+  const tabs = panel.tabs.map(tab => {
+    const host = owned.current.get(tab.id)!;
+    return { ...tab, host, subtitle: host.name };
+  });
+  return { ...panel, tabs, adopt, error, remove, removeTabs: (ids: string[]) => { ids.forEach(id => void remove(id)); } };
 }
 
 const RECENT_LIMIT = 6;

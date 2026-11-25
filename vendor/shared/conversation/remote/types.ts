@@ -4,6 +4,7 @@ export interface GuiCloudIdentity { baseUrl: string; userId: string }
 export interface GuiDeviceDirectory {
   identity: GuiCloudIdentity | null;
   currentDeviceId: string;
+  currentDeviceName?: string | null;
   devices: GuiComputer[];
 }
 export interface GuiComputerNavigation {

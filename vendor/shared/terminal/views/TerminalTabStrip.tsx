@@ -45,7 +45,8 @@ export function TerminalTabStrip({ tabs, selected, select, remove, removeTabs, v
       onOpenChange={value => { setOpen(value); if (value) setMenuId(null); }}
       overlayStyle={{ maxWidth: 'min(400px, calc(100vw - 16px))' }} menu={{
         items: hidden.map(tab => ({ key: tab.id, label: <div className={styles.overflowItem}>
-          <span>{label(tab)}</span><button type="button" aria-label={closeLabel(tab)}
+          <span>{label(tab)}{tab.subtitle && <small className={styles.tabSubtitle}>{tab.subtitle}</small>}</span>
+          <button type="button" aria-label={closeLabel(tab)}
             onClick={event => { event.stopPropagation(); remove(tab.id); }}><X size={16} /></button>
         </div> })), onClick: ({ key }) => choose(key),
       }}>

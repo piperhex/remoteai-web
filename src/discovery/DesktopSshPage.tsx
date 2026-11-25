@@ -1,26 +1,14 @@
-import { useMemo, useState } from 'react';
-import { Button } from 'antd';
-import { ChevronDown } from 'lucide-react';
+import { useRef } from 'react';
 import { SshWorkspace } from '../../../../shared/terminal/workspace/SshWorkspace';
-import { remoteTerminalApi } from '../../../../shared/remote-chat/terminalApi';
-import { ChatDevices } from '../../../../shared/remote-chat/views/ChatDevices';
-import type { GuiToolsClient } from '../../../../shared/remote-chat/guiTools';
-import { t } from '../../../../shared/localization/browserClient';
-import type { RemoteDevice } from '../types';
+import type { SshHost } from '../../../../shared/terminal/workspace/useSshHosts';
+import type { SshHostDirectory } from '../../../../shared/terminal/workspace/SshLaunchDialog';
 
-export default function DesktopSshPage({ client, active, connected, device, devices, chooseDevice, scope }: {
-  client: GuiToolsClient['terminal']; active: boolean; connected: boolean; device?: RemoteDevice;
-  devices: RemoteDevice[]; chooseDevice: (id: string) => void; scope: string;
+export default function DesktopSshPage({ active, scope, defaultHost, directory }: {
+  active: boolean; scope: string; defaultHost?: SshHost; directory: SshHostDirectory;
 }) {
-  const api = useMemo(() => remoteTerminalApi(client), [client]);
-  const [picking, setPicking] = useState(false);
-  return <>
-    <SshWorkspace api={api} active={active} available={connected} scope={scope} host={
-      <Button type="text" aria-label={t('client.settings.chooseAComputer')} onClick={() => setPicking(true)}>
-        {device ? t('client.discovery.sshViaComputer', { name: device.name }) : t('client.settings.chooseAComputer')}
-        <ChevronDown size={14} />
-      </Button>} />
-    {active && picking && <ChatDevices devices={devices} onClose={() => setPicking(false)}
-      choose={id => { setPicking(false); chooseDevice(id); }} />}
-  </>;
+  // A newly selected chat reports its API after mounting. Keep the account's open SSH tabs during that render.
+  const previous = useRef<SshHost>();
+  if (defaultHost) previous.current = defaultHost;
+  const host = defaultHost ?? (previous.current && { ...previous.current, ready: false });
+  return host && <SshWorkspace active={active} scope={scope} defaultHost={host} directory={directory} />;
 }

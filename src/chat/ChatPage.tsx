@@ -1,10 +1,12 @@
 import { t, useLanguage } from '../../../../shared/localization/browserClient';
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { usePagePreview } from '../../../../shared/navigation/PageSwipeContext';
 import { useAppDispatch } from '../hooks';
 import { chatDeviceSelected } from '../store';
 import type { AuthSession, RemoteDevice } from '../types';
 import { ConnectedChat } from '../../../../shared/remote-chat/views/ConnectedChat';
+import { useSshHosts, type ReportSshHost } from '../../../../shared/terminal/workspace/useSshHosts';
+import { remoteTerminalApi } from '../../../../shared/remote-chat/terminalApi';
 import { ChatTokenSummary } from './ChatTokenSummary';
 import { SshPage } from '../discovery/SshPage';
 import { RetainedView } from '../../../../shared/RetainedView';
@@ -53,17 +55,25 @@ export function ChatPage({ session, devices, active, openAccounts,
   }, [dispatch, device?.deviceId]);
   useChatViewport(active);
   const scope = JSON.stringify([session.baseUrl, session.email]);
-  const retained = useRetainedChatDevices({ scope, devices, selectedId: device?.deviceId });
+  const desktop = useDesktopLayout();
+  const hosts = useSshHosts(scope);
+  const retained = useRetainedChatDevices({ scope, devices, selectedId: device?.deviceId, requestedId: hosts.requestedId });
   const chats = device ? retained : [...retained, undefined];
   const chooseDevice = (id: string) => {
     setDeviceId(id);
   };
   return <section className="chat-page" hidden={!active && !preview} aria-label={t("client.chat.codexChat")}>
+    {desktop && <RetainedView active={!!sshDiscovery} scope={scope}>
+      <Suspense fallback={null}>
+        <DesktopSshPage key={scope} active={!!sshDiscovery} scope={scope} defaultHost={hosts.get(device?.deviceId ?? '')}
+          directory={{ devices, get: hosts.get, request: hosts.request, refresh: deviceRefresh }} />
+      </Suspense>
+    </RetainedView>}
     {chats.map(chatDevice => {
       const selected = chatDevice?.deviceId === device?.deviceId;
-      return <div className="chat-device-session" hidden={!selected}
+      return <div className="chat-device-session" hidden={!selected || (desktop && sshDiscovery)}
         key={JSON.stringify([scope, chatDevice?.deviceId])}>
-        <WebChat session={session} device={chatDevice} devices={devices} selected={selected}
+        <WebChat session={session} device={chatDevice} devices={devices} selected={selected} reportHost={hosts.report}
           acceptDownload={acceptDownload && selected}
           tokenSummary={tokenSummary && selected} closeTokenSummary={closeTokenSummary}
           sshDiscovery={sshDiscovery && selected} closeSshDiscovery={closeSshDiscovery}
@@ -74,12 +84,19 @@ export function ChatPage({ session, devices, active, openAccounts,
   </section>;
 }
 
-function WebChat({ session, device, selected, ...props }: Props & {
-  device?: RemoteDevice; selected: boolean; chooseDevice: (id: string) => void;
+function WebChat({ session, device, selected, reportHost, ...props }: Props & {
+  device?: RemoteDevice; selected: boolean; reportHost: ReportSshHost; chooseDevice: (id: string) => void;
   deviceRefresh: ComputerListRefresh;
 }) {
   const chat = useChat(session, device?.deviceId ?? '', props.active && Boolean(device));
   const desktop = useDesktopLayout();
+  const terminalApi = useMemo(() => remoteTerminalApi(chat.controller.guiTools.terminal), [chat.controller]);
+  const id = device?.deviceId ?? '';
+  useEffect(() => {
+    reportHost(id, { deviceId: id, name: device?.name ?? '', api: terminalApi, ready: chat.state.ready,
+      error: chat.state.connectionIssue });
+    return () => reportHost(id);
+  }, [reportHost, id, device?.name, terminalApi, chat.state.ready, chat.state.connectionIssue]);
   const [cwd, setWorkspaceCwd] = useState('');
   const terminal = useRemoteTerminalLauncher({ client: chat.controller.guiTools.terminal,
     cwd, connected: chat.state.ready });
@@ -89,15 +106,8 @@ function WebChat({ session, device, selected, ...props }: Props & {
     if (selected && chat.state.ready && device) saveLastConnectedDevice(session, device.deviceId);
   }, [selected, chat.state.ready, device?.deviceId, session.baseUrl, session.email]);
   useDownloadConnection({ session, deviceId: device?.deviceId ?? '', deviceName: device?.name ?? '',
-    controller: chat.controller, enabled: selected });
+    controller: chat.controller, enabled: selected || desktop, selected });
   return <TerminalWorkspaceProvider panel={terminal}>
-    {desktop && <RetainedView active={!!props.sshDiscovery}>
-      <Suspense fallback={null}>
-        <DesktopSshPage active={!!props.sshDiscovery} client={chat.controller.guiTools.terminal} connected={chat.state.ready}
-          device={device} devices={props.devices} chooseDevice={props.chooseDevice}
-          scope={JSON.stringify([session.baseUrl, session.email])} />
-      </Suspense>
-    </RetainedView>}
     {!desktop && props.sshDiscovery && <SshPage client={chat.controller.guiTools.terminal} connected={chat.state.ready}
       deviceName={device?.name} devices={props.devices} chooseDevice={props.chooseDevice}
       onBack={props.closeSshDiscovery!} />}

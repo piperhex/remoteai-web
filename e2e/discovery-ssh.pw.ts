@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { connect, fixtureUrl, login, navigate, operationCount, screenshot, state } from './chat-helpers';
 import { testText } from '../../../scripts/i18n-fixture.mjs';
+import { computers, provideComputers } from './chat-device-fixture';
 import { mockDiscoverySshStore } from './discovery-ssh-store';
 
 test('desktop sidebar opens saved SSH sessions independently of the chat terminal', async ({ page, request }, info) => {
@@ -9,6 +10,7 @@ test('desktop sidebar opens saved SSH sessions independently of the chat termina
   const store = await mockDiscoverySshStore(page, [{ id: 'dev', name: '开发服务器', host: 'dev.example.test',
     port: 22, username: 'dev', auth: 'password', revision: 1, fingerprint: 'SHA256:fixture' }]);
   store.secrets.set('dev', { password: 'fixture-password' });
+  await provideComputers(page, computers);
   await login(page); await connect(page);
   const nav = page.locator('.desktop-sidebar nav');
   await nav.getByRole('button', { name: 'SSH', exact: true }).click();
@@ -16,6 +18,13 @@ test('desktop sidebar opens saved SSH sessions independently of the chat termina
   await expect(workspace.locator('.ssh-profile-card')).toBeEnabled({ timeout: 25_000 });
   await screenshot(page, info, 'web-desktop-ssh-sidebar');
   await workspace.locator('.ssh-profile-card').click();
+  const picker = page.getByRole('dialog', { name: testText('client.settings.chooseAComputer') });
+  await expect(picker).toBeVisible();
+  await expect(picker).not.toHaveClass(/-(?:appear|enter)(?:\s|$|-)/);
+  await expect(picker).toHaveCSS('opacity', '1');
+  await screenshot(page, info, 'web-desktop-ssh-device-picker');
+  await picker.getByRole('button', { name: '另一台电脑 在线', exact: true }).click();
+  await expect(workspace.getByRole('tab').locator('small')).toHaveText('另一台电脑', { timeout: 25_000 });
   await expect(workspace.locator('.xterm-rows:visible')).toContainText('SSH ready');
   // Older connected computers can keep serving a terminal without reporting host metrics.
   await expect(workspace.locator('.sshm-status')).toHaveText(testText('client.conversationWorkspace.unavailable'));
@@ -49,6 +58,7 @@ test('desktop sidebar opens saved SSH sessions independently of the chat termina
   await expect(editor.getByLabel('IP 或主机名', { exact: true })).toHaveValue('');
   await editor.getByRole('button', { name: '取消', exact: true }).click();
   await navigate(page, '聊天');
+  await expect(page.getByRole('button', { name: '选择电脑', exact: true })).toContainText('我的工作电脑');
   await nav.getByRole('button', { name: 'SSH', exact: true }).click();
   await expect(workspace.locator('.xterm-rows:visible')).toContainText('SSH ready');
   await workspace.getByRole('button', { name: '关闭终端 1', exact: true }).click();

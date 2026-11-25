@@ -13,6 +13,7 @@ export function TerminalTabItem({ tab, tabs, selected, label, closeLabel, menuOp
   menuOpen: boolean; visible: boolean; choose: (id: string) => void; remove: (id: string) => void;
   removeTabs: (ids: string[]) => void; setMenuOpen: (open: boolean) => void;
 }) {
+  const { subtitle } = tab;
   const text = marketText(guiLanguage());
   const button = useRef<HTMLButtonElement>(null);
   const gesture = useThreadLongPress(press => {
@@ -43,11 +44,14 @@ export function TerminalTabItem({ tab, tabs, selected, label, closeLabel, menuOp
         // Native right-click focus can scroll a clipped tab and immediately dismiss its menu.
         if (event.button === 2) event.preventDefault();
       }}>
-      <Tooltip title={menuOpen ? null : label} styles={{ root: { maxWidth: 400 } }}>
+      <Tooltip title={menuOpen ? null : <>{label}{subtitle && <div>{subtitle}</div>}</>} styles={{ root: { maxWidth: 400 } }}>
         <button ref={button} type="button" role="tab" id={`terminal-tab-${tab.id}`} aria-selected={selected}
           aria-controls={`terminal-pane-${tab.id}`} aria-haspopup="menu" aria-expanded={menuOpen}
           onClick={() => choose(tab.id)}>
-          <SquareTerminal size={15} /><span>{label}</span>
+          <SquareTerminal size={15} />{subtitle
+            ? <span className={styles.tabLines}><span>{label}</span>
+              <small className={styles.tabSubtitle}>{subtitle}</small></span>
+            : <span>{label}</span>}
         </button>
       </Tooltip>
       <button type="button" aria-label={closeLabel} onClick={() => remove(tab.id)}><X size={14} /></button>
