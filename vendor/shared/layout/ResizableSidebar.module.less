@@ -2,7 +2,8 @@
 .handle { position: absolute; top: 0; bottom: 0; right: -4px; width: 8px; z-index: 5;
   cursor: col-resize; touch-action: none; outline: none;
   &::after { content: ''; position: absolute; inset: 0 3px; background: transparent; }
-  &:hover::after, &:focus-visible::after { background: var(--chat-green, var(--green)); }
 }
 .sidebar .handle:focus-visible { outline: none; }
-.sidebar[data-resizing='true'] .handle::after { background: var(--chat-green, var(--green)); }
+.handle:hover::after, .handle:focus-visible::after, .sidebar[data-resizing='true'] .handle::after {
+  background: var(--sidebar-resize-color, var(--chat-green, var(--green)));
+}

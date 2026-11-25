@@ -5,6 +5,8 @@ import { displayText as t } from '../../localization/messages';
 import { remoteErrorText } from '../../localization/errors';
 import { useGuiLanguage } from '../../localization/useGuiLanguage';
 import { enqueueSshDownload } from '../../downloads/sshDownload';
+import { ResizableSidebar } from '../../layout/ResizableSidebar';
+import type { SidebarSizing } from '../../layout/useSidebarResize';
 import { SshConnectionDialog } from '../SshConnectionDialog';
 import { SshQuickConnectDialog } from '../SshQuickConnectDialog';
 import { SshProjectBrowser } from '../SshProjectBrowser';
@@ -28,6 +30,12 @@ interface Props {
 
 // The remote terminal list uses this opaque project association to isolate SSH tabs from chat terminals.
 const SSH_WORKSPACE = 'remoteai:ssh-workspace';
+const SSH_SIDEBAR: SidebarSizing = {
+  storageKey: 'codex-switch:ssh-workspace-sidebar-width',
+  minimum: 180,
+  minimumContent: 300,
+  defaultWidth: available => available <= 630 ? available * 0.36 : Math.max(235, Math.min(330, available * 0.25)),
+};
 type WorkspaceDialog = { kind: 'new' | 'manage'; profile?: undefined } | { kind: 'edit' | 'remove'; profile: SshProfile };
 
 export function SshWorkspace({ api, active, available, scope, host, login }: Props) {
@@ -73,7 +81,8 @@ export function SshWorkspace({ api, active, available, scope, host, login }: Pro
       message={remoteErrorText(saved.error || sessions.error || (limit ? 'client.ssh.limit' : 'client.discovery.sshComputerHint'))}
       action={login && <Button onClick={login}>{t('client.lounge.login')}</Button>} />}
     <div className="sshw-body">
-      <div className="sshw-rail">
+      <ResizableSidebar className="sshw-rail" layoutSelector=".sshw-body" sizing={SSH_SIDEBAR}
+        resizeLabel={t(showFiles ? 'client.ssh.files' : 'client.ssh.savedConnections')}>
         {current && <div className="sshw-switch">
           <button type="button" aria-label={t('client.ssh.savedConnections')} aria-pressed={!files}
             onClick={() => setFiles(false)}><Server size={15} />{t('client.ssh.savedConnection')}</button>
@@ -90,7 +99,7 @@ export function SshWorkspace({ api, active, available, scope, host, login }: Pro
             nativeDrop={nativeDrop} download={file => enqueueSshDownload(ssh, tab.id, file)}
             pendingUpload={uploads.pending.find(upload => upload.id === tab.id)} />
         </div>)}
-      </div>
+      </ResizableSidebar>
       <div className="sshw-main">
         <div className="sshw-tabs" hidden={!sessions.tabs.length}>
           <Tooltip title={t('client.ssh.savedConnections')}><button type="button" className="sshw-home-tab"

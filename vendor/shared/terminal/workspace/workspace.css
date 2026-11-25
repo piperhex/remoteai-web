@@ -19,10 +19,10 @@
 .sshw-host { gap: 6px; padding-inline-start: 12px; border-inline-start: 1px solid var(--ssh-line);
   color: var(--ssh-muted); overflow-wrap: anywhere; }
 .sshw-tools { margin-inline-start: auto; gap: 6px; }
-.sshw-body { display: grid; grid-template-columns: clamp(235px, 25%, 330px) minmax(0, 1fr);
-  flex: 1; min-height: 0; }
+.sshw-body { display: flex; flex: 1; min-height: 0; }
 .sshw-rail, .sshw-main, .sshw-files, .sshw-console { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
-.sshw-rail { background: var(--ssh-subtle); border-inline-end: 1px solid var(--ssh-line); }
+.sshw-rail { flex: none; --sidebar-resize-color: var(--ssh-accent);
+  background: var(--ssh-subtle); border-inline-end: 1px solid var(--ssh-line); }
 .sshw-files, .sshw-profiles, .sshw-console { flex: 1; min-height: 0; }
 .sshw-files .pf-browser { --pf-subtle: var(--ssh-subtle); }
 .sshw-profiles .ssh-profile-sidebar { height: 100%; box-sizing: border-box; padding: 18px 12px; border: 0; }
@@ -31,7 +31,7 @@
 .sshw-profiles .ssh-profile-heading { padding-inline: 4px; }
 .sshw-profiles .ssh-profile-card { padding-block: 10px; }
 .sshw-profiles .ssh-profile-card:hover:not(:disabled) { border-color: var(--ssh-line); }
-.sshw-main { background: var(--ssh-surface); }
+.sshw-main { flex: 1; background: var(--ssh-surface); }
 .sshw-session-menu.ant-dropdown-menu { max-height: min(60dvh, 420px); overflow-y: auto; }
 .sshw-session-label { display: block; overflow-wrap: anywhere; }
 .sshw-session-label small { display: block; opacity: .72; }
@@ -83,7 +83,6 @@
 .sshm-meter i { display: block; height: 100%; background: var(--ssh-accent); }
 .sshm-status { padding-inline: 10px; color: var(--ssh-muted); }
 @container (max-width: 630px) {
-  .sshw-body { grid-template-columns: minmax(180px, 36%) minmax(0, 1fr); }
   .sshw-header { padding: 8px 12px; }
   .sshw-switch button { padding-inline: 3px; }
   .sshw-quick { margin-top: 18px; }

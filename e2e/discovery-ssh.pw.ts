@@ -19,6 +19,17 @@ test('desktop sidebar opens saved SSH sessions independently of the chat termina
   await expect(workspace.locator('.xterm-rows:visible')).toContainText('SSH ready');
   // Older connected computers can keep serving a terminal without reporting host metrics.
   await expect(workspace.locator('.sshm-status')).toHaveText(testText('client.conversationWorkspace.unavailable'));
+  const rail = workspace.locator('.sshw-rail');
+  const divider = rail.getByRole('separator', { name: testText('client.ssh.files'), exact: true });
+  await divider.hover();
+  const width = await rail.evaluate(element => element.clientWidth);
+  const bounds = await divider.boundingBox();
+  if (!bounds) throw new Error('Missing SSH sidebar divider');
+  await page.mouse.down();
+  await page.mouse.move(bounds.x + bounds.width / 2 + 100, bounds.y + bounds.height / 2, { steps: 5 });
+  await page.mouse.up();
+  await expect.poll(() => rail.evaluate(element => element.clientWidth)).toBe(width + 100);
+  await screenshot(page, info, 'web-desktop-ssh-resized');
   await workspace.locator('.sshw-switch').getByRole('button', { name: '已保存的连接' }).click();
   await expect(workspace.locator('.ssh-profile-card')).toBeVisible();
   await screenshot(page, info, 'web-desktop-ssh-connected');
