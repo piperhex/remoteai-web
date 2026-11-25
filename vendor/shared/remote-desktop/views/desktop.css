@@ -3,6 +3,8 @@
   font-family: system-ui, sans-serif; padding: env(safe-area-inset-top) env(safe-area-inset-right)
     env(safe-area-inset-bottom) env(safe-area-inset-left); outline: none; }
 .rd-root * { box-sizing: border-box; }
+.rd-root[data-embedded]:not(:fullscreen) { position: absolute; inset: 0; z-index: auto; padding: 0; }
+.rd-root[data-embedded] { overflow: hidden; color: #e7edf8; }
 .rd-workspace { flex: 1; display: flex; min-height: 0; min-width: 0; }
 @media (orientation: landscape) {
   .rd-root { padding-top: 0; }

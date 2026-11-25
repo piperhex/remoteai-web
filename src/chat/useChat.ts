@@ -1,12 +1,8 @@
+import { webChatConnection } from './webChatConnection';
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
-import { apiJson, getActiveSession, refreshSession } from '../api';
 import type { AuthSession } from '../types';
-import { ChatConnection } from '../../../../shared/remote-chat/client/connection';
-import { createBrowserPacketCompression } from '../../../../shared/remote-chat/browserPacketCompression';
 import { ChatController } from '../../../../shared/remote-chat/client/controller';
 import { createBrowserHistoryVersions } from '../../../../shared/remote-chat/browserHistory';
-import { RtcPeer } from '../../../../shared/remote-chat/rtcPeer';
-import { browserTrustStore, trustedHost, trustScope } from '../../../../shared/remote-chat/trustedHost';
 import { createPreviewDownloads } from '../downloads/previews';
 import { downloadOwner } from '../../../../shared/downloads/manager';
 import { useActiveChatPolicy } from '../../../../shared/remote-chat/useActiveChatPolicy';
@@ -16,27 +12,8 @@ import { browserDirectoryStorage } from '../../../../shared/chat/directory/stora
 const HISTORY_REFRESH_MS = 15_000;
 
 function createController(session: AuthSession, deviceId: string) {
-  const controller = new ChatController((events) => new ChatConnection({ ...events, deviceId, managePolicyMode: false,
-    createPacketCompression: createBrowserPacketCompression,
-    verifyHostKey: trustedHost(browserTrustStore, trustScope(session.baseUrl, deviceId)),
-    randomBytes: (length) => crypto.getRandomValues(new Uint8Array(length)),
-    renewAuthorization: async () => {
-      const current = getActiveSession();
-      if (!current || current.baseUrl !== session.baseUrl || current.email !== session.email) {
-        throw Object.assign(new Error('请重新登录后连接电脑。'), { status: 401 });
-      }
-      await refreshSession();
-    },
-    authorize: async () => {
-      await apiJson('/auth/me');
-      const current = getActiveSession();
-      if (!current || current.baseUrl !== session.baseUrl || current.email !== session.email) {
-        throw new Error('请重新登录后连接电脑。');
-      }
-      return current;
-    },
-    createPeer: (options) => new RtcPeer(options, () => new RTCPeerConnection({ iceServers: options.iceServers })),
-  }), undefined, createBrowserHistoryVersions(), createWebSshProfiles(session));
+  const controller = new ChatController(events => webChatConnection(session, deviceId, events),
+    undefined, createBrowserHistoryVersions(), createWebSshProfiles(session));
   controller.deferToolDetails = true;
   controller.directoryStorage = browserDirectoryStorage(JSON.stringify([session.baseUrl, session.email]), deviceId);
   controller.deferProcessDetails = true;

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ChatTools } from '../src/chat/ChatTools';
 import { GuiToolbox } from '../../../shared/conversation/GuiToolbox';
 import { GuiRemoteDesktop } from '../../../shared/conversation/GuiRemoteDesktop';
+import { RemoteDesktop } from '../../../shared/remote-desktop/views/RemoteDesktop';
 import { client, desktopTest } from './remote-desktop-fixture';
 import { RemoteDesktopComputersHarness } from './remote-desktop-computers-harness';
 import { DeviceScreenHarness } from './remote-desktop-device-screen-harness';
@@ -44,6 +45,14 @@ function Harness() {
   </main>;
 }
 const params = new URLSearchParams(location.search);
+function EmbeddedViewer() {
+  const [open, setOpen] = useState(true);
+  return <main style={{ position: 'absolute', inset: '64px 0 0 200px', overflow: 'hidden' }}>
+    {open && <RemoteDesktop embedded active client={client.desktop} close={() => setOpen(false)} />}
+  </main>;
+}
+
 createRoot(document.getElementById('root')!).render(params.has('device-screen') ? <DeviceScreenHarness />
+  : params.has('embedded') ? <EmbeddedViewer />
   : params.has('retained-tools') ? <RetainedToolsHarness />
   : params.has('computers') ? <RemoteDesktopComputersHarness /> : <Harness />);

@@ -1,9 +1,8 @@
 import { Component, type ReactNode } from 'react';
-import { createPortal } from 'react-dom';
 import { MonitorOff } from 'lucide-react';
 import { t } from '../../localization/browserClient';
 
-interface Props { active: boolean; close: () => void; children: ReactNode }
+interface Props { active: boolean; embedded?: boolean; close: () => void; children: ReactNode }
 
 /** Keep a viewer failure from unmounting the surrounding chat and application. */
 export class DesktopErrorBoundary extends Component<Props, { failed: boolean }> {
@@ -17,7 +16,9 @@ export class DesktopErrorBoundary extends Component<Props, { failed: boolean }> 
   render() {
     if (!this.state.failed) return this.props.children;
     if (!this.props.active) return null;
-    return createPortal(<div className="rd-root rd-fallback" role="dialog" aria-modal="true"
+    const { embedded } = this.props;
+    return <div className="rd-root rd-fallback" data-embedded={embedded || undefined}
+      role={embedded ? 'region' : 'dialog'} aria-modal={embedded ? undefined : true}
       aria-label={t("client.remoteDesktop.remoteDesktop")}>
       <div className="rd-fallback-card">
         <MonitorOff size={36} aria-hidden="true" />
@@ -28,6 +29,6 @@ export class DesktopErrorBoundary extends Component<Props, { failed: boolean }> 
           <button type="button" onClick={this.props.close}>{t("client.projectBrowser.close")}</button>
         </div>
       </div>
-    </div>, document.body);
+    </div>;
   }
 }

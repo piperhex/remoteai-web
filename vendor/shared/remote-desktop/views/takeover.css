@@ -2,6 +2,9 @@
   margin: auto; border: 1px solid #39455b; border-radius: 16px; background: #171c28;
   color: var(--app-faint, #e7edf8); overflow: auto; overflow-wrap: anywhere; }
 .rd-takeover::backdrop { background: #0009; }
+.rd-takeover-overlay { position: absolute; inset: 0; z-index: 5; display: grid;
+  place-items: center; background: #0009; }
+.rd-takeover-overlay .rd-takeover { position: static; }
 .rd-takeover h2 { margin: 0 0 12px; font-size: 18px; }
 .rd-takeover p { margin: 0 0 20px; font-size: 14px; line-height: 1.6; }
 .rd-takeover-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }

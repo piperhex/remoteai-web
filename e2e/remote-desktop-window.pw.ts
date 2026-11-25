@@ -165,3 +165,27 @@ test('keeps the desktop titlebar available on a touch-only Windows device', asyn
   await page.getByRole('button', { name: '关闭', exact: true }).click();
   await expect.poll(() => page.evaluate(() => window.desktopTest.closed)).toBe(1);
 });
+
+test('keeps the embedded viewer inside its page across resize, settings and fullscreen', async ({ page }) => {
+  await page.goto('e2e/remote-desktop-harness.html?embedded&displays');
+  const host = page.locator('main');
+  const viewer = host.getByRole('region', { name: '远程桌面', exact: true });
+  const video = viewer.locator('video');
+  await expect.poll(() => video.evaluate(el => el.videoWidth)).toBeGreaterThan(0);
+  await expect(viewer).not.toHaveAttribute('aria-modal');
+  for (const width of [1440, 900]) {
+    await page.setViewportSize({ width, height: 800 });
+    await expect.poll(() => viewer.boundingBox()).toEqual(await host.boundingBox());
+  }
+  await viewer.getByRole('button', { name: '显示', exact: true }).click();
+  await expect.poll(() => viewer.boundingBox()).toEqual(await host.boundingBox());
+  const stream = await video.elementHandle();
+  await viewer.getByRole('button', { name: '全屏', exact: true }).click();
+  await expect.poll(() => viewer.evaluate(el => document.fullscreenElement === el)).toBe(true);
+  await viewer.getByRole('button', { name: '退出全屏', exact: true }).click();
+  await expect.poll(() => viewer.boundingBox()).toEqual(await host.boundingBox());
+  expect(await stream!.evaluate(el => el === document.querySelector('main video'))).toBe(true);
+  await viewer.locator('.rd-window-close').click();
+  await expect(viewer).toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => window.desktopTest.closed)).toBe(1);
+});

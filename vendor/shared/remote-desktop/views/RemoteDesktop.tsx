@@ -43,18 +43,21 @@ interface Props {
   visible?: boolean;
   connected?: boolean;
   nativeWindow?: boolean;
+  embedded?: boolean;
   windowState?: DesktopWindowState;
   keepAlive?: boolean;
 }
 
 export function RemoteDesktop(props: Props) {
-  return <DesktopErrorBoundary active={props.active && props.visible !== false} close={props.close}>
+  const viewer = <DesktopErrorBoundary active={props.active && props.visible !== false}
+    embedded={props.embedded} close={props.close}>
     <DesktopViewer {...props} />
   </DesktopErrorBoundary>;
+  return props.embedded ? viewer : createPortal(viewer, document.body);
 }
 
 function DesktopViewer({ client, active, visible = true, connected = true, close, localClipboard, nativeWindow = false,
-  windowState, keepAlive = false }: Props) {
+  windowState, keepAlive = false, embedded = false }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const windowControls = useDesktopWindow(root, active, windowState);
   const shown = active && visible && !windowControls.minimized;
@@ -65,11 +68,11 @@ function DesktopViewer({ client, active, visible = true, connected = true, close
   const [display, setDisplay] = useState(false);
   const [security, setSecurity] = useState(false);
   const [keyboard, setKeyboard] = useState(false);
-  const keyboardViewport = useKeyboardViewport(shown && (keyboard || display || security));
+  const keyboardViewport = useKeyboardViewport(shown && !embedded && (keyboard || display || security));
   const [direct, setDirect] = useState(false);
   const [statsVisible, setStatsVisible] = useState(true);
   const hardware = useHardwarePointer();
-  const desktopWindow = nativeWindow || hardware;
+  const desktopWindow = embedded || nativeWindow || hardware;
   const clipboard = useDesktopClipboard({ active: shown && !!session.stream,
     connected: active && !!session.stream,
     clipboard: session.clipboard, localClipboard });
@@ -112,12 +115,12 @@ function DesktopViewer({ client, active, visible = true, connected = true, close
     if ((video.current?.videoWidth ?? 0) > 0) session.frameRendered();
   };
   if (!active) return null;
-  return createPortal(<><div ref={root} tabIndex={-1} className="rd-root" style={keyboardViewport}
-    hidden={!shown}
-    role="dialog" aria-modal="true"
+  return <><div ref={root} tabIndex={-1} className="rd-root" style={keyboardViewport}
+    data-embedded={embedded || undefined} hidden={!shown}
+    role={embedded ? 'region' : 'dialog'} aria-modal={embedded ? undefined : true}
     aria-label={t("client.remoteDesktop.remoteDesktop")} onContextMenu={event => event.preventDefault()}>
     {desktopWindow && <DesktopTitlebar displays={session.displays} selected={session.settings.displayId}
-      nativeWindow={nativeWindow} controls={windowControls} close={close}
+      nativeWindow={nativeWindow && !embedded} controls={windowControls} close={close} embedded={embedded}
       disabled={session.saving || !session.stream}
       select={displayId => { void session.update({ ...session.settings, displayId }); }} />}
     <div className="rd-workspace">
@@ -148,7 +151,8 @@ function DesktopViewer({ client, active, visible = true, connected = true, close
       {clipboard.open && <DesktopClipboardPanel clipboard={clipboard} />}
       {security && <SecuritySettings {...desktopSecuritySettings(session, () => setSecurity(false))} />}
       <DesktopClipboardNotice clipboard={clipboard} />
-      {shown && session.takeover.pending && <DesktopTakeover {...session.takeover} disabled={!connected} />}
+      {shown && session.takeover.pending && <DesktopTakeover {...session.takeover}
+        disabled={!connected} embedded={embedded} />}
       {viewOnly && session.stream && <div className="rd-clipboard-notice" role="status">{t("client.remoteDesktop.viewOnly")}</div>}
       {!viewOnly && hardware && session.stream && !session.capabilities.keyboard && !clipboard.status
         && <div className="rd-clipboard-notice" role="status">
@@ -198,5 +202,5 @@ function DesktopViewer({ client, active, visible = true, connected = true, close
       aria-label={t("client.remoteDesktop.restoreRemoteDesktop")} onClick={windowControls.restore}>
       <Monitor size={22} /><span>{t("client.remoteDesktop.remoteDesktop")}</span>
     </button>}
-  </>, document.body);
+  </>;
 }

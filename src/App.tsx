@@ -3,7 +3,7 @@ import { displayError } from '../../../shared/localization/browserClient';
 import { getLocale, t, useLanguage } from '../../../shared/localization/browserClient';
 import type { RemoteModelTarget } from '../../../shared/remote-chat/modelTarget';
 import { profileRole } from './i18n/profile';
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button, Dialog, Form, Input, PullToRefresh, SafeArea, SpinLoading, Toast } from "antd-mobile";
 import { Dropdown, Tooltip, type MenuProps } from "antd";
 import { ChevronRight, CircleGauge, Compass, LayoutDashboard, LogOut, Menu, MonitorCog,
@@ -41,7 +41,7 @@ import { WebsiteDownloadsContext } from '../../../shared/browser/downloads/conte
 import { useWebsiteDownloads } from './downloads/useWebsiteDownloads';
 import { BrowserNavigationProvider } from '../../../shared/browser/BrowserNavigationProvider';
 import { RetainedView } from '../../../shared/RetainedView';
-import { Globe } from 'lucide-react';
+import { Globe, Monitor } from 'lucide-react';
 import { LoungeAvatar } from '../../../shared/lounge/LoungeAvatar';
 import { accountLabel } from '../../../shared/lounge/accountLabel';
 import { downloadOwner } from '../../../shared/downloads/manager';
@@ -58,6 +58,7 @@ import { useChatViewport } from './chat/useChatViewport';
 import { AgreementConsent } from '../../../shared/legal/AgreementConsent';
 import { useAgreementConsent } from '../../../shared/legal/useAgreementConsent';
 
+const WebRemoteDesktopPage = lazy(() => import('./chat/WebRemoteDesktopPage'));
 const PULL_REFRESH_TEXT = {
   get pulling() { return t("client.accounts.pullToRefresh"); },
   get canRelease() { return t("client.accounts.releaseToRefresh"); },
@@ -381,7 +382,8 @@ function AppShell() {
     { key: "logout", label: t("client.app.signOut"), danger: true, icon: <LogOut size={16} />, onClick: () => void dispatch(signOut()) },
   ];
 
-  const pageDescriptions: Record<Exclude<AppPage, 'chat' | 'downloads' | 'lounge' | 'browser' | 'token-summary' | 'ssh'>, string> = {
+  const pageDescriptions: Record<Exclude<AppPage,
+    'chat' | 'downloads' | 'lounge' | 'browser' | 'token-summary' | 'ssh' | 'remote-desktop'>, string> = {
     accounts: t("client.app.welcomeBackYourAccountsAtAGlance"),
     discover: t('client.discovery.title'),
     devices: t("client.app.viewAndControlYourDesktopDevices"), totp: t("client.app.manageAndSyncYour2faCodes"), settings: t("client.app.managePreferencesAndAccountSecurity"),
@@ -391,6 +393,9 @@ function AppShell() {
     onOpen={destination => { downloadsBack.current = 'discover'; dispatch(pageChanged(destination)); }} />;
   const otherPages = {
     browser: null,
+    'remote-desktop': session && <Suspense fallback={null}>
+      <WebRemoteDesktopPage key={JSON.stringify([session.baseUrl, session.email])} session={session} devices={devices} />
+    </Suspense>,
     lounge: <LoungePage controller={lounge.controller} mobile={!desktopLayout}
       onBack={() => dispatch(pageChanged('discover'))} />,
     discover: discoveryPage, 'token-summary': discoveryPage, ssh: null,
@@ -406,6 +411,7 @@ function AppShell() {
   const pageTitle = page === 'devices' ? t('client.app.devices')
     : page === 'totp' ? t('client.discovery.twoFactor') : navItems.find(item => item.key === page)?.label;
   const shellClass = ['app-shell', (page === 'chat' || page === 'ssh') && 'chat-active',
+    page === 'remote-desktop' && 'remote-desktop-active',
     page === 'lounge' && 'lounge-active', page === 'browser' && 'browser-active',
     (page === 'discover' || page === 'token-summary') && 'discovery-active',
     !menuVisible && 'main-menu-collapsed'].filter(Boolean).join(' ');
@@ -436,6 +442,13 @@ function AppShell() {
             : <item.icon size={19} />}<span>{item.label}</span>
         </button>
       </Tooltip>)}
+        <Tooltip placement="right" title={menuVisible ? undefined : t('client.remoteDesktop.remoteDesktop')}>
+          <button type="button" aria-label={t('client.remoteDesktop.remoteDesktop')}
+            aria-current={page === 'remote-desktop' ? 'page' : undefined}
+            className={page === 'remote-desktop' ? 'active' : ''} onClick={() => dispatch(pageChanged('remote-desktop'))}>
+            <Monitor size={19} /><span>{t('client.remoteDesktop.remoteDesktop')}</span>
+          </button>
+        </Tooltip>
         <Tooltip placement="right" title={menuVisible ? undefined : t('client.discovery.ssh')}>
           <button type="button" aria-label={t('client.discovery.ssh')} aria-current={page === 'ssh' ? 'page' : undefined}
             className={page === 'ssh' ? 'active' : ''} onClick={() => dispatch(pageChanged('ssh'))}>
@@ -470,7 +483,8 @@ function AppShell() {
       </Tooltip>
     </aside>
     <div className="content-shell">
-      {page !== 'chat' && page !== 'downloads' && page !== 'lounge' && page !== 'browser' && page !== 'token-summary' && page !== 'ssh'
+      {page !== 'chat' && page !== 'downloads' && page !== 'lounge' && page !== 'browser'
+        && page !== 'token-summary' && page !== 'ssh' && page !== 'remote-desktop'
         && <header className="desktop-topbar"><div>
         <span>{pageTitle}</span><strong>{pageDescriptions[page]}</strong></div>
         <div>{page === 'totp' && <TotpSyncSwitch enabled={totpManager.cloudSyncEnabled}
