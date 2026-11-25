@@ -8,6 +8,7 @@ export interface BookmarkActions {
   t: MarketText; visit: (entry: Bookmark, newTab?: boolean) => void; edit: (entry: Bookmark) => void;
   remove: (entry: Bookmark) => void; manage: () => void; menuChanged: (open: boolean) => void;
   addPage: (folder: Bookmark) => void;
+  newFolder: (parent?: Bookmark) => void; newFolderLabel: string;
 }
 
 export function BookmarkContextMenu({ entry, children, ...actions }: BookmarkActions & {
@@ -24,6 +25,7 @@ export function BookmarkContextMenu({ entry, children, ...actions }: BookmarkAct
   return <Dropdown trigger={['contextMenu']} onOpenChange={menuChanged} overlayClassName="browser-bookmark-menu"
     menu={{ items: entry.kind === 'folder' ? [
       { key: 'add-page', label: t('market.bookmarkAddPage'), onClick: () => addPage(entry) },
+      { key: 'new-folder', label: actions.newFolderLabel, onClick: () => actions.newFolder(entry) },
       editItem, manageItem, { type: 'divider' }, deleteItem,
     ] : [
       { key: 'open', label: t('market.bookmarkOpenNew'), onClick: () => visit(entry, true) },

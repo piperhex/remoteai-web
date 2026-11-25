@@ -13,6 +13,35 @@ async function longPress(page: Page, target: Locator, menu: Locator) {
   } finally { await touch.detach(); }
 }
 
+async function verifyCreateSubfolder(page: Page, work: Locator, capture: (state: string) => Promise<Buffer>) {
+  const create = page.getByRole('menuitem', { name: '新建文件夹', exact: true });
+  const dialog = page.getByRole('dialog', { name: '书签文件夹', exact: true });
+  const selected = dialog.locator('.ant-tree-node-selected');
+  const name = dialog.getByRole('textbox', { name: '名称' });
+  const save = dialog.getByRole('button', { name: /保\s*存/ });
+  await work.click();
+  const project = page.getByText('项目资料', { exact: true });
+  await project.click({ button: 'right' });
+  await create.click();
+  await expect(selected).toHaveText('项目资料');
+  await expect(name).toHaveValue('');
+  await name.fill('会议记录');
+  await expect(dialog).not.toHaveClass(/-appear|-enter/);
+  await capture('new-subfolder');
+  await save.click(); await expect(dialog).toBeHidden();
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await work.click(); await project.hover();
+  await expect(page.getByRole('menuitem', { name: /会议记录/ })).toBeVisible();
+  await work.click();
+  await longPress(page, work, create); await create.click();
+  await expect(selected).toHaveText('工作');
+  await dialog.getByText('稍后阅读', { exact: true }).click();
+  await expect(selected).toHaveText('稍后阅读');
+  await name.fill('周末'); await save.click(); await expect(dialog).toBeHidden();
+  await page.getByRole('button', { name: '稍后阅读', exact: true }).click();
+  await expect(page.getByRole('menuitem', { name: /周末/ })).toBeVisible();
+}
+
 export async function verifyAddPageToFolder(page: Page, info: TestInfo, options: {
   harness: string; scope: string; label: string;
 }) {
@@ -42,7 +71,7 @@ export async function verifyAddPageToFolder(page: Page, info: TestInfo, options:
     path: info.outputPath(`${options.label}-${state}.png`), animations: 'disabled',
   });
   await work.click({ button: 'right' });
-  const order = ['添加网页', '编辑书签', '管理书签', '删除'];
+  const order = ['添加网页', '新建文件夹', '编辑书签', '管理书签', '删除'];
   await expect(menu.getByRole('menuitem')).toHaveText(order);
   await expect(page.locator('.browser-bookmark-menu:visible')).not.toHaveClass(/-appear|-enter/);
   await capture('folder-menu');
@@ -73,4 +102,5 @@ export async function verifyAddPageToFolder(page: Page, info: TestInfo, options:
   await expect(selected).toHaveText('书签栏');
   await dialog.getByRole('button', { name: /取\s*消/ }).click(); await expect(dialog).toBeHidden();
   await expect(bar.locator('.browser-bookmark-item')).toHaveCount(2);
+  await verifyCreateSubfolder(page, work, capture);
 }

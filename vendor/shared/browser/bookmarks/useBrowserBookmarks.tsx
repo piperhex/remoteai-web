@@ -32,7 +32,7 @@ export function useBrowserBookmarks(options: {
   const [settings, setSettings] = useState(false);
   const [menu, setMenu] = useState(false);
   const [manager, setManager] = useState(false);
-  const [editor, setEditor] = useState<{ entry: Bookmark; addingPage?: boolean }>();
+  const [editor, setEditor] = useState<{ entry: Bookmark; creatingInFolder?: boolean }>();
   const [deleting, setDeleting] = useState<Bookmark>();
   const drag = useBookmarkDrag(store, 'x');
   const address = tab && bookmarkUrl(tab.url);
@@ -42,7 +42,7 @@ export function useBrowserBookmarks(options: {
     const id = crypto.randomUUID();
     const page = prefill && tab ? pageBookmark(tab, () => id) : undefined;
     setMenu(false);
-    setEditor({ addingPage: !!folder, entry: { id, kind, title: page?.title ?? '', url: page?.url ?? '',
+    setEditor({ creatingInFolder: !!folder, entry: { id, kind, title: page?.title ?? '', url: page?.url ?? '',
       parentId: folder?.id ?? '', position: Math.max(-1, ...entries.map(entry => entry.position)) + 1 } });
   };
   const visit = (entry: Bookmark, newTab = false) => {
@@ -92,7 +92,7 @@ export function useBrowserBookmarks(options: {
     </Popover>,
     bar: showBar && <BookmarkBar entries={entries} t={t} visit={visit} edit={edit} remove={remove}
       manage={manage} menuChanged={setMenu} drag={drag} newFolderLabel={options.newFolderLabel}
-      newFolder={() => create('folder')} addPage={folder => create('link', true, folder)} />,
+      newFolder={folder => create('folder', false, folder)} addPage={folder => create('link', true, folder)} />,
     overlays: <>{manager && (compact
       ? <BookmarkDrawer t={t} close={() => setManager(false)} visit={visit} add={() => create('link', true)} />
       : <BookmarkManager t={t} close={() => setManager(false)} edit={edit} create={create} visit={visit} />)}

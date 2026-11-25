@@ -63,8 +63,8 @@ function BookmarkOverflowMenu({ items, t, menuChanged }: Pick<Props, 't' | 'menu
   </Dropdown>;
 }
 
-export function BookmarkBar({ drag, newFolder, newFolderLabel, ...props }: Props & {
-  drag: ReturnType<typeof useBookmarkDrag>; newFolder: () => void; newFolderLabel: string;
+export function BookmarkBar({ drag, ...props }: Props & {
+  drag: ReturnType<typeof useBookmarkDrag>;
 }) {
   const { entries, t } = props;
   const blankMenu = useThreadLongPress(press => {
@@ -76,7 +76,7 @@ export function BookmarkBar({ drag, newFolder, newFolderLabel, ...props }: Props
   const hidden = new Set(overflow.hiddenPaths);
   return <div {...drag.handlers} className="browser-bookmark-bar" role="navigation" aria-label={t('market.bookmarkBar')}>
     <Dropdown trigger={['contextMenu']} onOpenChange={props.menuChanged} overlayClassName="browser-bookmark-menu"
-      menu={{ items: [{ key: 'folder', label: newFolderLabel, onClick: newFolder }] }}>
+      menu={{ items: [{ key: 'folder', label: props.newFolderLabel, onClick: () => props.newFolder() }] }}>
       <span {...blankMenu} className="browser-bookmark-background" onPointerDown={event => {
         if (event.pointerType !== 'mouse') blankMenu.onPointerDown(event);
       }} />

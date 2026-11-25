@@ -6,8 +6,8 @@ import { bookmarkDescendants, bookmarkUrl, hasValidBookmarkParents, type Bookmar
 import { useBookmarks } from './context';
 import { BookmarkFolderPicker } from './BookmarkFolderPicker';
 
-export function BookmarkEditor({ entry, t, close, addingPage }: {
-  entry: Bookmark; t: MarketText; close: () => void; addingPage?: boolean;
+export function BookmarkEditor({ entry, t, close, creatingInFolder }: {
+  entry: Bookmark; t: MarketText; close: () => void; creatingInFolder?: boolean;
 }) {
   const { store, entries } = useBookmarks();
   const nativePopup = useBrowserOverlay();
@@ -18,7 +18,8 @@ export function BookmarkEditor({ entry, t, close, addingPage }: {
   const [error, setError] = useState(false);
   const excluded = bookmarkDescendants(entries, entry.id);
   const existing = entries.some(item => item.id === entry.id);
-  const canSaveHere = !addingPage || hasValidBookmarkParents({ ...entry, parentId }, new Map(entries.map(e => [e.id, e])));
+  const canSaveHere = !creatingInFolder
+    || hasValidBookmarkParents({ ...entry, parentId }, new Map(entries.map(item => [item.id, item])));
   const submit = () => {
     if (!canSaveHere) return;
     const address = entry.kind === 'link' ? bookmarkUrl(url.trim()) : '';
@@ -26,8 +27,8 @@ export function BookmarkEditor({ entry, t, close, addingPage }: {
       title: title.trim(), url: address ?? '', parentId })) { setError(true); return; }
     close();
   };
-  const editorTitle = entry.kind === 'folder' ? 'market.bookmarkFolder' : 'market.bookmarkEdit';
-  return <Modal open className="browser-chrome" title={t(addingPage ? 'market.bookmarkAddPage' : editorTitle)}
+  const linkTitle = creatingInFolder ? 'market.bookmarkAddPage' : 'market.bookmarkEdit';
+  return <Modal open className="browser-chrome" title={t(entry.kind === 'folder' ? 'market.bookmarkFolder' : linkTitle)}
     afterOpenChange={open => {
       const input = nameRef.current?.input;
       // In the native popup, the dialog focuses its wrapper when the opening animation finishes.
@@ -48,7 +49,7 @@ export function BookmarkEditor({ entry, t, close, addingPage }: {
         aria-label={t('market.bookmarkName')} onChange={event => setTitle(event.target.value)} /></label>
       {entry.kind === 'link' && <label>{t('market.browserAddress')}<Input value={url} maxLength={4096}
         aria-label={t('market.browserAddress')} onChange={event => setUrl(event.target.value)} /></label>}
-      {addingPage ? <BookmarkFolderPicker entries={entries} label={t('market.bookmarkLocation')}
+      {creatingInFolder ? <BookmarkFolderPicker entries={entries} label={t('market.bookmarkLocation')}
         barLabel={t('market.bookmarkBar')} value={parentId} onChange={setParentId} />
         : <label>{t('market.bookmarkLocation')}<Select value={parentId} aria-label={t('market.bookmarkLocation')}
         onChange={setParentId} options={[{ value: '', label: t('market.bookmarkBar') },
