@@ -4,6 +4,7 @@ import { ChevronRight, Monitor, MonitorOff, RefreshCw } from 'lucide-react';
 import type { ChatComputer } from '../../remote-chat/devices';
 import type { ComputerListRefresh } from '../../remote-chat/ComputerSearchBar';
 import { displayError, t } from '../../localization/browserClient';
+import { useViewActive } from '../../RetainedView';
 import { ConnectedDesktop, type DesktopConnectionFactory } from './ConnectedDesktop';
 import type { LocalDesktopClipboard } from '../clipboard';
 import './remoteDesktopPage.css';
@@ -17,15 +18,16 @@ interface Props {
 }
 
 export function RemoteDesktopPage({ devices, directory, login, connect, localClipboard }: Props) {
+  const active = useViewActive();
   const [selected, setSelected] = useState<ChatComputer | null>(null);
   const title = t('client.remoteDesktop.remoteDesktop');
   const refresh = t('client.app.refreshDeviceList');
-  return <section className="rd-page" aria-label={title}>
+  return <section className="rd-page" hidden={!active} aria-label={title}>
     <header className="rd-page-header">
       <Monitor size={21} aria-hidden="true" /><h1>{title}</h1>
       {selected && <span className="rd-page-host">{selected.name}</span>}
     </header>
-    {selected ? <ConnectedDesktop deviceId={selected.deviceId} connect={connect}
+    {selected ? <ConnectedDesktop deviceId={selected.deviceId} connect={connect} visible={active}
       localClipboard={localClipboard} close={() => setSelected(null)} />
       : <div className="rd-page-directory">
         <div className="rd-page-directory-heading"><h2>{t('client.settings.chooseAComputer')}</h2>

@@ -60,9 +60,10 @@ function DesktopViewer({ client, active, visible = true, connected = true, close
   windowState, keepAlive = false, embedded = false }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const windowControls = useDesktopWindow(root, active, windowState);
-  const shown = active && visible && !windowControls.minimized;
   const pageVisible = usePageVisibility();
-  const session = useDesktopSession({ client, active: active && (keepAlive || pageVisible), connected, createPeer });
+  const shown = active && visible && !windowControls.minimized && (!embedded || pageVisible);
+  const session = useDesktopSession({ client, active: active && (keepAlive || pageVisible),
+    background: embedded && !shown, connected, createPeer });
   const statusAction = desktopStatusAction(session);
   const viewOnly = session.capabilities.control === false;
   const [display, setDisplay] = useState(false);

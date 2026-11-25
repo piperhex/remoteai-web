@@ -8,7 +8,8 @@ import { RemoteDesktop } from './RemoteDesktop';
 
 export type DesktopConnectionFactory = (deviceId: string, events: ConnectionEvents) => ChatConnection;
 
-export function ConnectedDesktop({ deviceId, connect, localClipboard, close }: {
+export function ConnectedDesktop({ deviceId, connect, localClipboard, close, visible }: {
+  visible: boolean;
   deviceId: string; connect: DesktopConnectionFactory; localClipboard?: LocalDesktopClipboard; close: () => void;
 }) {
   const [ready, setReady] = useState(false);
@@ -28,8 +29,8 @@ export function ConnectedDesktop({ deviceId, connect, localClipboard, close }: {
   return <>
     {error && <Alert type="warning" showIcon message={displayError(error)} />}
     <div className="rd-page-viewer">
-      {opened ? <RemoteDesktop embedded client={client} active connected={ready} close={close}
-        localClipboard={localClipboard} />
+      {opened ? <RemoteDesktop embedded keepAlive visible={visible} client={client} active connected={ready}
+        close={close} localClipboard={localClipboard} />
         : <div className="rd-page-connecting">
           {!error && <><Spin /><p role="status">{t('client.remoteDesktop.connectingToTheDesktop')}</p></>}
           <Button onClick={close}>{t('client.projectBrowser.close')}</Button>

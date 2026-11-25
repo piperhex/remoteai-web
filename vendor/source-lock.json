@@ -3,7 +3,7 @@
   "revision": "0fc25189af7df20cafa7711f59a1dcfef93c193c",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "1304166652ddd9ded7215d1cc8da4b3dff6e61ef"
+    "revision": "6391a3b882e39da2d995a5a9cbb09c1c9cd0e68c"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -213,7 +213,7 @@
     "shared/chat/workspaceLaunchers.ts": "7cbccdc1193c6835e07ae663824167aa60c991338c5cbf780687121ff3edb6ee",
     "shared/remote-desktop/useDesktopLauncher.ts": "8b312acf073fbec0cafc7c6780c133219ae20e13dabbdbd23ad060497aaeb22e",
     "shared/git/views/ChatGit.tsx": "d3f9185ccff2c5cb267a645671bc3c6adc8ef69c836aba0630c84d1758347527",
-    "shared/remote-desktop/views/RemoteDesktop.tsx": "22acc5941fd116fbe8b6ec2ceeae21b934f4e1ea19d30cc983037022295827af",
+    "shared/remote-desktop/views/RemoteDesktop.tsx": "e469e75416c4a2416d240454ee49e180d8c72b3b66d9aae96205d1d076bb02df",
     "shared/git/views/git.css": "8a300638a59d6cb65696e5a6b502d6ac6b3e6bf427dbf661f12ab3caf4c56ce1",
     "shared/project-browser/views/ProjectBrowserDrawer.tsx": "e64da4120f531037ea117f33980f1cec12c023a6ef697540c713c72ec54fb450",
     "shared/project-browser/useProjectBrowsers.ts": "223bff35060248e5edf65033d362034fad1b6329119eeef51600b36fe7d203a8",
@@ -771,7 +771,7 @@
     "shared/downloads/gitPatch.ts": "7ead276ad266826768e3305f4c916befdc9d87b218de5725bb940e9e1c71d1be",
     "shared/git/views/GitDiff.tsx": "0eeec9e25b529fb4bd929077825346e6bd8a2670fddc3052b178bdaa05626294",
     "shared/git/views/GitDrawer.tsx": "24487487bcee7b309c516ab6f8200db284320320b4e950eeb8f1a22eb1ea46f4",
-    "shared/remote-desktop/useDesktopSession.ts": "0a7f8fbdcdd917050fe47fc87672a689f0094d4dcdeb5594fa66074d9fe864ca",
+    "shared/remote-desktop/useDesktopSession.ts": "ff64a195b567f5c0ae466e873a081cc3f558ff88d59a0d2baecec3582009a774",
     "shared/remote-desktop/views/DisplaySettings.tsx": "c9cc27546cf38bea6433a38dafd08832788c8acf75b1393f9d1716f7e592c4b5",
     "shared/remote-desktop/views/SecuritySettings.tsx": "16a5081c2de2b1f088b47148cdbbc142db694b0d4708a2c1e2c1505dc40f66c1",
     "shared/remote-desktop/securitySettings.ts": "83edf69e216b41069bb7177647c59a5735df4189dfe4c6d15d0bc9076e065cf5",
@@ -1320,7 +1320,7 @@
     "shared/remote-chat/gitWorkspaceCommit.ts": "9be84ad54909250f87bf1f4aa5e7c1e8cb4dd4bb9b3417be18ee426a43151cb0",
     "shared/git/views/gitRevision.css": "49ffbd3db0bcf15241dadc5cca7ff91da40635040ef36b3a00ed8d3e3ca0782c",
     "shared/remote-chat/gitMenu.ts": "8e0f12e2b51ed3c5337f8c041a03d9da5e52eb3f0744c031f9616ea3c83f8231",
-    "shared/remote-desktop/displaySession.ts": "a6476c3ba7ca6ed5c5c45ca9ec44a120dfc3e4054913f0dd55483b81da0e3be9",
+    "shared/remote-desktop/displaySession.ts": "baebd67be2d456719e63205ae1cef0a50606a52996b774d54a5ff50a8ad5f371",
     "shared/remote-desktop/recovery.ts": "727538cd691f9c8739142e27cf38ab30b603bfc2d62a0be1f35d63a5bd464603",
     "shared/remote-desktop/displayActions.ts": "c63e9c59433bedb092a9ca4cbb5b00a5501b004a0213eb6005fafbd90a48997b",
     "shared/remote-desktop/permissionWait.ts": "6b63641289ec7f521794a7b597342144bff71dfd2b76ca5b2b37fbd30dce88c2",
@@ -2077,9 +2077,9 @@
     "shared/conversation/savedReview.ts": "ac076bbed5060f351cee3bad1a1e722eceb2700b84ab7acd38665ad44d958f42",
     "shared/conversation/SavedReviewFiles.tsx": "24989a651e66029db286b1d70da40cd9806c2dac9a609fb734614b56e2784d06",
     "shared/remote-chat/views/MobileChatDiff.tsx": "361b3b431e2bc46af11031f1c37d0011921ca387efbd1db643b74a259695e41e",
-    "shared/remote-desktop/views/RemoteDesktopPage.tsx": "1e2b25560c5e8b64e123a5c04c2eec34e7ec3f48ca6dec7c3e02bbfcdfed7038",
-    "shared/remote-desktop/views/ConnectedDesktop.tsx": "03ef7a0d6390b8134508b00b4b90bf19cddfdbe580e90f51727ca2b9d28ea028",
-    "shared/remote-desktop/views/remoteDesktopPage.css": "cb2a77218dac98bd035c02d1d3ac72f29e8579a44696134c4741cf6515dc3074",
+    "shared/remote-desktop/views/RemoteDesktopPage.tsx": "6f2eb0673f57c13c9e9979b2df19b375807b89a8fe965f7254f3d0bbd291b522",
+    "shared/remote-desktop/views/ConnectedDesktop.tsx": "a8dc8a6c48da69955e311f02f78f4af9e1f5fbb621f23311b4f5f0664dda1616",
+    "shared/remote-desktop/views/remoteDesktopPage.css": "ad29c1757da9ff0caf7d3e7cbdaeacbac4118c8f9d1c326d3e8379b16f2a0df7",
     "shared/conversation/SavedReviewSummary.tsx": "08cde4be4591f079421c79dda024abe843d09110de72bdd186ed222048756240",
     "shared/layout/ResizableSidebar.tsx": "4150ded9b422dce5c6d0e378714bb5d3b0bb1cc7a8adbee96c2fd3904cfc9141",
     "shared/layout/useSidebarResize.ts": "c87a08718f5ae20920025d7a1b83bdcbb1b7b1172fd85a92dbe718fdd86df3ca",

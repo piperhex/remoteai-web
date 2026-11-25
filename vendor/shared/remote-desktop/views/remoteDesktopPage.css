@@ -1,5 +1,6 @@
 /* The directory handles scrolling inside the desktop content pane. */
-main:has(> .rd-page) { scrollbar-gutter: auto; }
+main:has(> .rd-page:not([hidden])) { scrollbar-gutter: auto; }
+.rd-page[hidden] { display: none; }
 .rd-page {
   --rd-page-inset: 16px;
   flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; overflow: hidden;

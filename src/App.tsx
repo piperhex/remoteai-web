@@ -393,9 +393,7 @@ function AppShell() {
     onOpen={destination => { downloadsBack.current = 'discover'; dispatch(pageChanged(destination)); }} />;
   const otherPages = {
     browser: null,
-    'remote-desktop': session && <Suspense fallback={null}>
-      <WebRemoteDesktopPage key={JSON.stringify([session.baseUrl, session.email])} session={session} devices={devices} />
-    </Suspense>,
+    'remote-desktop': null,
     lounge: <LoungePage controller={lounge.controller} mobile={!desktopLayout}
       onBack={() => dispatch(pageChanged('discover'))} />,
     discover: discoveryPage, 'token-summary': discoveryPage, ssh: null,
@@ -516,6 +514,12 @@ function AppShell() {
               onClose={() => dispatch(pageChanged('discover'))} />
           </WebsiteDownloadsContext.Provider>
         </RetainedView>
+        {session && <RetainedView active={page === 'remote-desktop'}
+          key={JSON.stringify([session.baseUrl, session.email])}>
+          <Suspense fallback={null}>
+            <WebRemoteDesktopPage session={session} devices={devices} />
+          </Suspense>
+        </RetainedView>}
         {page !== 'chat' && page !== 'accounts' && page !== 'discover' && page !== 'settings' && otherPages[page]}
         </PrimaryPagePager>
       </main>
