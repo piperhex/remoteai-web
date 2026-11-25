@@ -71,7 +71,12 @@ test('uses the original finger from the wheel through dragging and lifting', asy
 
 for (const reason of ['blur', 'pointercancel', 'lostpointercapture', 'mode', 'resize'] as const) {
   test(`restores the mouse and stops scrolling on ${reason}`, async ({ page }) => {
-    await open(page); const origin = await pressWheel(page);
+    await open(page);
+    // Chromium only lets Playwright resize a window after the mobile viewer leaves fullscreen.
+    if (reason === 'resize') await page.evaluate(async () => {
+      if (document.fullscreenElement) await document.exitFullscreen();
+    });
+    const origin = await pressWheel(page);
     const stage = (await page.locator('.rd-stage').boundingBox())!;
     const cross = (await page.locator('.rd-scroll-pad').boundingBox())!;
     expect(cross.x).toBeGreaterThanOrEqual(stage.x); expect(cross.y).toBeGreaterThanOrEqual(stage.y);

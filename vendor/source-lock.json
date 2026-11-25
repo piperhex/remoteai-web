@@ -3,7 +3,14 @@
   "revision": "10967f6e406daca25e948d6b997ea2b0ef5138d3",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "14ffa467061b062accec9028712432b5d51c38f0"
+    "revision": "c97055b7198437077a5c906fd4c654f79069143a"
+  },
+  "retainedTestSources": {
+    "repository": "https://github.com/piperhex/remoteai",
+    "revision": "10967f6e406daca25e948d6b997ea2b0ef5138d3",
+    "paths": [
+      "apps/desktop/e2e/"
+    ]
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -778,7 +785,7 @@
     "shared/remote-desktop/views/DesktopTitlebar.tsx": "f47bfa9d37d6cc7636a1a1ebe5b05719320247e047e1d74558565e276ab54df9",
     "shared/remote-desktop/views/useDesktopWindow.ts": "134dfb8c53a60b530f75881afea3523b2a353d7e03d90bb7d2c1971f0fa62c83",
     "shared/remote-desktop/views/DesktopStats.tsx": "7d4cbfa3f694839145315b80a167627fc0610f5b672f48e96bdac8cdba7cb2bb",
-    "shared/remote-desktop/views/MousePad.tsx": "cf30a78d140ee7478d41df5152efd036a098c8148428511b269348a0d43242d3",
+    "shared/remote-desktop/views/MousePad.tsx": "742585d96e9ec0ad48efd693bb1f829dd98471e24d878ac19877e57c0bccf1d6",
     "shared/remote-desktop/views/useTrackpad.ts": "febe0e3a0263401d1627328772ab91b3d507e3c496fd0b0e844f89834212669a",
     "shared/remote-desktop/views/useVideoViewport.ts": "27fc1e5684e036355d7c9a4d784a07d3efb922ba485b716362462c05ee95ce0b",
     "shared/remote-desktop/useMousePanel.ts": "2037c627c2658fcb8660c2a75c664f361c496afbb94f6ec2015d3244096e1fa8",
@@ -787,7 +794,7 @@
     "shared/remote-desktop/statusAction.ts": "b98d86cb67fbff6149bd5f68303f1b5cc36eab860e012193b07c0c8dc47aad41",
     "shared/remote-desktop/useInputViewport.ts": "bfc739fc2ab5de24e6e1c32b99b279543b0ab2f5925d47a1787bba9201f9fcc5",
     "shared/remote-desktop/useDesktopInputFocus.ts": "4fba2924be0f4535fdf97fb538902922d3b00bb9c6ecd05b743b3bf4c23f01ec",
-    "shared/remote-desktop/geometry.ts": "723a5eff0af5138172e783bcddf6347f82fb23cf2a45baac6ca0a3830302d547",
+    "shared/remote-desktop/geometry.ts": "2dfb7a4d25f64ad11826a51b6e29911b44e5c794f09ea5aea9563c7ed03670e7",
     "shared/remote-desktop/views/usePageVisibility.ts": "d3846892e31f2ea761318dcbe10a178770a7e2b357ceef528b2f5835d2715350",
     "shared/remote-desktop/views/useKeyboardViewport.ts": "10883eb65625d8e5e3727247ce953aba7d6a933033dc81fc0555e8b159ad45c7",
     "shared/remote-desktop/views/useDesktopPlayback.ts": "45726b9d15dad29d2b3ff972f296f1a79a1f89442c8a3935562cd9ba3e3b39f5",
@@ -919,7 +926,7 @@
     "shared/provider-market/i18n.ts": "99dda5e97e45baf4e6a78c6db8ecf6df1dae0d66356af9647cfe4264dd9413b2",
     "shared/file-preview/workspace/preview.module.less": "ab254b31294a88ac66379927c40523f47cf90756c44da0f2670b9509890d8701",
     "shared/remote-chat/views/remoteFilePreview.css": "fabb7a21c444c886f938711c288702b314d08dcc3e4ca38bbb198229cf700080",
-    "shared/provider-market/ProviderBrowser.tsx": "f748f28abfb8a1638964628528d94ba50132b7d611fe95ec76baa5e91c290201",
+    "shared/provider-market/ProviderBrowser.tsx": "4479cbab9c2e75725588ce6e4dd829cd73eb4fefa5f4764cb70ff12d441968f8",
     "shared/file-preview/workspace/ManagedBrowserSurface.tsx": "de910114dc9c467b7ea9a69332da83b2fdbc71c4000117d4ff6ef2c03534e3ae",
     "shared/remote-chat/views/ChatBinaryFilePreview.tsx": "d18d95c89fcd05ddd62ce5d23297c65dede1f4712cb97af8f641650b0818ad97",
     "shared/remote-chat/filePreview.ts": "8d369c8a09c5a195afe36a072b33eba610baf26717f370c0a7911d6457314096",
@@ -1336,7 +1343,7 @@
     "shared/remote-desktop/views/DesktopDisplayBar.tsx": "c831c74f47048619232c9d0072642b7e789deb9721e028abcb6ed2e4da49b9bb",
     "shared/remote-desktop/views/titlebar.css": "37e6869b546db646f300f8bb72422210692c8e6b60af232192fdb47171c7e6dd",
     "shared/remote-desktop/cursor.svg": "375bcd7422aea6bd83a38afa2ee5569780f5133e21d8664a1994a31ec2d2d0b6",
-    "shared/remote-desktop/views/useMouseButtons.ts": "35ef56708af105d69ec5003fb2da7006fa282a190df5033c6b6b2434e218a591",
+    "shared/remote-desktop/views/useMouseButtons.ts": "7a7b9273f7c2e47853ca180e4d35ce4dc30ac7378aabdaaa0a78e197653f689c",
     "shared/remote-desktop/useScrollPad.ts": "de61575c9e5f7f50ec5b3df0209ed274cb647df6c40ca7704e876128ae25c76b",
     "shared/remote-desktop/scrollPad.ts": "9179736595b4533c99019a6e02a38011791615dfc7e31022324d1c0750828245",
     "shared/remote-desktop/views/useScrollButton.ts": "ea8444ddac803ea8f7524b527b40e2d86b5272f931db4aeb7ac396950d952030",
@@ -1865,7 +1872,7 @@
     "shared/browser/searchEngine.ts": "6f3d67eabc3cb333ca29447b9e96c10f8740c58dd00ce9f357ac2194e6291bd4",
     "shared/browser/searchPreference.ts": "e735f5fd02aa753eaa37018d75d3baeb6fcdb0ba6e84c2535af4e2b5b2c8e4da",
     "shared/browser/MobileBrowserToolbar.tsx": "679584a732ebc697a51386f728221895c0a7e0362eefcac478109fe552d77760",
-    "shared/browser/BrowserPages.tsx": "c1fd24dfd1dab30e14b90a24a003f9ecd6b7899bcbf92dd665f68f175d4b9984",
+    "shared/browser/BrowserPages.tsx": "e2367c1c7b9f13ba0bddd85b593504e867310964bb69cac42c622de88cfc8047",
     "shared/browser/BrowserEdgeGestures.tsx": "1577ede3c8eae8703d1c9bfebc103ae158ed8c90a432785aca6bfaa557f44748",
     "shared/browser/mobileBrowser.css": "a573e9c6e23bc123a3390f0703544a7ae0ae8f07b628cd97386e1800758bc1be",
     "shared/browser/BrowserSiteModeSetting.tsx": "83bbe064d816a63907e6c7fb43e36972b0f86d7dd39a3c67252be3420b29ba4e",
@@ -2096,6 +2103,13 @@
     "shared/conversation/DiffFileList.tsx": "e9cb83a7bd21cae6b30a3dacfaf692730c696cf1267589e64c2859ec72f541bb",
     "shared/terminal/workspace/SshComputerMenu.tsx": "070758b83e388bf0945e80dfcb4e42e54fb23d27442bd224f3268624c4ed4589",
     "shared/terminal/workspace/computerMenu.css": "edeb0616719bc87c5524807f1b7aeb719fc8d7e61dbc1400b80322616ceab47a",
-    "shared/remote-desktop/views/AddDesktopMenu.tsx": "f44342a994912807b3bbe52d4593950d7a96e774c696424be3ac9a8adb0a380a"
+    "shared/remote-desktop/views/AddDesktopMenu.tsx": "f44342a994912807b3bbe52d4593950d7a96e774c696424be3ac9a8adb0a380a",
+    "shared/browser/mouse/mousePreference.ts": "f7fb5cd8457935513e64f72ee724fa2490eba70afe5a2ce7f18e1812e8028cb5",
+    "shared/browser/mouse/BrowserMousePanel.tsx": "bc351541a74d6e999981a2ca3ee280564827f38fc0ccb07fe97ea11f3811bcc9",
+    "shared/browser/mouse/documentMouse.ts": "d0b432a98cd4a39e0f1a7f45050875e7b8340a705e095ddb231d0430f97bf952",
+    "shared/browser/mouse/useBrowserMouse.ts": "4c6bffe06c61120dc0be9faeef7a0a83be714286247eca24f618b41c51274368",
+    "shared/browser/mouse/browserMouse.css": "cec4d7038140197436648e8f5ec52eb3e7bf9675cb8eef2bfa7e6168046ffe6d",
+    "shared/browser/mouse/pageDrag.ts": "cebb97383c938b7a49f963fa7bbb3cd2ead52b6f91c56b51d7ace33b538038e4",
+    "shared/browser/mouse/textDrag.ts": "e78d0df9ebad60a34fd96eee820160b2d38386d1d2d9addf78235717792b8a77"
   }
 }

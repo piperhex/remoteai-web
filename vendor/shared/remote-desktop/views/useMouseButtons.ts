@@ -7,7 +7,8 @@ import { useMouseButtons as useSharedMouseButtons } from '../useMouseButtons';
 type Button = 'left' | 'right';
 interface Press { id: number; x: number; y: number }
 
-export function useMouseButtons(pointer: DesktopPointer, viewport: DesktopViewport, panel: MousePanelActivity) {
+export function useMouseButtons(pointer: DesktopPointer, viewport: DesktopViewport, panel: MousePanelActivity,
+  pageCanTakeFocus = false) {
   const buttons = useSharedMouseButtons(pointer);
   const presses = useRef<Partial<Record<Button, Press>>>({});
   const cancel = useCallback(() => {
@@ -15,11 +16,13 @@ export function useMouseButtons(pointer: DesktopPointer, viewport: DesktopViewpo
   }, [buttons.cancel, panel.hold]);
   useEffect(() => {
     const hidden = () => { if (document.hidden) cancel(); };
-    window.addEventListener('blur', cancel); document.addEventListener('visibilitychange', hidden);
+    // Moving focus into an embedded page also blurs its parent window. Wait for focus to settle.
+    const blur = pageCanTakeFocus ? () => queueMicrotask(() => { if (!document.hasFocus()) cancel(); }) : cancel;
+    window.addEventListener('blur', blur); document.addEventListener('visibilitychange', hidden);
     return () => {
-      cancel(); window.removeEventListener('blur', cancel); document.removeEventListener('visibilitychange', hidden);
+      cancel(); window.removeEventListener('blur', blur); document.removeEventListener('visibilitychange', hidden);
     };
-  }, [cancel]);
+  }, [cancel, pageCanTakeFocus]);
   const move = (button: Button, event: PointerEvent<HTMLButtonElement>) => {
     const previous = presses.current[button];
     if (previous?.id !== event.pointerId) return;

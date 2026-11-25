@@ -9,11 +9,13 @@ import { SwipeableBrowserPage } from './SwipeableBrowserPage';
 import { DESKTOP_SITE_WIDTH } from './siteMode';
 import './mobileBrowser.css';
 import { BrowserHome } from './BrowserHome';
+import { BrowserMousePanel } from './mouse/BrowserMousePanel';
 import { useMobileBrowserRenderers } from './useMobileBrowserRenderers';
 
 /** Keep tab cards and navigation available when an older mobile page releases its renderer. */
 export function BrowserPages({ browser, t, manager, compact, query, blocked, select, loadingChanged, desktopTabs,
-  home, bookmarks, recordVisit, zoomAnchor }: {
+  home, bookmarks, recordVisit, zoomAnchor, mouseEnabled }: {
+  mouseEnabled?: boolean;
   zoomAnchor: HTMLSpanElement | null;
   browser: BrowserWindowProps & { embedded?: boolean; onPageNavigate?: (id: string, url: string) => void };
   t: MarketText; manager: boolean; compact: boolean; query: string; blocked: boolean;
@@ -87,6 +89,8 @@ export function BrowserPages({ browser, t, manager, compact, query, blocked, sel
           </div>}
         </BrowserTabCanvas>
         {home(entry.id) && <BrowserHome t={t} visit={url => browser.onNavigate(entry.id, url)} bookmarks={bookmarks} />}
+        {mouseEnabled && compact && open && !manager && !blocked && entry.id === activeId &&
+          <BrowserMousePanel key={home(entry.id) ? 'home-mouse' : entry.url} home={home(entry.id)} />}
         {manager && <><button className="browser-tab-select" aria-label={title} aria-pressed={entry.id === activeId}
           onClick={() => select(entry.id)} /><span className="browser-tab-card-url">{entry.url || title}</span></>}
       </SwipeableBrowserPage>;

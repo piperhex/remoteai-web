@@ -16,7 +16,7 @@ import { DesktopScrollPad } from './DesktopScrollPad';
 
 interface Props {
   pointer: DesktopPointer; viewport: DesktopViewport; panel: MousePanelActivity;
-  wheel: DesktopWheel; horizontal: boolean;
+  wheel: DesktopWheel; horizontal: boolean; contained?: boolean;
 }
 type MousePadProps = Omit<Props, 'wheel' | 'horizontal'> & { scroll: ScrollPadGesture };
 export function DesktopMouse({ visible, ...props }: Props & { visible: boolean }) {
@@ -24,7 +24,7 @@ export function DesktopMouse({ visible, ...props }: Props & { visible: boolean }
   const scroll = useScrollPad({ ...props, enabled: visible && props.panel.expanded });
   const cursor = cursorPosition(position, props.viewport);
   const panelSize = props.panel.expanded ? MOUSE_PANEL_SIZE : MOUSE_ICON_SIZE;
-  const panel = mousePanelPosition(cursor);
+  const panel = mousePanelPosition(cursor, props.contained ? { stage: props.viewport.stage, panel: panelSize } : undefined);
   return <>
     {props.panel.expanded && <img className="rd-cursor" src={cursorImage} alt="" aria-hidden="true" draggable={false}
       style={{ ...CURSOR_SIZE, left: cursor.x, top: cursor.y }} />}
@@ -43,8 +43,8 @@ function MouseIcon({ pointer, viewport, panel }: Props) {
     onClick={event => { if (event.detail === 0) panel.expand(); }}><Mouse /></button>;
 }
 
-function MousePad({ pointer, viewport, panel, scroll }: MousePadProps) {
-  const buttons = useMouseButtons(pointer, viewport, panel);
+function MousePad({ pointer, viewport, panel, scroll, contained }: MousePadProps) {
+  const buttons = useMouseButtons(pointer, viewport, panel, contained);
   const wheel = useScrollButton(scroll);
   const pad = useTrackpad({ pointer, viewport, panel, id: 'pad', cancel: buttons.cancel });
   const grip = useTrackpad({ pointer, viewport, panel, id: 'grip', click: false, cancel: buttons.cancel });

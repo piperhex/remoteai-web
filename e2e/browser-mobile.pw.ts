@@ -1,6 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { verifyFullscreenControl } from './browser-fullscreen-checks';
+import { verifyBrowserMouse } from './browser-mouse-checks';
+
+test('mobile browser mouse controls operate the active page', verifyBrowserMouse);
 
 test('mobile browser bounds live frames and reopens an evicted tab at its saved URL', async ({ page }, info) => {
   await page.setViewportSize({ width: 390, height: 844 });

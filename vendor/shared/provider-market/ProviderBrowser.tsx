@@ -1,6 +1,8 @@
 import { useCallback, useContext, useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { Download, ExternalLink, History, KeyRound, Maximize2, Plus, X } from 'lucide-react';
+import { Download, ExternalLink, History, KeyRound, Maximize2, Mouse, Plus, X } from 'lucide-react';
+import { Checkbox } from 'antd';
+import { mousePreference } from '../browser/mouse/mousePreference';
 import { marketText, type MarketText } from './i18n';
 import type { Language } from '@remoteai/i18n';
 import { useSearchEngine } from '../browser/useSearchEngine';
@@ -33,6 +35,8 @@ import { BrowserSidePanel, type BrowserPanelSelection } from '../browser/extensi
 import { Settings } from 'lucide-react';
 import { BrowserOverlayProvider, useBrowserOverlay } from '../browser/overlays/BrowserOverlayProvider';
 import { WebsiteDownloadsContext } from '../browser/downloads/context';
+
+const useMousePreference = mousePreference(() => localStorage);
 
 export interface BrowserSurfaceProps {
   tab: BrowserTab; active: boolean; command: { sequence: number; action: BrowserAction } | null;
@@ -78,6 +82,7 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
   const [manager, setManager] = useState(false);
   const [query, setQuery] = useState('');
   const [desktopTabs, setDesktopTabs] = useState<Record<string, boolean>>({});
+  const [mouseEnabled, setMouseEnabled] = useMousePreference();
   const [mappingsOpen, setMappingsOpen] = useState(false);
   const [dataPanel, setDataPanel] = useState<'history' | 'passwords'>();
   const [extensionsOpen, setExtensionsOpen] = useState(false);
@@ -108,6 +113,9 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
       {compact && <BrowserSettingsAction icon={Maximize2} onClick={() => {
         dismiss(); props.toggleFullscreen();
       }}>{t('market.browserFullscreen')}</BrowserSettingsAction>}
+      {compact && <Checkbox className="browser-site-mode-setting" checked={mouseEnabled}
+        onChange={event => { setMouseEnabled(event.target.checked); dismiss(); }}>
+        <Mouse size={20} /><span>{uiText('client.remoteDesktop.mouseControls', {}, props.language)}</span></Checkbox>}
       {(compact || props.mainBrowser) && <BrowserSettingsAction disabled={!externalUrl} icon={ExternalLink}
         onClick={() => {
         if (externalUrl) void openWebsiteInBrowser(externalUrl);
@@ -190,7 +198,7 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
     <div className="browser-content-row"><BrowserPages key="pages" browser={{ ...props, onAction: home.action, onNavigate: home.navigate,
       onCloseTab: id => closeTabs([id]) }}
       home={home.isHome} bookmarks={bookmarks.manage} t={t} manager={showManager} compact={compact} query={query}
-      desktopTabs={desktopTabs} zoomAnchor={zoomAnchor}
+      desktopTabs={desktopTabs} zoomAnchor={zoomAnchor} mouseEnabled={mouseEnabled}
       blocked={!nativeOverlay && (addressOpen || menuOpen || extensionsOpen || bookmarks.overlayOpen || mappingsOpen
         || !!dataPanel || !!records.candidate || !!records.focus)}
       loadingChanged={loadingChanged}
