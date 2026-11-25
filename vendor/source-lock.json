@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "121a6f8178ed7c98017e0dcd2ad16cfdd7c53f79",
+  "revision": "e59c612a238f8a438254b394741f40729e04a4fa",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "3f4b4cc03c5f6d4559d207fdec229576bd70612c"
+    "revision": "0992e4f9e224d65c2f8b7e1717f84aa44d3fc0fb"
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
@@ -2079,8 +2079,8 @@
     "shared/conversation/savedReview.ts": "c03f148beaf05b2712ae3bb9f0afef65c96983a507661ec49b210a054e58b448",
     "shared/conversation/SavedReviewFiles.tsx": "ee5d27c80ed8e853e16c0994e0193e17d8abd0ba3860adfc50a1f6a400c5cd0e",
     "shared/remote-chat/views/MobileChatDiff.tsx": "f8337dc6e4b6bfb1d6981db91d6ac137ad48f75879873747b38010eba2b00d72",
-    "shared/remote-desktop/views/RemoteDesktopPage.tsx": "f8e30244121de1b6a63f8fc04ff4c0e6b0f1b81fb2cc62ee7da941b84f2b0112",
+    "shared/remote-desktop/views/RemoteDesktopPage.tsx": "1e2b25560c5e8b64e123a5c04c2eec34e7ec3f48ca6dec7c3e02bbfcdfed7038",
     "shared/remote-desktop/views/ConnectedDesktop.tsx": "03ef7a0d6390b8134508b00b4b90bf19cddfdbe580e90f51727ca2b9d28ea028",
-    "shared/remote-desktop/views/remoteDesktopPage.css": "a6cb55d7652ffa475160a1612fd09d572526efe94558ba291689f3e6bb2ba592"
+    "shared/remote-desktop/views/remoteDesktopPage.css": "cb2a77218dac98bd035c02d1d3ac72f29e8579a44696134c4741cf6515dc3074"
   }
 }

@@ -35,11 +35,11 @@ export function RemoteDesktopPage({ devices, directory, login, connect, localCli
         {directory.error && <Alert type="warning" showIcon message={displayError(directory.error)} />}
         {devices.length > 0 ? <div className="rd-device-list">
           {devices.map(device => <button type="button" key={device.deviceId} disabled={!device.online}
-            className="rd-device-row" onClick={() => setSelected(device)}>
-            <span className="rd-device-icon"><Monitor size={21} /></span>
+            className="rd-device-card" onClick={() => setSelected(device)}>
+            <span className="rd-device-icon"><Monitor size={21} aria-hidden="true" /></span>
             <span className="rd-device-label"><strong>{device.name}</strong><small>{device.platform}</small></span>
             <span className="rd-device-presence">{t(device.online ? 'client.chat.online' : 'client.chat.offline')}</span>
-            <ChevronRight size={16} aria-hidden="true" />
+            {device.online && <ChevronRight className="rd-device-open" size={16} aria-hidden="true" />}
           </button>)}
         </div> : <div className="rd-device-empty">
           {directory.loading ? <Spin /> : <><MonitorOff size={28} aria-hidden="true" />
