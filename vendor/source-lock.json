@@ -3,7 +3,7 @@
   "revision": "10967f6e406daca25e948d6b997ea2b0ef5138d3",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "9ec14805de4dc399048784be88e60216b1bd72c0"
+    "revision": "f7d9678809c6a2301ef658df21a686d77a0d5f74"
   },
   "retainedTestSources": {
     "repository": "https://github.com/piperhex/remoteai",
@@ -1854,13 +1854,13 @@
     "shared/browser/bookmarks/store.ts": "c9501be61d70ff74e07d2f89a79c25fa807cb1bead8a307b208ff6643202403e",
     "shared/browser/bookmarks/useBrowserBookmarks.tsx": "112cd6f1fefaa24d7dcf751b57bc3540fb1e858fb40c7fdfcd62cd243241795a",
     "shared/browser/bookmarks/model.ts": "1edefc05a39f73cbddd690ceefc469895e4e9456f2141264a8d8ea97d9dae0d8",
-    "shared/browser/bookmarks/BookmarkBar.tsx": "8c4e2b440aac3f5e830160daf4224241cd31a3e430f222fc9567e1f85113b5d4",
+    "shared/browser/bookmarks/BookmarkBar.tsx": "9cc4af307c95ebb84b8758e5a5dbd73fac66924a0aaf1b9c115770489c26af3d",
     "shared/browser/bookmarks/BookmarkEditor.tsx": "32ac60ae4f767561d84b06cdf97b2391055c1ed0ceb16d5bcac3141be895c0d0",
     "shared/browser/bookmarks/BookmarkManager.tsx": "177a1b41b515db4c65d28041f4644c976782c9958acdb81223fac45c6a6054f1",
-    "shared/browser/bookmarks/bookmarks.css": "5272bdd7fdf3c72234b0a936399f5e320c1a507857a0b390b056f92f4d105e9f",
+    "shared/browser/bookmarks/bookmarks.css": "35e355f97d16394b9ea1715419adc4fe18fab1cf7f373de6d02711a7e685e38d",
     "apps/desktop/e2e/nested-scroll-checks.ts": "d069d4904859fd6d130d21f6d8169cdd17e45e65c6ffa7d443d3dbfd8f06dbb4",
     "shared/chat/canScrollWithin.ts": "8d95c7965ce767bd659b54250f5d97462b6337596f5ad87930bf6fc00004318d",
-    "shared/browser/bookmarks/BookmarkContextMenu.tsx": "15726f1b72694e66e252ffc90da4f3ebd7b13fc1c388c11bf585c798985e9afd",
+    "shared/browser/bookmarks/BookmarkContextMenu.tsx": "21d62c8418758f585646b91e9ecb2926da4247a5ef59367cc9a58f2d3b04cc8f",
     "shared/browser/bookmarks/useBookmarkDrag.ts": "991c6d4507c561e880bbab3f4a7d0274443423e620358c6fcd016335fe29702e",
     "shared/chat/useScrollChain.ts": "18175cb18ec0015543c5075fe1866cdcd37600d709e301c6be5cd1fb3a354404",
     "shared/browser/bookmarks/status.ts": "003546ca89e4a6cf202165b03127402770046146fde1abc3d29b64169dcfea9e",
@@ -2110,6 +2110,7 @@
     "shared/browser/mouse/useBrowserMouse.ts": "4c6bffe06c61120dc0be9faeef7a0a83be714286247eca24f618b41c51274368",
     "shared/browser/mouse/browserMouse.css": "cec4d7038140197436648e8f5ec52eb3e7bf9675cb8eef2bfa7e6168046ffe6d",
     "shared/browser/mouse/pageDrag.ts": "cebb97383c938b7a49f963fa7bbb3cd2ead52b6f91c56b51d7ace33b538038e4",
-    "shared/browser/mouse/textDrag.ts": "e78d0df9ebad60a34fd96eee820160b2d38386d1d2d9addf78235717792b8a77"
+    "shared/browser/mouse/textDrag.ts": "34c853f8e7ae11db775b36fba44b7c6c335c5c0f8e88e6710514bb12dc557a42",
+    "shared/testing/bookmarkContextMenu.mts": "3a591df9a7cd4a1a431d343495482a8dc308329f0e8ed8aed03e55510849fde5"
   }
 }

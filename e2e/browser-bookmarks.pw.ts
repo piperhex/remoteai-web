@@ -2,6 +2,12 @@ import { expect, test } from '@playwright/test';
 import { verifyBookmarkOverflow } from '../../../shared/testing/bookmarkOverflow.mts';
 import { verifyBookmarkFolders } from '../../../shared/testing/bookmarkFolders.mts';
 import { verifyAddPageToFolder } from '../../../shared/testing/bookmarkFolderPages.mts';
+import { verifyBookmarkContextMenu } from '../../../shared/testing/bookmarkContextMenu.mts';
+
+test('web bookmark context menu above folder contents', async ({ page }, info) => {
+  await verifyBookmarkContextMenu(page, info, { label: 'web-desktop', scope: 'web-bookmarks',
+    harness: 'e2e/web-browser-bookmarks-harness.html' });
+});
 
 test('web add a page from a bookmark folder', async ({ page }, info) => {
   await verifyAddPageToFolder(page, info, { label: 'web-desktop', scope: 'web-bookmarks',

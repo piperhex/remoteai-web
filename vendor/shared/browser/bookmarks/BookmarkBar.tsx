@@ -4,13 +4,17 @@ import { Ellipsis, Folder, PanelsTopLeft } from 'lucide-react';
 import { useTabOverflow } from '../../project-browser/useTabOverflow';
 import { BrowserWebsiteIcon } from '../icons/BrowserWebsiteIcon';
 import type { Bookmark } from './model';
-import { BookmarkContextMenu, type BookmarkActions } from './BookmarkContextMenu';
+import { BOOKMARK_MENU_Z_INDEX, BookmarkContextMenu, type BookmarkActions } from './BookmarkContextMenu';
 import type { useBookmarkDrag } from './useBookmarkDrag';
 import { useThreadLongPress } from '../../chat/useThreadLongPress';
 
 interface Props extends BookmarkActions {
   entries: Bookmark[];
 }
+
+const bookmarkMenuOverlay = {
+  overlayClassName: 'browser-bookmark-menu', overlayStyle: { zIndex: BOOKMARK_MENU_Z_INDEX },
+};
 
 function childrenOf(entries: Bookmark[], parentId: string) {
   return entries.filter(entry => entry.parentId === parentId);
@@ -22,8 +26,14 @@ function bookmarkItems(props: Props, entries: Bookmark[], depth = 0): NonNullabl
     key: entry.id, label: <BookmarkContextMenu {...props} entry={entry}>{entry.title}</BookmarkContextMenu>,
     icon: entry.kind === 'folder' ? <Folder size={15} />
       : <span><BrowserWebsiteIcon url={entry.url} size={15} /></span>,
-    ...(entry.kind === 'folder' ? { children: bookmarkItems(props, childrenOf(props.entries, entry.id), depth + 1) }
-      : { onClick: ({ domEvent }) => props.visit(entry, domEvent.ctrlKey || domEvent.metaKey) }),
+    ...(entry.kind === 'folder' ? { popupStyle: { zIndex: BOOKMARK_MENU_Z_INDEX + depth + 1 },
+      children: bookmarkItems(props, childrenOf(props.entries, entry.id), depth + 1) }
+      : { onClick: ({ domEvent }) => {
+        // Portaled context actions also bubble through this row in the React tree.
+        if (domEvent.target instanceof Node && domEvent.currentTarget.contains(domEvent.target)) {
+          props.visit(entry, domEvent.ctrlKey || domEvent.metaKey);
+        }
+      } }),
   }));
 }
 
@@ -41,7 +51,7 @@ function BookmarkButton({ entry, dragClass, hidden, ...props }: Props & {
   </button>;
   return <BookmarkContextMenu {...props} entry={entry}>
     {entry.kind === 'folder' ? <Dropdown trigger={['click']} onOpenChange={menuChanged}
-      overlayClassName="browser-bookmark-menu" menu={{ items: bookmarkItems(props, childrenOf(props.entries, entry.id)) }}>
+      {...bookmarkMenuOverlay} menu={{ items: bookmarkItems(props, childrenOf(props.entries, entry.id)) }}>
       {button}</Dropdown> : button}
   </BookmarkContextMenu>;
 }
@@ -57,7 +67,7 @@ function BookmarkOverflowMenu({ items, t, menuChanged }: Pick<Props, 't' | 'menu
   }, [open, menuChanged]);
   const label = t('market.moreActions');
   return <Dropdown trigger={['click']} placement="bottomRight" autoFocus open={open} onOpenChange={setOpen}
-    overlayClassName="browser-bookmark-menu" menu={{ 'aria-label': label, items }}>
+    {...bookmarkMenuOverlay} menu={{ 'aria-label': label, items }}>
     <button type="button" title={label} aria-label={label} aria-haspopup="menu" aria-expanded={open}>
       <Ellipsis size={18} /></button>
   </Dropdown>;
@@ -75,7 +85,7 @@ export function BookmarkBar({ drag, ...props }: Props & {
   const overflow = useTabOverflow(roots.map(entry => ({ path: entry.id })));
   const hidden = new Set(overflow.hiddenPaths);
   return <div {...drag.handlers} className="browser-bookmark-bar" role="navigation" aria-label={t('market.bookmarkBar')}>
-    <Dropdown trigger={['contextMenu']} onOpenChange={props.menuChanged} overlayClassName="browser-bookmark-menu"
+    <Dropdown trigger={['contextMenu']} onOpenChange={props.menuChanged} {...bookmarkMenuOverlay}
       menu={{ items: [{ key: 'folder', label: props.newFolderLabel, onClick: () => props.newFolder() }] }}>
       <span {...blankMenu} className="browser-bookmark-background" onPointerDown={event => {
         if (event.pointerType !== 'mouse') blankMenu.onPointerDown(event);
@@ -90,7 +100,7 @@ export function BookmarkBar({ drag, ...props }: Props & {
       {overflow.overflowing && <BookmarkOverflowMenu t={t} menuChanged={props.menuChanged}
         items={bookmarkItems(props, roots.filter(entry => hidden.has(entry.id)))} />}
     </div>
-    <Dropdown trigger={['click']} onOpenChange={props.menuChanged} overlayClassName="browser-bookmark-menu"
+    <Dropdown trigger={['click']} onOpenChange={props.menuChanged} {...bookmarkMenuOverlay}
       menu={{ items: [...bookmarkItems(props, roots), { type: 'divider' },
         { key: 'manage', label: t('market.bookmarkManage'), onClick: props.manage }] }}>
       <button type="button" className="browser-bookmark-all" title={t('market.bookmarkAll')}
