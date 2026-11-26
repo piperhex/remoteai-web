@@ -92,8 +92,8 @@ export function BrowserPages({ browser, t, manager, compact, query, blocked, sel
           </div>}
         </BrowserTabCanvas>
         {home(entry.id) && <BrowserHome t={t} visit={url => browser.onNavigate(entry.id, url)} bookmarks={bookmarks} />}
-        {mouseEnabled && compact && open && !manager && !blocked && entry.id === activeId &&
-          <BrowserMousePanel key={home(entry.id) ? 'home-mouse' : entry.url} home={home(entry.id)} />}
+        {mouseEnabled && compact && <BrowserMousePanel home={home(entry.id)}
+          active={open && !manager && !blocked && entry.id === activeId} />}
         {manager && <><button className="browser-tab-select" aria-label={title} aria-pressed={entry.id === activeId}
           onClick={() => select(entry.id)} /><span className="browser-tab-card-url">{entry.url || title}</span></>}
       </SwipeableBrowserPage>;

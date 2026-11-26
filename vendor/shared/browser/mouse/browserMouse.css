@@ -1,3 +1,4 @@
+.pm-browser-page.browser-mouse-stage { background: #000; overflow: clip; }
 .browser-mouse-layer { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; }
 .browser-mouse-layer * { box-sizing: border-box; }
 .browser-mouse-layer .rd-scroll-layer { pointer-events: auto; }

@@ -1,6 +1,6 @@
 import { expect, type Page, type TestInfo } from '@playwright/test';
 
-export async function verifyBrowserMouse({ page }: { page: Page }, info: TestInfo) {
+export async function openMouseBrowser(page: Page) {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.addInitScript(() => localStorage.setItem('codex-switch.web.session.v1', JSON.stringify({
     baseUrl: location.origin + '/mouse-account', email: 'mouse@example.test', accessToken: 'fixture', refreshToken: 'fixture',
@@ -8,6 +8,13 @@ export async function verifyBrowserMouse({ page }: { page: Page }, info: TestInf
   await page.route('**/mouse-account/**', route => route.fulfill({ json: {
     accounts: [], devices: [], providers: [], id: 'mouse', email: 'mouse@example.test', ticket: 'fixture',
   } }));
+  await page.goto('./');
+  await page.locator('.mobile-tabbar').getByRole('tab', { name: '浏览器', exact: true }).click();
+  return page.locator('.browser-main-page');
+}
+
+export async function verifyBrowserMouse({ page }: { page: Page }, info: TestInfo) {
+  const browser = await openMouseBrowser(page);
   await page.route('**/mouse-page', route => route.fulfill({ contentType: 'text/html',
     body: '<meta name="viewport" content="width=device-width, initial-scale=1"><style>body{height:250vh;width:250vw;'
       + 'font:20px system-ui;background:#f4f7f5;color:#234637}main{padding:22px}</style>'
@@ -16,9 +23,6 @@ export async function verifyBrowserMouse({ page }: { page: Page }, info: TestInf
       + 'document.addEventListener(name,e=>{if(name==="contextmenu") e.preventDefault();'
       + 'if(name==="pointermove" && !e.buttons)return;document.querySelector("output").textContent=name+":"+e.buttons;});'
       + '</script>' }));
-  await page.goto('./');
-  await page.locator('.mobile-tabbar').getByRole('tab', { name: '浏览器', exact: true }).click();
-  const browser = page.locator('.browser-main-page');
   const settings = browser.getByRole('button', { name: '浏览器设置', exact: true });
   const toggle = page.getByRole('checkbox', { name: '鼠标操作' });
   const address = browser.getByLabel('页面地址', { exact: true });
