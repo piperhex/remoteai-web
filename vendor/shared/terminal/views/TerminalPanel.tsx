@@ -15,19 +15,18 @@ import { SshProjectBrowser } from '../SshProjectBrowser';
 import { WorkspaceDrawerContext } from '../../chat/workspaceDrawer';
 import { TerminalTabStrip } from './TerminalTabStrip';
 import { useGuiLanguage } from '../../localization/useGuiLanguage';
-import { SshDropTarget } from '../SshDropTarget';
+import { SshDropTarget, type SshNativeDrop } from '../SshDropTarget';
 import { useSshDropQueue } from '../useSshDropQueue';
 import type { SshUploadBatch } from '../sshDrop';
 import { sshError } from '../ssh';
-import { nativeSshUploadBatch, subscribeSshFileDrop } from './sshDrop';
 import { getSshDirectory, subscribeSshDirectory } from '../sshDirectory';
 import { ZmodemDialog } from '../ZmodemDialog';
 import { enqueueSshDownload } from '../../downloads/sshDownload';
 
-export const nativeDrop = { subscribe: subscribeSshFileDrop, read: nativeSshUploadBatch };
-
-export default function TerminalPanel({ panel, active, api, fill = false, translate = displayText, notice, empty, onClose }: {
+export default function TerminalPanel({ panel, active, api, fill = false, translate = displayText, notice, empty,
+  nativeDrop, onClose }: {
   panel: TerminalPanelState; active: boolean; api: TerminalApi; fill?: boolean;
+  nativeDrop?: SshNativeDrop;
   translate?: (source: string, values?: { number: number }) => string;
   notice?: string;
   empty?: ReactNode;
@@ -76,6 +75,7 @@ export default function TerminalPanel({ panel, active, api, fill = false, transl
     {notice && <div className={styles.status} role="alert">{translate(notice)}</div>}
     {!panel.tabs.length && empty}
     {panel.tabs.map((tab) => <TerminalPane key={tab.id} tab={tab} api={api} translate={translate} shortcuts={fill}
+      nativeDrop={nativeDrop}
       onExit={() => panel.exited?.(tab.id)}
       upload={async batch => {
         if (!tab.session) return;
@@ -99,9 +99,11 @@ export default function TerminalPanel({ panel, active, api, fill = false, transl
   </section>;
 }
 
-export function TerminalPane({ tab, visible, api, translate, shortcuts, upload, uploadPending, onExit, darkScreen }: {
+export function TerminalPane({ tab, visible, api, translate, shortcuts, upload, uploadPending,
+  nativeDrop, onExit, darkScreen }: {
   tab: TerminalTab; visible: boolean; api: TerminalApi; translate: (source: string) => string;
   shortcuts: boolean; darkScreen?: boolean;
+  nativeDrop?: SshNativeDrop;
   onExit: () => void;
   upload: (batch: SshUploadBatch) => Promise<void>; uploadPending: boolean;
 }) {

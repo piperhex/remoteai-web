@@ -18,7 +18,8 @@ import { sshLabel, type SshProfile } from '../sshProfiles';
 import { useSshProfiles } from '../useSshProfiles';
 import { useSshDropQueue } from '../useSshDropQueue';
 import { TerminalTabStrip } from '../views/TerminalTabStrip';
-import { TerminalPane, nativeDrop } from '../views/TerminalPanel';
+import { TerminalPane } from '../views/TerminalPanel';
+import type { SshNativeDrop } from '../SshDropTarget';
 import { MAX_TERMINAL_TABS } from '../views/useTerminalPanel';
 import type { TerminalInfo } from '../types';
 import { useRecentSshProfiles, useSshSessions } from './useSshSessions';
@@ -29,6 +30,7 @@ import './workspace.css';
 
 interface Props {
   defaultHost: SshHost; directory: SshHostDirectory; active: boolean; scope: string; login?: () => void;
+  nativeDrop?: SshNativeDrop;
 }
 
 // The remote terminal list uses this opaque project association to isolate SSH tabs from chat terminals.
@@ -41,7 +43,7 @@ const SSH_SIDEBAR: SidebarSizing = {
 };
 type WorkspaceDialog = { kind: 'new' | 'manage'; profile?: undefined } | { kind: 'edit' | 'remove'; profile: SshProfile };
 
-export function SshWorkspace({ defaultHost, directory, active, scope, login }: Props) {
+export function SshWorkspace({ defaultHost, directory, active, scope, login, nativeDrop }: Props) {
   useGuiLanguage();
   const { api, ready: available } = defaultHost;
   const ssh = api.ssh!;
@@ -134,6 +136,7 @@ export function SshWorkspace({ defaultHost, directory, active, scope, login }: P
         </div></div>}
         <div className="sshw-console" hidden={!current}>
           {sessions.tabs.map(tab => <TerminalPane key={tab.id} tab={tab} api={tab.host.api} translate={t}
+            nativeDrop={nativeDrop}
             visible={active && tab.id === current?.id} shortcuts={false} darkScreen onExit={() => sessions.exited(tab.id)}
             upload={batch => { setFiles(true); return uploads.enqueue(tab.id, batch); }}
             uploadPending={uploads.pending.some(upload => upload.id === tab.id)} />)}

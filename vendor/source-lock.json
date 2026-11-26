@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "b6639c10148fec86ea2c20969be1771d10a114eb",
+  "revision": "05cdbba3d1c44fa8d10a64890ad3ff6cdc99f84a",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "230ca9db5db5293e79b5c2c400aad17f3ecf2fb6"
+    "revision": "ae6621deb4042e9af3eed8ea15821eff4436e205"
   },
   "retainedTestSources": {
     "repository": "https://github.com/piperhex/remoteai",
@@ -14,7 +14,7 @@
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
-    "revision": "79483b18732e8469343b78b5b9d3e4d1e796e46f"
+    "revision": "8a99e154ef9426a211d930a6a0d7a93fb1849582"
   },
   "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.46/remoteai-i18n-0.1.46.tgz",
   "files": {
@@ -209,7 +209,7 @@
     "shared/remote-chat/terminalApi.ts": "5b3d8acb832ff1de39aca308b7286ffd420b324e0ee1d3af754816b3c73b5905",
     "shared/remote-chat/views/terminal.css": "cd0af2694963d751616eaf417862c1f1516cb4207ca7e6a53fe662518f15895c",
     "shared/remote-chat/useToolLaunch.ts": "bde7048507977139fc3f3c3c4fb0a267784492a12ea59faeb553673702df22a6",
-    "shared/terminal/views/TerminalPanel.tsx": "b14ad59dc1321e71b562681d75a4391a1058997b8212fbdceb4736c307535f23",
+    "shared/terminal/views/TerminalPanel.tsx": "366c5fe2dcdec0fc5514a15aded0dc4afd1fde9dab8d3a96d2c5f89a07edc14d",
     "shared/token-usage/quotaHistoryData.ts": "b65edc5eedd6a1032a5b6404e53445e61c7d9d3d295935f8d16818f5e1cc14d1",
     "shared/token-usage/quotaChartLabels.ts": "2a7f82d5e2231a0ed51d0a94e412c8ae2ef6aafc3527c83892419c40a8750bb4",
     "shared/remote-chat/usage.ts": "f754d482e581c544e3eef749323cbe571437b695368eaefa98159d82a72d8c50",
@@ -758,7 +758,6 @@
     "shared/terminal/SshDropTarget.tsx": "e61ac698c41a0b42b6d6eee0ca75881bdde30625d483a14d87812f633401e3e2",
     "shared/terminal/useSshDropQueue.ts": "d8d7f3cb93b1a32daa9847759d507601e78a5acad17309a1a08420449987b7ed",
     "shared/terminal/sshDrop.ts": "c4b028cc23c0c2d8804ed23cbe1885cd1f7cd91208530d32202d1216676c397f",
-    "shared/terminal/views/sshDrop.ts": "2da714332ce0af4654762d313373e3437fa5021ec6a53437355028c2dcc86c14",
     "shared/terminal/sshDirectory.ts": "c3399df504753dd802eb7f5efd446c0369c1a598c26c156c3fb6ca285e015d23",
     "shared/terminal/ZmodemDialog.tsx": "8551897ac41cb4110a78fcc1be0c3f2b8e4e7226ff687bbf42fa01a1065a78c5",
     "shared/downloads/sshDownload.ts": "20995b5cdc30f8ae6c5560626fa2a4b66d4898b9229c216c338347282f83cd71",
@@ -2051,7 +2050,7 @@
     "shared/chat/DraftImagePreviews.tsx": "eea0f77dfdcac6e4c31ac390f20ca53465d758e275b0986a8c8163ae8cb9e8fb",
     "shared/chat/draftImagePreviews.css": "270456f3e565703fc5fa7e54c3799ef3ce31932317f8c1d32e7f8a2dd6f6cbce",
     "shared/terminal/views/terminalClipboard.ts": "aca3d9ca51f3c75b9681ab65c4a3d7d7f8dbb56fd0a2208b4e9d33b598109aa6",
-    "shared/terminal/workspace/SshWorkspace.tsx": "a2a8a0ece833ef766454ea490c078de8f1394ca04068320447694017bacc3acf",
+    "shared/terminal/workspace/SshWorkspace.tsx": "0134678d56a7b710c88a889658923d8cbf040bcc3cb3d49d1d922fb89d53ac25",
     "shared/terminal/workspace/useSshSessions.ts": "a3d9ca5262337aac96920bbd78d7897b199b98f4ad93e4fbf7fbb8b221f1b265",
     "shared/terminal/workspace/workspace.css": "18f61b8d145847c255d76d7c57f947b3e0f41ea1496a4e45793fa84778f9b4ec",
     "shared/terminal/workspace/ServerMonitor.tsx": "a92ef0c540b34b4e5d0adab80446ccb315b19c8e2cbff58eaafc7b2da17d5505",

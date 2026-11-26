@@ -22,9 +22,12 @@ test('desktop sidebar opens saved SSH sessions independently of the chat termina
   await expect(picker).toBeVisible();
   await expect(page.locator('.ant-dropdown:visible')).not.toHaveClass(/-(?:appear|enter)(?:\s|$|-)/);
   await screenshot(page, info, 'web-desktop-ssh-device-picker');
-  await picker.getByRole('menuitem', { name: '另一台电脑 在线', exact: true }).click();
-  await expect(workspace.getByRole('tab').locator('small')).toHaveText('另一台电脑', { timeout: 25_000 });
+  const otherComputer = { name: '另一台电脑 Windows 在线', exact: true };
+  await picker.getByRole('menuitem', otherComputer).click();
+  await expect(workspace.getByRole('tab').locator('small')).toHaveText('另一台电脑 Windows', { timeout: 25_000 });
   await expect(workspace.locator('.xterm-rows:visible')).toContainText('SSH ready');
+  await expect(workspace.locator('.sshw-files:visible')).toBeVisible();
+  await expect(workspace.getByRole('alert').filter({ hasText: 'plugin:event|listen' })).toHaveCount(0);
   // Older connected computers can keep serving a terminal without reporting host metrics.
   await expect(workspace.locator('.sshm-status')).toHaveText(testText('client.conversationWorkspace.unavailable'));
   const rail = workspace.locator('.sshw-rail');
@@ -54,7 +57,7 @@ test('desktop sidebar opens saved SSH sessions independently of the chat termina
   await expect(page.locator('.ant-dropdown:visible')).not.toHaveClass(/-(?:appear|enter)(?:\s|$|-)/);
   await screenshot(page, info, 'web-desktop-ssh-session-menu');
   await items.nth(1).click();
-  const secondComputer = page.getByRole('menuitem', { name: '另一台电脑 在线', exact: true });
+  const secondComputer = page.getByRole('menuitem', otherComputer);
   await secondComputer.click({ trial: true });
   await expect(secondComputer).toBeInViewport({ ratio: 1 });
   await screenshot(page, info, 'web-desktop-ssh-session-computers');
