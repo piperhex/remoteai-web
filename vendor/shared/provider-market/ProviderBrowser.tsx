@@ -175,6 +175,8 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
       : showManager ? <MobileTabManagerToolbar t={t} count={tabs.length} query={query} setQuery={setQuery}
       close={() => setManager(false)} add={add} closeAll={() => closeTabs(tabs.map(tab => tab.id))} /> : compact
       ? <MobileBrowserToolbar tab={displayTab} t={t} engine={search.engine} count={tabs.length}
+        loading={Boolean(displayTab?.url && loadingTabs.has(activeId))}
+        loadingLabel={uiText('client.portForwarding.loadingWebsite', {}, props.language)}
         newTab={add} manage={() => { setQuery(''); setManager(true); }} settings={bookmarks.settings}
         navigate={url => { if (tab) home.navigate(tab.id, url); }}
         home={() => { if (tab) home.show(tab.id); }} />

@@ -7,6 +7,34 @@ import { verifyBrowserMouseEdge } from './browser-mouse-edge';
 test('mobile browser mouse controls operate the active page', verifyBrowserMouse);
 test('mobile browser pans into the margin and keeps the pointer across navigation', verifyBrowserMouseEdge);
 
+for (const dark of [false, true]) test(`mobile loading line fades without moving the page (${dark ? 'dark' : 'light'})`,
+  async ({ page }, info) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.addInitScript(dark => {
+      localStorage.setItem('codex-switch.web.theme.v1', dark ? 'dark' : 'light');
+    }, dark);
+    await page.goto('e2e/mobile-chat-browser-harness.html');
+    await page.route('**/preview-site/page', route => route.fulfill({ contentType: 'text/html',
+      body: '<meta name="viewport" content="width=device-width"><h1>网页预览</h1><img src="/pending-image" alt="">' }));
+    let finish!: () => void;
+    const pending = new Promise<void>(resolve => { finish = resolve; });
+    await page.route('**/pending-image', async route => { await pending; await route.fulfill({ status: 204 }); });
+    await page.getByRole('link', { name: '网页链接' }).click();
+    const browser = page.locator('.browser-main-page');
+    const line = browser.locator('.browser-mobile-load-line');
+    const frame = browser.locator('.browser-tab-selected iframe');
+    await expect(browser.getByRole('progressbar')).toBeVisible();
+    await expect(line).toHaveCSS('height', '1px');
+    await expect(line).toHaveCSS('opacity', '1');
+    const loadingBounds = await frame.boundingBox();
+    const label = `web-mobile-${dark ? 'dark' : 'light'}`;
+    await page.screenshot({ path: info.outputPath(`${label}-loading.png`) });
+    finish();
+    await expect(line).toHaveCSS('opacity', '0');
+    expect(await frame.boundingBox()).toEqual(loadingBounds);
+    await page.screenshot({ path: info.outputPath(`${label}-complete.png`) });
+  });
+
 test('mobile browser bounds live frames and reopens an evicted tab at its saved URL', async ({ page }, info) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.addInitScript(() => localStorage.setItem('codex-switch.web.session.v1', JSON.stringify({

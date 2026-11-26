@@ -1,5 +1,20 @@
 .browser-tab-canvas { display: flex; position: relative; flex: 1; min-width: 0; min-height: 0; }
 .browser-mobile-toolbar { gap: 1px; padding: 6px 4px; }
+.pm-browser-toolbar.browser-mobile-toolbar { border-bottom-color: transparent; }
+.browser-mobile-load-line { position: absolute; inset: auto 0 -1px; height: 1px; overflow: hidden;
+  pointer-events: none; opacity: 1; transition: opacity 180ms ease-out; }
+.browser-mobile-load-line[aria-hidden="true"] { opacity: 0; }
+.browser-mobile-load-line::before { content: ''; display: block; height: 100%; width: 40%;
+  background: var(--accent, #6175db); animation: browser-mobile-load-sweep 1.3s ease-in-out infinite; }
+.browser-mobile-load-line[aria-hidden="true"]::before { animation-play-state: paused; }
+@keyframes browser-mobile-load-sweep {
+  from { transform: translateX(-85%); }
+  to { transform: translateX(235%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .browser-mobile-load-line { transition: none; }
+  .browser-mobile-load-line::before { animation: none; }
+}
 .browser-mobile-toolbar > button { min-width: 34px; min-height: 44px; padding: 5px; }
 .browser-mobile-toolbar form { border-radius: 18px; padding: 0 10px; }
 .browser-mobile-toolbar input { width: 0; height: 42px; }

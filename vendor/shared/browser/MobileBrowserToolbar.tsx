@@ -7,10 +7,11 @@ import { browserInput } from './addressInput';
 import { useBrowserAddressInput } from './useBrowserAddressInput';
 import type { SearchEngine } from './searchEngine';
 
-export function MobileBrowserToolbar({ tab, t, engine, navigate, home, count, newTab, manage, settings }: {
+export function MobileBrowserToolbar({ tab, t, engine, navigate, home, count, newTab, manage, settings,
+  loading, loadingLabel }: {
   tab?: BrowserTab; t: MarketText; engine: SearchEngine; navigate: (url: string) => void;
   home: () => void; count: number; newTab: () => void; manage: () => void;
-  settings: ReactNode;
+  settings: ReactNode; loading: boolean; loadingLabel: string;
 }) {
   const [address, setAddress] = useState(tab?.url ?? '');
   const addressInput = useBrowserAddressInput(address);
@@ -33,6 +34,8 @@ export function MobileBrowserToolbar({ tab, t, engine, navigate, home, count, ne
     <button aria-label={t('market.browserManageTabs', { count })} onClick={manage}>
       <span className="browser-tab-count">{count}</span></button>
     {settings}
+    <span key={tab?.id} className="browser-mobile-load-line" role="progressbar"
+      aria-label={loadingLabel} aria-hidden={!loading} />
     {invalid && <span className="pm-browser-address-error" role="alert">{t('market.browserInvalidUrl')}</span>}
   </div>;
 }
