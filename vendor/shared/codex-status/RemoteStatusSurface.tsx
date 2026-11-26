@@ -6,13 +6,15 @@ import { BrowserClientContext } from '../file-preview/workspace/browserClient';
 import { remoteStatusPage } from './remoteStatusPage';
 
 const PREVIEW_REFRESH_MS = 2_000;
-export function RemoteStatusSurface({ tab, active, command, onNavigate, onLoadingChange, t }: BrowserSurfaceProps) {
+export function RemoteStatusSurface({ tab, active, command, onNavigate, onLoadingChange, onPageTitle, t }:
+  BrowserSurfaceProps) {
   const client = useContext(BrowserClientContext);
   const session = useRef<ReturnType<typeof remoteStatusPage>>();
   const [frame, setFrame] = useState<BrowserReply['result']>();
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
-  const current = useRef({ onNavigate, onLoadingChange, url: tab.url });
+  const current = useRef({ onNavigate, onLoadingChange, onPageTitle, url: tab.url });
+  current.current.onPageTitle = onPageTitle;
   current.current.onNavigate = onNavigate; current.current.onLoadingChange = onLoadingChange;
   useEffect(() => {
     if (!tab.url) return;
@@ -38,6 +40,9 @@ export function RemoteStatusSurface({ tab, active, command, onNavigate, onLoadin
         if (stopped) return;
         if (result.image) { setFrame(result); setFailed(false); }
         if (typeof result.loading === 'boolean') current.current.onLoadingChange?.(result.loading);
+        if (result.url && typeof result.title === 'string') {
+          current.current.onPageTitle?.({ url: result.url, title: result.title });
+        }
         if (result.url && result.url !== 'about:blank' && result.url !== current.current.url) {
           current.current.url = result.url; current.current.onNavigate(result.url);
         }

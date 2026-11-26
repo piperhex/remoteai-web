@@ -7,11 +7,9 @@ import { localeForLanguage, type Language } from '@remoteai/i18n';
 import { useBrowserOverlay } from '../browser/overlays/BrowserOverlayProvider';
 import { BrowserClientContext } from '../file-preview/workspace/browserClient';
 import { pageUrl } from './pageLink';
-import type { BrowserTab } from './browserState';
+import { currentTabPage, type BrowserTab, type BrowserTabPage } from './browserState';
 import type { MarketText } from './i18n';
 import './browserTabHover.css';
-
-export type BrowserTabVisit = { requested: string; url: string; title: string };
 
 function memoryLabel(bytes: number | null | undefined, language: Language, t: MarketText) {
   if (bytes === null) return t('market.browserTabMemoryUnavailable');
@@ -24,7 +22,7 @@ function memoryLabel(bytes: number | null | undefined, language: Language, t: Ma
 }
 
 export function BrowserTabHoverCard({ anchor, tab, visit, language, t, stay, leave }: {
-  anchor: HTMLElement; tab: BrowserTab; visit?: BrowserTabVisit; language: Language; t: MarketText;
+  anchor: HTMLElement; tab: BrowserTab; visit?: BrowserTabPage; language: Language; t: MarketText;
   stay: () => void; leave: () => void;
 }) {
   const overlay = useBrowserOverlay();
@@ -42,7 +40,7 @@ export function BrowserTabHoverCard({ anchor, tab, visit, language, t, stay, lea
       .catch(() => { if (current) setBytes(null); });
     return () => { current = false; };
   }, [tab.id, tab.url, tab.automationThread, measurable]);
-  const page = visit && (visit.requested === tab.url || visit.url === tab.url) ? visit : tab;
+  const page = currentTabPage(tab, visit) ?? tab;
   const site = pageUrl(page.url)?.host;
   const bounds = anchor.getBoundingClientRect();
   return createPortal(<div role="tooltip" id={`tab-hover-${tab.id}`} data-browser-popup="tab-hover"

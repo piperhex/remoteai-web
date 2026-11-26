@@ -22,12 +22,13 @@ export function WebsiteBrowserSurface(props: BrowserSurfaceProps) {
     : <ManagedBrowserSurface {...props} />;
 }
 
-function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, obscured }: BrowserSurfaceProps) {
+function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, onPageTitle, t, obscured }:
+  BrowserSurfaceProps) {
   const client = useContext(BrowserClientContext);
   const host = useRef<HTMLDivElement>(null);
   const [pageFullscreen, setPageFullscreen] = useState(false);
-  const current = useRef({ active, onNavigate, onLoadingChange, obscured, pageFullscreen });
-  current.current = { active, onNavigate, onLoadingChange, obscured, pageFullscreen };
+  const current = useRef({ active, onNavigate, onLoadingChange, onPageTitle, obscured, pageFullscreen });
+  current.current = { active, onNavigate, onLoadingChange, onPageTitle, obscured, pageFullscreen };
   const { image: overlayImage, preview } = useNativeBrowserPreview();
   const [image, setImage] = useState('');
   const [failed, setFailed] = useState(false);
@@ -36,7 +37,13 @@ function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, ob
   useEffect(() => {
     let disposed = false;
     let receivedLoading = false;
+    let receivedTitle = false;
     const listener = client.subscribe(event => {
+      if (!disposed && event.type === 'title' && event.tabId === tab.id && event.threadId === tab.automationThread) {
+        receivedTitle = true;
+        if (!client.native) current.current.onNavigate(event.url);
+        current.current.onPageTitle?.({ url: event.url, title: event.title });
+      }
       if (!disposed && event.type === 'loading' && event.tabId === tab.id && event.threadId === tab.automationThread) {
         receivedLoading = true;
         current.current.onLoadingChange?.(event.loading);
@@ -46,6 +53,7 @@ function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, ob
       .then(reply => {
         const entry = reply.tabs?.find(entry => entry.id === tab.id);
         if (!disposed && entry) rememberWebsiteIcons(entry.url, entry.icons);
+        if (!disposed && entry && !receivedTitle) current.current.onPageTitle?.({ url: entry.url, title: entry.title });
         if (!disposed && !receivedLoading) {
           current.current.onLoadingChange?.(Boolean(reply.tabs?.find(entry => entry.id === tab.id)?.loading));
         }
@@ -122,6 +130,9 @@ function ManagedBrowserSurface({ tab, active, onNavigate, onLoadingChange, t, ob
         if (image) { setImage(`data:${image.mimeType};base64,${image.data}`); setFailed(false); }
         if (reply.result?.url) current.current.onNavigate(reply.result.url);
         if (reply.result?.url) rememberWebsiteIcons(reply.result.url, reply.result.icons);
+        if (reply.result?.url && typeof reply.result.title === 'string') {
+          current.current.onPageTitle?.({ url: reply.result.url, title: reply.result.title });
+        }
         if (typeof reply.result?.loading === 'boolean') current.current.onLoadingChange?.(reply.result.loading);
       } catch { if (!stopped) setFailed(true); }
       finally { if (!stopped) timer = setTimeout(() => { void read(); }, 700); }

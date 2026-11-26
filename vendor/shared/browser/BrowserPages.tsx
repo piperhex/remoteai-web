@@ -11,10 +11,11 @@ import './mobileBrowser.css';
 import { BrowserHome } from './BrowserHome';
 import { BrowserMousePanel } from './mouse/BrowserMousePanel';
 import { useMobileBrowserRenderers } from './useMobileBrowserRenderers';
+import type { BrowserTabPage } from '../provider-market/browserState';
 
 /** Keep tab cards and navigation available when an older mobile page releases its renderer. */
 export function BrowserPages({ browser, t, manager, compact, query, blocked, select, loadingChanged, desktopTabs,
-  home, bookmarks, recordVisit, zoomAnchor, mouseEnabled }: {
+  home, bookmarks, recordVisit, updatePage, zoomAnchor, mouseEnabled }: {
   mouseEnabled?: boolean;
   zoomAnchor: HTMLSpanElement | null;
   browser: BrowserWindowProps & { embedded?: boolean; onPageNavigate?: (id: string, url: string) => void };
@@ -22,7 +23,8 @@ export function BrowserPages({ browser, t, manager, compact, query, blocked, sel
   select: (id: string) => void; loadingChanged: (id: string, loading: boolean) => void;
   desktopTabs: Readonly<Record<string, boolean>>;
   home: (id: string) => boolean; bookmarks: () => void;
-  recordVisit?: (id: string, page: { url: string; title: string }, requested: string) => void;
+  recordVisit?: (id: string, page: { url: string; title: string }) => void;
+  updatePage: (id: string, page: BrowserTabPage) => void;
 }) {
   const { tabs, activeId, Surface, commands, open } = browser;
   const { resident } = useMobileBrowserRenderers(activeId, compact && open);
@@ -77,11 +79,12 @@ export function BrowserPages({ browser, t, manager, compact, query, blocked, sel
             command={commands[entry.id] ?? null} hideForModal={browser.embedded} obscured={blocked}
             onNavigate={url => (browser.onPageNavigate ?? browser.onNavigate)(entry.id, url)}
             onPopup={url => browser.onPopup(entry.id, url)}
+            onPageTitle={(page, requested = page.url) => updatePage(entry.id, { ...page, requested })}
             onVisit={page => {
               if (compact && page.url !== entry.url && /^https?:\/\//i.test(page.url)) {
                 observed.current.set(entry.id, { requested: entry.url, url: page.url });
               } else observed.current.delete(entry.id);
-              recordVisit?.(entry.id, page, entry.url);
+              recordVisit?.(entry.id, page);
             }}
             onLoadingChange={loading => loadingChanged(entry.id, loading)} t={t} />}
           {!mounted && manager && !home(entry.id) && <div className="pm-browser-feedback" aria-hidden>

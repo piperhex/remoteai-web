@@ -6,10 +6,10 @@ import { WebsiteDownloadsContext } from '../downloads/context';
 import { observeFrameDownloads } from '../downloads/frameDownloads';
 
 /** Browser-hosted previews cannot retain a cross-origin document when cancelling its navigation. */
-export function BrowserFrame({ tab, active, command, onLoadingChange, onVisit, t, onError }: BrowserSurfaceProps & {
-  onError: () => void;
-}) {
+export function BrowserFrame({ tab, active, command, onLoadingChange, onVisit, onPageTitle, t, onError }:
+  BrowserSurfaceProps & { onError: () => void }) {
   const frame = useRef<HTMLIFrameElement>(null);
+  const titleObserver = useRef<MutationObserver>();
   const downloads = useContext(WebsiteDownloadsContext);
   const current = useRef({ onLoadingChange, downloads, active }); current.current = { onLoadingChange, downloads, active };
   const stopObserving = useRef<() => void>();
@@ -28,7 +28,7 @@ export function BrowserFrame({ tab, active, command, onLoadingChange, onVisit, t
   }, [managed, observeDownloads]);
   useEffect(() => {
     current.current.onLoadingChange?.(true);
-    return () => current.current.onLoadingChange?.(false);
+    return () => { titleObserver.current?.disconnect(); current.current.onLoadingChange?.(false); };
   }, [tab.url, attempt]);
   useEffect(() => {
     if (!command || command.sequence === lastCommand.current) return;
@@ -49,12 +49,22 @@ export function BrowserFrame({ tab, active, command, onLoadingChange, onVisit, t
     onLoad={() => {
       current.current.onLoadingChange?.(false);
       observeDownloads();
+      titleObserver.current?.disconnect();
       try {
         const page = frame.current?.contentWindow;
-        if (page) rememberWebsiteIcons(page.location.href, readPageIcons(page.document));
-        if (page?.location.href !== 'about:blank') onVisit?.({ url: page?.location.href ?? tab.url,
-          title: page?.document.title ?? tab.title });
-      } catch { onVisit?.({ url: tab.url, title: tab.title }); }
+        if (!page || page.location.href === 'about:blank') return;
+        const doc = page.document;
+        const reportTitle = () => onPageTitle?.({ url: doc.URL, title: doc.title }, tab.url);
+        reportTitle();
+        titleObserver.current = new MutationObserver(reportTitle);
+        titleObserver.current.observe(doc.head ?? doc.documentElement,
+          { subtree: true, childList: true, characterData: true });
+        rememberWebsiteIcons(doc.URL, readPageIcons(doc));
+        onVisit?.({ url: doc.URL, title: doc.title });
+      } catch {
+        onPageTitle?.({ url: tab.url, title: '' });
+        onVisit?.({ url: tab.url, title: tab.title });
+      }
     }} onError={() => {
       current.current.onLoadingChange?.(false); onError();
     }} />;

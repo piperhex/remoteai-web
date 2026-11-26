@@ -14,6 +14,13 @@ export interface BrowserTab {
   automationClient?: import('../browser/automation').BrowserClient;
 }
 export type BrowserAction = 'back' | 'forward' | 'reload' | 'stop';
+export interface BrowserPageTitle { url: string; title: string }
+export interface BrowserTabPage extends BrowserPageTitle { requested: string }
+
+/** A readable iframe can navigate internally while its requested src stays the same. */
+export function currentTabPage(tab: BrowserTab, page?: BrowserTabPage) {
+  return page && (tab.url === page.requested || tab.url === page.url) ? page : undefined;
+}
 
 export function createBrowserTab(source?: { name: string; marketSource: ProviderMarketSource }): BrowserTab {
   const url = source ? resolvedPageUrl(source.marketSource.page) : '';

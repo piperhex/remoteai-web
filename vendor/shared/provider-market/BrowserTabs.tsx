@@ -4,25 +4,29 @@ import { isTauri } from '@tauri-apps/api/core';
 import type { Language } from '@remoteai/i18n';
 import { Ellipsis, X } from 'lucide-react';
 import { useTabOverflow } from '../project-browser/useTabOverflow';
-import type { BrowserTab } from './browserState';
+import { currentTabPage, type BrowserTab, type BrowserTabPage } from './browserState';
 import type { MarketText } from './i18n';
 import { BrowserTabItem } from './BrowserTabItem';
 import { BrowserTabIcon } from './BrowserTabIcon';
-import { BrowserTabHoverCard, type BrowserTabVisit } from './BrowserTabHoverCard';
+import { BrowserTabHoverCard } from './BrowserTabHoverCard';
 import { useBrowserTabHover } from './useBrowserTabHover';
 import { useBrowserOverlay } from '../browser/overlays/BrowserOverlayProvider';
 
 interface Props {
   tabs: BrowserTab[]; activeId: string; visible: boolean; t: MarketText;
-  language: Language; visits: ReadonlyMap<string, BrowserTabVisit>;
+  language: Language; visits: ReadonlyMap<string, BrowserTabPage>;
   select: (id: string) => void; close: (id: string) => void; menuChanged: (open: boolean) => void;
   closeTabs: (ids: string[]) => void;
   windowDragRegion?: boolean;
 }
 
 /** Match project and workspace tabs: reveal the selection, fade the clipped left edge and list hidden tabs. */
-export function BrowserTabs({ tabs, activeId, visible, t, language, visits, select, close, closeTabs,
+export function BrowserTabs({ tabs: entries, activeId, visible, t, language, visits, select, close, closeTabs,
   menuChanged, windowDragRegion }: Props) {
+  const tabs = entries.map(tab => {
+    const title = currentTabPage(tab, visits.get(tab.id))?.title;
+    return title ? { ...tab, title } : tab;
+  });
   const overflow = useTabOverflow(tabs.map(tab => ({ path: tab.id })), activeId);
   const hidden = tabs.filter(tab => overflow.hiddenPaths.includes(tab.id));
   const [open, setOpen] = useState(false);

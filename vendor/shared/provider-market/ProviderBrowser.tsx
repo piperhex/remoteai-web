@@ -7,7 +7,7 @@ import { marketText, type MarketText } from './i18n';
 import type { Language } from '@remoteai/i18n';
 import { useSearchEngine } from '../browser/useSearchEngine';
 import { BrowserSearchSetting } from '../browser/BrowserSearchSetting';
-import type { BrowserAction, BrowserTab } from './browserState';
+import type { BrowserAction, BrowserPageTitle, BrowserTab } from './browserState';
 import { BrowserTabs } from './BrowserTabs';
 import { BrowserToolbar } from '../browser/BrowserToolbar';
 import { useBrowserBookmarks } from '../browser/bookmarks/useBrowserBookmarks';
@@ -43,7 +43,8 @@ export interface BrowserSurfaceProps {
   onNavigate: (url: string) => void; t: MarketText;
   onPopup: (url: string) => void;
   onLoadingChange?: (loading: boolean) => void;
-  onVisit?: (page: { url: string; title: string }) => void;
+  onVisit?: (page: BrowserPageTitle) => void;
+  onPageTitle?: (page: BrowserPageTitle, requested?: string) => void;
   hideForModal?: boolean;
   obscured?: boolean;
 }
@@ -159,7 +160,7 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
   const tabBar = !compact && <div className="pm-browser-titlebar" {...bookmarks.tabDragHandlers(tabs)}
     data-tauri-drag-region={props.windowControls ? true : undefined}>
     {props.tabBarStart}
-    <BrowserTabs tabs={tabs} activeId={activeId} visible={open} t={t} language={props.language} visits={records.visits}
+    <BrowserTabs tabs={tabs} activeId={activeId} visible={open} t={t} language={props.language} visits={records.pages}
       windowDragRegion={Boolean(props.windowControls)} select={props.onSelect} close={props.onCloseTab}
       closeTabs={props.onCloseTabs} menuChanged={setMenuOpen} />
     <button aria-label={t('market.browserNewTab')} title={t('market.browserNewTab')}
@@ -202,7 +203,7 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
       blocked={!nativeOverlay && (addressOpen || menuOpen || extensionsOpen || bookmarks.overlayOpen || mappingsOpen
         || !!dataPanel || !!records.candidate || !!records.focus)}
       loadingChanged={loadingChanged}
-      recordVisit={records.recordVisit}
+      recordVisit={records.recordVisit} updatePage={records.updatePage}
       select={id => { props.onSelect(id); setManager(false); }} />
     {sidePanel && !compact && <BrowserSidePanel key={sidePanel.id ?? 'builtin'}
       selection={sidePanel} active={open && !addressOpen && !extensionsOpen && !bookmarks.overlayOpen && !dataPanel}

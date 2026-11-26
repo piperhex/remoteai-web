@@ -3,6 +3,7 @@ import { isTauri, invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import { Globe } from 'lucide-react';
 import type { BrowserSurfaceProps } from '../../provider-market/ProviderBrowser';
+import type { BrowserPageTitle } from '../../provider-market/browserState';
 import { nativeBrowserSession } from './providerBrowserSession';
 import { nativeSurfaceBounds, type NativePageFullscreenEvent } from './nativeSurfaceSession';
 import { browserOverlayAttributes, hasBrowserOverlay } from './browserOverlays';
@@ -29,7 +30,8 @@ export function ProviderBrowserSurface(props: BrowserSurfaceProps) {
   const [pageFullscreen, setPageFullscreen] = useState(false);
   const desktop = isTauri();
   const { image, preview } = useNativeBrowserPreview();
-  const latest = { tab, active, pageFullscreen, onNavigate, onPopup, onLoadingChange, obscured, onVisit: props.onVisit };
+  const latest = { tab, active, pageFullscreen, onNavigate, onPopup, onLoadingChange, obscured,
+    onVisit: props.onVisit, onPageTitle: props.onPageTitle };
   const state = useRef(latest);
   state.current = latest;
   const refresh = useRef<() => void>();
@@ -61,13 +63,18 @@ export function ProviderBrowserSurface(props: BrowserSurfaceProps) {
     };
     refresh.current = sync;
     const unlisten = listen<{ url?: string; title?: string; popup?: boolean; loading?: boolean;
-      visited?: boolean; icons?: string[] } & NativeZoomEvent & NativePageFullscreenEvent>(
+      visited?: boolean; icons?: string[]; pageTitle?: BrowserPageTitle } & NativeZoomEvent & NativePageFullscreenEvent>(
       `provider-browser-${tab.id}`, ({ payload }) => {
         zoom?.(payload);
         if (typeof payload.pageFullscreen === 'boolean') setPageFullscreen(payload.pageFullscreen);
         if (payload.popup && payload.url) { state.current.onPopup(payload.url); return; }
         if (typeof payload.loading === 'boolean') state.current.onLoadingChange?.(payload.loading);
-        if (payload.visited && payload.url) state.current.onVisit?.({ url: payload.url, title: payload.title ?? '' });
+        if (payload.pageTitle) state.current.onPageTitle?.(payload.pageTitle);
+        if (payload.visited && payload.url) {
+          const page = { url: payload.url, title: payload.title ?? '' };
+          state.current.onVisit?.(page);
+          state.current.onPageTitle?.(page);
+        }
         if (!payload.url) return;
         rememberWebsiteIcons(payload.url, payload.icons);
         nativeNavigation.current = payload.url;

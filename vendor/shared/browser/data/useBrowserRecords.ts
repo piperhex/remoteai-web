@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { invoke, isTauri } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
-import type { BrowserTab } from '../../provider-market/browserState';
+import { currentTabPage, type BrowserTab, type BrowserTabPage } from '../../provider-market/browserState';
 import { useBrowserData } from './context';
 import { browserUrl, loginOrigin, type Login } from './model';
 import { newDataId, validateLogin } from './crypto';
@@ -12,7 +12,8 @@ export function useBrowserRecords(options: {
   tabs: BrowserTab[]; activeId: string; active: boolean; closeTabs: (ids: string[]) => void;
 }) {
   const { store, vault, random } = useBrowserData(), observed = useRef(new Map<string, { url: string; at: number }>());
-  const recorded = useRef(new Map<string, { requested: string; url: string; title: string }>());
+  const recorded = useRef(new Map<string, string>());
+  const [pages, setPages] = useState(() => new Map<string, BrowserTabPage>());
   const [candidate, setCandidate] = useState<Login>();
   const desktop = isTauri(), closeCapture = useCallback(() => setCandidate(undefined), []);
   useEffect(() => {
@@ -23,12 +24,29 @@ export function useBrowserRecords(options: {
     }
     for (const id of observed.current.keys()) if (!options.tabs.some(tab => tab.id === id)) observed.current.delete(id);
     for (const id of recorded.current.keys()) if (!options.tabs.some(tab => tab.id === id)) recorded.current.delete(id);
+    setPages(current => {
+      const retained = new Map(current);
+      for (const [id, page] of current) {
+        const tab = options.tabs.find(tab => tab.id === id);
+        if (!tab || !currentTabPage(tab, page)) retained.delete(id);
+      }
+      return retained.size === current.size ? current : retained;
+    });
   }, [options.tabs, store, random]);
-  const recordVisit = useCallback((id: string, page: { url: string; title: string }, requested: string) => {
+  const updatePage = useCallback((id: string, page: BrowserTabPage) => {
+    if (!browserUrl(page.url)) return;
+    const title = page.title.trim();
+    setPages(current => {
+      const old = current.get(id);
+      if (old?.requested === page.requested && old.url === page.url && old.title === title) return current;
+      return new Map(current).set(id, { ...page, title });
+    });
+  }, []);
+  const recordVisit = useCallback((id: string, page: { url: string; title: string }) => {
     if (!browserUrl(page.url)) return;
     const previous = recorded.current.get(id);
-    recorded.current.set(id, { ...page, requested });
-    if (previous?.url === page.url) return;
+    recorded.current.set(id, page.url);
+    if (previous === page.url) return;
     try { store.visit({ id: newDataId(random), kind: 'visit', url: page.url, title: page.title.slice(0, 512), at: Date.now() }); }
     catch { /* The store exposes persistence failures in the browser data UI. */ }
   }, [store, random]);
@@ -74,5 +92,5 @@ export function useBrowserRecords(options: {
       request: { action: 'fill', login: { origin, username, password }, focusId } });
     if (!done) throw new Error('password-fill');
   } : undefined;
-  return { controls, fill, candidate, closeCapture, recordVisit, visits: recorded.current, ...suggestions };
+  return { controls, fill, candidate, closeCapture, recordVisit, updatePage, pages, ...suggestions };
 }
