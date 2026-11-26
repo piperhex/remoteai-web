@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "05cdbba3d1c44fa8d10a64890ad3ff6cdc99f84a",
+  "revision": "01c9c26843a00722b0b596773cba673120614b3f",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "ae6621deb4042e9af3eed8ea15821eff4436e205"
+    "revision": "bbb287592f1a4cbcb459bb6218fafb559129308b"
   },
   "retainedTestSources": {
     "repository": "https://github.com/piperhex/remoteai",
@@ -14,7 +14,7 @@
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
-    "revision": "8a99e154ef9426a211d930a6a0d7a93fb1849582"
+    "revision": "815d1061afa286e1589f94e19df1649d6f9789a1"
   },
   "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.46/remoteai-i18n-0.1.46.tgz",
   "files": {
@@ -25,9 +25,9 @@
     "apps/desktop/e2e/chat-harness.html": "4da5133597619c5631f9eba960aef812fc49f402907f8da357c63f8a3f095bc8",
     "apps/desktop/e2e/chat-harness.ts": "baa18c5e3535c749c4ef9774b4fa7ab0f6d184ee863cd2c2a9022373e12329b4",
     "apps/desktop/e2e/mobile-fixture.mjs": "cb3f949542ff02fbb29758470a43be4321f196d1ab84e97ad7c2ab9a31d2b405",
-    "apps/desktop/src-tauri/icons/32x32.png": "7f5310d2f4b466d841479766ddf28a8b1003e167bfbc2e723d6de7ee967f4466",
-    "apps/desktop/src-tauri/icons/128x128.png": "c6e11f099d213c5e3b81dc9264403858841e130f07e6f832069cac8eae47db02",
-    "apps/desktop/src-tauri/tauri.conf.json": "3727211dcf2e2e590d41c431427950bf5901293dff818ffa03b21620b22bbfc3",
+    "apps/desktop/src-tauri/icons/32x32.png": "f1ef425afd70853a3f0b4abd58163ef5614d707d7e5e210f27e7077b352c02b0",
+    "apps/desktop/src-tauri/icons/128x128.png": "7bddfd1a2388c61fc938654c7693453b737b609fe3646e6af34ee9c3cef1e132",
+    "apps/desktop/src-tauri/tauri.conf.json": "e5ffbbfcdd334715554448cc75c9958f823a6fbcf15af5eaa1e596e48692f2d2",
     "shared/localization/testLocale.ts": "6ca4daa3a6a5d9442013a8b5861803edfafebf20d2bd875d6a2608158dc53e35",
     "apps/desktop/e2e/browser-chrome-checks.ts": "374cdbf6b32a067e3e545fdf402b58f33c96ae379839b04696408bb84ea8deb1",
     "apps/desktop/e2e/browser-loading-checks.ts": "5f4de7daccff9a8ba701c9fc451b67a078c780e8beb6dd9f1cec909efe3fa759",
@@ -1947,7 +1947,7 @@
     "shared/browser/extensions/ExtensionManager.tsx": "897bcef506d862a22c934872106437fee236b677eeda5054b080456b5c820d4e",
     "shared/browser/extensions/useExtensions.ts": "da9656334bfe4d0685426ac2b3ce6284e1d7f6e7e3d7c1ee78e4de428fa778e1",
     "shared/browser/extensions/extensions.css": "c8e7783b54d05d253a38b0a952bbde5efe5b39522730ddcf340ba1bd196f5098",
-    "shared/browser/extensions/assistant.png": "c6e11f099d213c5e3b81dc9264403858841e130f07e6f832069cac8eae47db02",
+    "shared/browser/extensions/assistant.png": "7bddfd1a2388c61fc938654c7693453b737b609fe3646e6af34ee9c3cef1e132",
     "apps/native/src/chat/markdownTree.ts": "c717f4481126195f1b542ac400c078a2eac6d6db4154030cf1fbbdc20659893c",
     "apps/native/src/chat/mathDocument.ts": "d4b2d2e61220f574271a306211590b6d7332da61092b4706539c472c828c66fb",
     "apps/native/assets/terminal.html": "163e393b9dff468ad4c539368f3f1d4a9b18521070d99b59764b884bb2775586",
