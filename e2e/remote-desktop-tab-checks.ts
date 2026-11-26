@@ -91,10 +91,24 @@ export async function checkDesktopTabs(page: Page, hosts: { office: Page; studio
   const activeVideo = viewer.getByRole('tabpanel').locator('video');
   const waitForVideo = () => expect.poll(() => activeVideo.evaluate(video => video.videoWidth)).toBeGreaterThan(0);
   const sound = () => tabAudio(viewer);
+  const heading = viewer.getByRole('heading', { name: '选择电脑' });
+  await expect(heading).toHaveCSS('cursor', 'default');
+  await expect(heading).toHaveCSS('caret-color', 'rgba(0, 0, 0, 0)');
+  await heading.dblclick();
+  expect(await page.evaluate(() => window.getSelection()?.toString())).toBe('');
+  await expect(page.locator('.adm-toast-mask')).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath('choose-computer.png'), animations: 'disabled' });
   await viewer.getByRole('button', { name: /Office PC/ }).click();
   await waitForVideo();
   await expect.poll(sound).toEqual([true]);
   const officeVideo = await activeVideo.elementHandle();
+  await viewer.getByRole('button', { name: '键盘', exact: true }).click();
+  const input = viewer.getByRole('textbox', { name: '发送到电脑的文字' });
+  await expect(input).toHaveCSS('user-select', 'text');
+  await input.fill('local text');
+  await expect.poll(() => hosts.office.evaluate(() => window.desktopTest.inputs.at(-1)))
+    .toEqual({ kind: 'text', text: 'local text' });
+  await viewer.getByRole('button', { name: '收起键盘' }).click();
   await checkAddButtonPosition(page, expect);
   await checkComputerPicker(page, info, expect);
   await waitForVideo();

@@ -1,13 +1,20 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "3e929cddf14f2a2644e07e4d87811e0968101360",
+  "revision": "3516a0a8d3648152be90fbedb22d36fc29090065",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "bbb287592f1a4cbcb459bb6218fafb559129308b"
+    "revision": "3d3943d12bbd8e3fae0bda0403a396290945f893"
+  },
+  "retainedTestSources": {
+    "repository": "https://github.com/piperhex/remoteai",
+    "revision": "3e929cddf14f2a2644e07e4d87811e0968101360",
+    "paths": [
+      "apps/desktop/e2e/"
+    ]
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
-    "revision": "de7ba0b29b4077ef660b2839d1e537a9be45f7c9"
+    "revision": "4670b2df4367ac44b9a0085e90133a1020d9cf88"
   },
   "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.46/remoteai-i18n-0.1.46.tgz",
   "files": {
@@ -964,7 +971,7 @@
     "shared/chat/diff.ts": "6b3da6561ea170a591d78c3151162f2d3a3a2e5114e210b397a9a3c73081c611",
     "shared/conversation/autoSwitchSettings.ts": "856dd57ac2081d1e012001502b93708261eb9def2cd708c77b97d02ca30535b4",
     "shared/remote-chat/diagnosticSchema.ts": "d33f7bd306b5be0258fdaa154d2461b37e1e356deb0ca14b1a219239875fbe8d",
-    "shared/port-mapping/service.ts": "8b483dd0244fce2acdba2f5040ee8b9266cb1baaf4cef971a83767243dfe98fb",
+    "shared/port-mapping/service.ts": "744b6a2d24760d813430ac5200eaff167f1acac5856c6eef398250bf1a21d772",
     "shared/remote-chat/views/MobileHistoryContent.tsx": "101d99104c8f56dc76384623e2490b9bd1d271b2583b5503f25a108057d67208",
     "shared/chat/virtualScroll.ts": "958c14c640123073aaa4ff7b9206c7c18032819faed3173f25dd9520cd8ec5cc",
     "shared/remote-chat/views/mobileHistoryObserver.ts": "4d2534163b2124918e158a4ee523794351ccc80827c5c4ed3b807c392b370db1",
@@ -1459,8 +1466,8 @@
     "shared/chat/diffCache.ts": "afb8463a479c2074090d9ecf9d959cdb7fff68bd9366b1d00b363317f847dcc2",
     "shared/chat/diffParser.ts": "a6939868ba0889cb0a7193bb686263a0b7139e32cb45f95dfffbed7da2af4b04",
     "shared/port-mapping/types.ts": "d0a3d9dee2f648b138437ef2436f64b7e0985fbfb4b14b1c111c33b0d7784514",
-    "shared/port-mapping/settings.ts": "c7748dfcc9de18ff477bb9049691c521528a55ce58e012788fab0fe912c2d650",
-    "shared/port-mapping/target.ts": "33a84374b85115e9085c75f481149e27839ff7acfae25f25cc216851c4d35a40",
+    "shared/port-mapping/settings.ts": "6e8715e2d10d3fa3ba1fd615fd0629f3c05ee649b02fa6dfa30db2fdade676cd",
+    "shared/port-mapping/target.ts": "85ccdc07337ed3b8c526326cb3ff3c65a80df714c15f5a5cf048f0809c9af478",
     "shared/port-mapping/streamBudget.ts": "5f0005d0141da79ac2f68115c081f2c58c116da0f0065f3e4facb6d282538f02",
     "shared/remote-chat/views/useMobileHistoryVisibility.ts": "2925fa60285dcc2b5b01e3312fe1aa4b184fc0f228a42081c18a36d4520a8e62",
     "shared/chat/activityList.less": "43e674cf5d2087fea15f0b621a906e11b1a2a128671933d6ef32e3a1af8a19f8",
@@ -1878,7 +1885,7 @@
     "shared/browser/BrowserHome.tsx": "d1d36e0ce38512f8a162f839825330e770485d8084db5b04ff84c887abcdd838",
     "shared/browser/browserHome.css": "1734ca821077f2e9cc9b3093c7efcdc96d792c68b43b94555bf1313466f7d84b",
     "shared/browser/BrowserPortMappings.tsx": "7d8f7254c74e663509045e6d9e579600b80cda03ebd0fa06b22e077016ca89e4",
-    "shared/port-mapping/browserMappings.ts": "f216713cb828fcde40656c1a06b7f0c1041ed47e83fdb9c6986a1333b1a3771a",
+    "shared/port-mapping/browserMappings.ts": "ddc8c592b4424bd9d52daf02576a94e02809029d069e3861967c0c2a03ab0701",
     "shared/browser/browserPortMappings.css": "34fb523d3ad70f341f394df6ec384aadd0a102d0388d77f66d4383249e281e61",
     "shared/browser/BrowserSettings.tsx": "2b1782e5b48fe799bb3a94a90d2b5825ae67344a7fa35d0f6d3d0b99b046cd6b",
     "shared/browser/browserSettings.css": "5c88740baea715d0976aa63b0ecfb7f3f4a7949350c02db646d63c0c77961733",
@@ -2078,7 +2085,7 @@
     "shared/remote-chat/views/MobileChatDiff.tsx": "361b3b431e2bc46af11031f1c37d0011921ca387efbd1db643b74a259695e41e",
     "shared/remote-desktop/views/RemoteDesktopPage.tsx": "f9a0573bb9a1db69f69f881841abe0c2325f92203463b7b259da48da3900dfe5",
     "shared/remote-desktop/views/ConnectedDesktop.tsx": "a8dc8a6c48da69955e311f02f78f4af9e1f5fbb621f23311b4f5f0664dda1616",
-    "shared/remote-desktop/views/remoteDesktopPage.css": "daa1a2e349d99f307a28762fe718b88034fa2485b60e35cef7e2e7fa1eda93c0",
+    "shared/remote-desktop/views/remoteDesktopPage.css": "ac0e56461df67e1249e5d87d792951167121f43e2caec7836335c04f9a018a4d",
     "shared/conversation/SavedReviewSummary.tsx": "08cde4be4591f079421c79dda024abe843d09110de72bdd186ed222048756240",
     "shared/layout/ResizableSidebar.tsx": "4150ded9b422dce5c6d0e378714bb5d3b0bb1cc7a8adbee96c2fd3904cfc9141",
     "shared/layout/useSidebarResize.ts": "c87a08718f5ae20920025d7a1b83bdcbb1b7b1172fd85a92dbe718fdd86df3ca",

@@ -1,4 +1,5 @@
 import type { ForwardingEntry } from './service';
+import { localMappingUrl, mappingAddress } from './target';
 
 interface MappingSource {
   snapshot(): readonly ForwardingEntry[];
@@ -32,8 +33,8 @@ export class BrowserMappingStore {
   private update = () => {
     this.entries = [...this.sources.values()].flatMap(({ scope, source }) => source.snapshot()
       .filter(entry => entry.status === 'running' && entry.protocol !== 'udp')
-      .map(entry => ({ id: JSON.stringify([scope, entry.id]), url: `http://127.0.0.1:${entry.localPort}/`,
-        target: `${entry.remoteHost || '127.0.0.1'}:${entry.remotePort}` })));
+      .map(entry => ({ id: JSON.stringify([scope, entry.id]), url: `${localMappingUrl(entry)}/`,
+        target: mappingAddress(entry) })));
     this.listeners.forEach(listener => listener());
   };
 }
