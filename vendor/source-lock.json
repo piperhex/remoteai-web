@@ -1,20 +1,13 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "01c9c26843a00722b0b596773cba673120614b3f",
+  "revision": "3e929cddf14f2a2644e07e4d87811e0968101360",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
     "revision": "bbb287592f1a4cbcb459bb6218fafb559129308b"
   },
-  "retainedTestSources": {
-    "repository": "https://github.com/piperhex/remoteai",
-    "revision": "642d0ab9e925aa7ba0f7306bb58c0922a67c0651",
-    "paths": [
-      "apps/desktop/e2e/"
-    ]
-  },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
-    "revision": "815d1061afa286e1589f94e19df1649d6f9789a1"
+    "revision": "de7ba0b29b4077ef660b2839d1e537a9be45f7c9"
   },
   "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.46/remoteai-i18n-0.1.46.tgz",
   "files": {
@@ -29,7 +22,7 @@
     "apps/desktop/src-tauri/icons/128x128.png": "7bddfd1a2388c61fc938654c7693453b737b609fe3646e6af34ee9c3cef1e132",
     "apps/desktop/src-tauri/tauri.conf.json": "e5ffbbfcdd334715554448cc75c9958f823a6fbcf15af5eaa1e596e48692f2d2",
     "shared/localization/testLocale.ts": "6ca4daa3a6a5d9442013a8b5861803edfafebf20d2bd875d6a2608158dc53e35",
-    "apps/desktop/e2e/browser-chrome-checks.ts": "374cdbf6b32a067e3e545fdf402b58f33c96ae379839b04696408bb84ea8deb1",
+    "apps/desktop/e2e/browser-chrome-checks.ts": "fa6e849fb44f9d95d53f0e970260170e36078382c2a0efb6f749e08e02d94452",
     "apps/desktop/e2e/browser-loading-checks.ts": "5f4de7daccff9a8ba701c9fc451b67a078c780e8beb6dd9f1cec909efe3fa759",
     "shared/appearance/ApplicationTypography.tsx": "330285d301442e3bb33557bb54862ad36619b26d59a0e989f52865475f6ce86e",
     "shared/remote-chat/views/ChatDetailsWorkspace.tsx": "501ffa6246b276e22cd591bdf48384e041a9f0864a45e56d058ec123e3678bc4",
@@ -1926,7 +1919,7 @@
     "shared/browser/home/cache.ts": "fa3f514742fedf309e291bd668fb9fbc9aeeca7973797344030d751373caf7c3",
     "shared/browser/home/document.ts": "c93263bce59dfcf63d1eb157e4d2f81ea0a0144e43a2abb6c400ea68af165d75",
     "shared/browser/home/package.ts": "90eb625d90399416d27bf65b946180c5d512b0807da2bb9f23d9cf7554727375",
-    "apps/desktop/e2e/browser-website-icons-checks.ts": "6a2c44d54e7cf1dfbf28ea1516e511174c7c31769087a027895d8ce31b8e2896",
+    "apps/desktop/e2e/browser-website-icons-checks.ts": "7fad486bae7ae63b7d6a2ad04947279389432f956b866f1cf66c3e3531353efd",
     "apps/desktop/e2e/fixtures/chatgpt-favicon.png": "b113a53f2188572f0b56eb6a923198426864d816c7deab16d1dcb3dc96da1771",
     "shared/browser/icons/BrowserWebsiteIcon.tsx": "5a627d8add84b0981aef08ec2964ac7fdef2e82ae8a9e06fd0430a4eb2674e87",
     "shared/browser/icons/websiteIcons.ts": "4ea41011c13dbb9cad58f2424436782a8b13a0ab6eb0d7e8977f8788482bbcb2",
