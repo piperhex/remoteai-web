@@ -80,10 +80,12 @@ function DesktopViewer({ client, active, visible = true, connected = true, close
   const panelVisible = !viewOnly && !hardware && !direct && !display && !security && !keyboard && !clipboard.open;
   const panel = useMousePanel(shown && panelVisible && !!session.stream);
   const video = useRef<HTMLVideoElement>(null);
-  const playback = useDesktopPlayback(video, session.stream, session.muted);
+  const playbackVisible = shown && pageVisible;
+  const playback = useDesktopPlayback(video, session.stream, session.muted || !playbackVisible);
   const silent = session.muted || playback.blocked;
   const audioUnavailable = !session.hasAudio || session.stats?.audio === 'unavailable';
   const toggleAudio = () => {
+    if (!playbackVisible) return;
     if (silent) { session.mute(false); playback.enable(); } else session.mute(true);
   };
   useDesktopOrientation(root, shown && !desktopWindow);

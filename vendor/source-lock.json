@@ -3,7 +3,7 @@
   "revision": "10967f6e406daca25e948d6b997ea2b0ef5138d3",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "f5cf59cb630602177ea07b46aab6f50d845be5ab"
+    "revision": "9b0782e927a1175f75eadf0dbb4e2f84403ee12b"
   },
   "retainedTestSources": {
     "repository": "https://github.com/piperhex/remoteai",
@@ -220,7 +220,7 @@
     "shared/chat/workspaceLaunchers.ts": "7cbccdc1193c6835e07ae663824167aa60c991338c5cbf780687121ff3edb6ee",
     "shared/remote-desktop/useDesktopLauncher.ts": "8b312acf073fbec0cafc7c6780c133219ae20e13dabbdbd23ad060497aaeb22e",
     "shared/git/views/ChatGit.tsx": "d3f9185ccff2c5cb267a645671bc3c6adc8ef69c836aba0630c84d1758347527",
-    "shared/remote-desktop/views/RemoteDesktop.tsx": "e469e75416c4a2416d240454ee49e180d8c72b3b66d9aae96205d1d076bb02df",
+    "shared/remote-desktop/views/RemoteDesktop.tsx": "b3c34428ac2f0bfe7548ae46d3b877d67f9ece66e174ac5d2418081531b647de",
     "shared/git/views/git.css": "8a300638a59d6cb65696e5a6b502d6ac6b3e6bf427dbf661f12ab3caf4c56ce1",
     "shared/project-browser/views/ProjectBrowserDrawer.tsx": "e64da4120f531037ea117f33980f1cec12c023a6ef697540c713c72ec54fb450",
     "shared/project-browser/useProjectBrowsers.ts": "223bff35060248e5edf65033d362034fad1b6329119eeef51600b36fe7d203a8",
@@ -797,7 +797,7 @@
     "shared/remote-desktop/geometry.ts": "2dfb7a4d25f64ad11826a51b6e29911b44e5c794f09ea5aea9563c7ed03670e7",
     "shared/remote-desktop/views/usePageVisibility.ts": "d3846892e31f2ea761318dcbe10a178770a7e2b357ceef528b2f5835d2715350",
     "shared/remote-desktop/views/useKeyboardViewport.ts": "10883eb65625d8e5e3727247ce953aba7d6a933033dc81fc0555e8b159ad45c7",
-    "shared/remote-desktop/views/useDesktopPlayback.ts": "45726b9d15dad29d2b3ff972f296f1a79a1f89442c8a3935562cd9ba3e3b39f5",
+    "shared/remote-desktop/views/useDesktopPlayback.ts": "c7f17d683be9a2846f2f5869c1a13e5169e1efe1d7e07e6bef20c20eed9ddab5",
     "shared/remote-desktop/views/useDesktopMouse.ts": "92a983d64f8bd710288b5259f15f8bfd77c8b18f6f5fa0049b918adf5274c7ee",
     "shared/remote-desktop/views/useDesktopClipboard.ts": "cd7ac70a775b190b6cdcc0cd77de3aa199cbf1134ea3c47306274e5fc77989d5",
     "shared/remote-desktop/views/DesktopClipboardPanel.tsx": "6d5319bf77ba38a07f705723510be7e267d0954ce233c2b20f63b1ee33f1e95a",

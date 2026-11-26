@@ -1,4 +1,4 @@
-import type { expect as expectTest, Page, TestInfo } from '@playwright/test';
+import type { expect as expectTest, Locator, Page, TestInfo } from '@playwright/test';
 import type { desktopRequest, desktopTest } from './remote-desktop-fixture';
 
 declare global {
@@ -19,7 +19,7 @@ export async function connectCaptureHosts(page: Page, fixtureUrl: string, adapte
     await host.route('**/capture-host.html*', route => route.fulfill({ contentType: 'text/html',
       body: `<script type="module">import {desktopRequest} from ${JSON.stringify(fixtureUrl)};
         window.captureRequest = desktopRequest;</script>` }));
-    await host.goto('capture-host.html?displays');
+    await host.goto('capture-host.html?displays&audio');
     await host.waitForFunction(() => !!window.captureRequest);
     hosts.set(device.deviceId, host);
   }
@@ -35,6 +35,23 @@ export async function connectCaptureHosts(page: Page, fixtureUrl: string, adapte
 const frames = (host: Page) => host.evaluate(() => window.desktopTest.frames);
 const rate = (host: Page) => host.evaluate(() => window.desktopTest.settings.at(-1)?.fps);
 const sessions = (host: Page) => host.evaluate(() => [window.desktopTest.captures, window.desktopTest.closed]);
+
+function tabAudio(viewer: Locator) {
+  return viewer.locator('video').evaluateAll((videos: HTMLVideoElement[]) => videos.map(video => {
+    const track = (video.srcObject as MediaStream | null)?.getAudioTracks()[0];
+    return track?.readyState === 'live' ? track.enabled && !video.muted : null;
+  }));
+}
+
+async function checkManualMute(viewer: Locator, info: TestInfo, expect: typeof expectTest) {
+  await viewer.getByRole('button', { name: '静音', exact: true }).click();
+  await viewer.getByRole('tab', { name: 'Studio PC' }).click();
+  await expect.poll(() => tabAudio(viewer)).toEqual([false, true]);
+  await viewer.getByRole('tab', { name: 'Office PC' }).click();
+  await expect.poll(() => tabAudio(viewer)).toEqual([false, false]);
+  await expect(viewer.getByRole('button', { name: '开启声音', exact: true })).toBeVisible();
+  await viewer.page().screenshot({ path: info.outputPath('restored-manual-mute.png'), animations: 'disabled' });
+}
 
 async function checkAddButtonPosition(page: Page, expect: typeof expectTest) {
   const bar = page.locator('.rd-computer-tabs > .ant-tabs-nav');
@@ -73,8 +90,10 @@ export async function checkDesktopTabs(page: Page, hosts: { office: Page; studio
   const viewer = page.locator('.rd-page');
   const activeVideo = viewer.getByRole('tabpanel').locator('video');
   const waitForVideo = () => expect.poll(() => activeVideo.evaluate(video => video.videoWidth)).toBeGreaterThan(0);
+  const sound = () => tabAudio(viewer);
   await viewer.getByRole('button', { name: /Office PC/ }).click();
   await waitForVideo();
+  await expect.poll(sound).toEqual([true]);
   const officeVideo = await activeVideo.elementHandle();
   await checkAddButtonPosition(page, expect);
   await checkComputerPicker(page, info, expect);
@@ -83,6 +102,7 @@ export async function checkDesktopTabs(page: Page, hosts: { office: Page; studio
   await expect.poll(() => rate(hosts.office)).toBe(1);
   await checkAddButtonPosition(page, expect);
   await expect.poll(() => rate(hosts.studio)).toBe('auto');
+  await expect.poll(sound).toEqual([false, true]);
   const officeBefore = await frames(hosts.office);
   const studioBefore = await frames(hosts.studio);
   await expect.poll(async () => await frames(hosts.office) - officeBefore).toBeGreaterThanOrEqual(2);
@@ -93,15 +113,19 @@ export async function checkDesktopTabs(page: Page, hosts: { office: Page; studio
   const navigation = page.getByRole('navigation').filter({ has: page.getByRole('button', { name: /^下载/ }) });
   await navigation.getByRole('button', { name: /^下载/ }).click();
   await expect(viewer).toBeHidden();
+  await expect.poll(sound).toEqual([false, false]);
   await expect.poll(() => rate(hosts.studio)).toBe(1);
   expect(await rate(hosts.office)).toBe(1);
   await navigation.getByRole('button', { name: '远程桌面', exact: true }).click();
   await expect.poll(() => rate(hosts.studio)).toBe('auto');
+  await expect.poll(sound).toEqual([false, true]);
   expect(await rate(hosts.office)).toBe(1);
   await viewer.getByRole('tab', { name: 'Office PC' }).click();
   await expect.poll(() => rate(hosts.office)).toBe('auto');
   await expect.poll(() => rate(hosts.studio)).toBe(1);
+  await expect.poll(sound).toEqual([true, false]);
   expect(await activeVideo.evaluate((video, previous) => video === previous, officeVideo)).toBe(true);
+  await checkManualMute(viewer, info, expect);
   await viewer.locator('[data-node-key="studio"] .ant-tabs-tab-remove').click();
   await expect.poll(() => sessions(hosts.studio)).toEqual([1, 1]);
   expect(await sessions(hosts.office)).toEqual([1, 0]);
