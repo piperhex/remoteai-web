@@ -9,6 +9,7 @@ import { DeviceScreenSheet } from './DeviceScreenSheet';
 import { DeviceBottomSheet } from './DeviceBottomSheet';
 import type { AccountSummary, RemoteDevice, RemoteProviderSummary } from '../types';
 import { remoteModelOptions, type RemoteModelTarget } from '../../../../shared/remote-chat/modelTarget';
+import { computerDetails } from '../../../../shared/remote-chat/devices';
 
 interface DeviceCardProps {
   mobile: boolean;
@@ -26,15 +27,6 @@ interface DeviceCardProps {
   screenControl: ScreenPowerControl;
 }
 
-function platformLabel(platform: string) {
-  switch (platform.trim().toLowerCase()) {
-    case 'windows': return 'Windows';
-    case 'darwin':
-    case 'macos': return 'macOS';
-    case 'linux': return 'Linux';
-    default: return platform || t("client.app.unknownPlatform");
-  }
-}
 
 function modelLabel(device: RemoteDevice, accounts: AccountSummary[], providers: RemoteProviderSummary[],
   target: RemoteModelTarget) {
@@ -118,14 +110,14 @@ export function DeviceCard(props: DeviceCardProps) {
   const modelDisabled = !device.online || busy;
   return <><article className={`device-card ${device.online ? 'online' : 'offline'}`}>
     <button type="button" className="device-card-main" disabled={!mobile && modelDisabled} aria-busy={busy}
-      aria-haspopup={mobile ? 'dialog' : undefined}
+      aria-haspopup={mobile ? 'dialog' : undefined} aria-description={computerDetails(device)}
       aria-label={mobile ? t('client.app.moreActionsFor', { value1: device.name })
         : `${device.name}，${device.online ? t('client.app.selectToSwitchModel') : t('client.chat.offline')}`}
       onClick={mobile ? openOptions : () => props.onSwitchModel(device.deviceId)}>
       <span className="device-card-header">
         <span className="device-platform"><PlatformIcon platform={device.platform} /></span>
         <span className="device-identity"><strong>{device.name}</strong>
-          <span>{platformLabel(device.platform)}{device.appVersion ? ` · v${device.appVersion}` : ''}</span></span>
+          <span>{computerDetails(device, t('client.app.unknownPlatform'))}{device.appVersion ? ` · v${device.appVersion}` : ''}</span></span>
         <span className="device-status"><i />{busy ? t("client.app.working") : device.online ? t("client.chat.online") : t("client.chat.offline")}</span>
       </span>
       <DeviceDetails device={device} accounts={props.accounts} providers={props.providers} />

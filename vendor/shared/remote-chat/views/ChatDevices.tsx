@@ -1,14 +1,15 @@
 import { t, useLanguage } from '../../localization/browserClient';
 import { AdaptiveSheet } from '../../layout/AdaptiveSheet';
-import type { ChatComputer } from '../devices';
+import { computerDetails, type ChatComputer, type ComputerSystem } from '../devices';
+import { ComputerIdentity } from '../ComputerIdentity';
 import { useState } from 'react';
 import { ComputerSearchBar, type ComputerListRefresh } from '../ComputerSearchBar';
 import { useDesktopLayout } from '../../layout/useDesktopLayout';
 import { useChatSurfaceTheme } from './useChatSurfaceTheme';
 
-export function ChatDevices({ devices, choose, chooseLocal, localDeviceId, onClose, refresh }: {
+export function ChatDevices({ devices, choose, chooseLocal, localDeviceId, localSystem, onClose, refresh }: {
   devices: ChatComputer[]; choose: (id: string) => void; onClose: () => void; chooseLocal?: () => void;
-  refresh?: ComputerListRefresh; localDeviceId?: string;
+  refresh?: ComputerListRefresh; localDeviceId?: string; localSystem?: ComputerSystem;
 }) {
   useLanguage();
   const surfaceTheme = useChatSurfaceTheme();
@@ -21,12 +22,16 @@ export function ChatDevices({ devices, choose, chooseLocal, localDeviceId, onClo
     className="chat-device-picker" style={surfaceTheme}>
     <div className="chat-settings">
       {showLocal && <button type="button" className="chat-setting-entry" onClick={chooseLocal}>
-        <strong>{t("client.composer.thisComputer")}</strong></button>}
-      {matches.map((device) => <button type="button" key={device.deviceId} className="chat-setting-entry"
-        disabled={!device.online} onClick={() => choose(device.deviceId)}>
-        <strong>{device.name}</strong><span>{device.deviceId === localDeviceId
-          ? t("client.composer.thisComputer") : t(device.online ? "client.chat.online" : "client.chat.offline")}</span>
-      </button>)}
+        <ComputerIdentity name={<strong>{t("client.composer.thisComputer")}</strong>} device={localSystem} /></button>}
+      {matches.map(device => {
+        const status = device.deviceId === localDeviceId ? t("client.composer.thisComputer")
+          : t(device.online ? "client.chat.online" : "client.chat.offline");
+        return <button type="button" key={device.deviceId} className="chat-setting-entry"
+          aria-label={`${device.name} ${status}`} aria-description={computerDetails(device)}
+          disabled={!device.online} onClick={() => choose(device.deviceId)}>
+          <ComputerIdentity name={<strong>{device.name}</strong>} device={device} /><span>{status}</span>
+        </button>;
+      })}
       {!devices.length && <p className="chat-muted">{t("client.chat.openRemoteAiOnYourComputerAndSignInWith")}</p>}
       {!!keyword && !showLocal && !matches.length
         && <p className="chat-muted">{t("client.workspaceSettings.noMatchingComputers")}</p>}

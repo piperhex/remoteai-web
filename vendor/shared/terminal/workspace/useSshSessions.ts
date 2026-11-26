@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { sshError } from '../ssh';
+import { computerDetails, type ChatComputer } from '../../remote-chat/devices';
 import type { SshHost } from './useSshHosts';
 import type { TerminalInfo } from '../types';
 import { useTerminalPanel } from '../views/useTerminalPanel';
 
 /** Only terminals explicitly opened by this workspace belong to it. */
-export function useSshSessions() {
+export function useSshSessions(devices: ChatComputer[]) {
   const panel = useTerminalPanel('');
   const owned = useRef(new Map<string, SshHost>());
   const closing = useRef(new Set<string>());
@@ -42,7 +43,8 @@ export function useSshSessions() {
   };
   const tabs = panel.tabs.map(tab => {
     const host = owned.current.get(tab.id)!;
-    return { ...tab, host, subtitle: host.name };
+    const device = devices.find(item => item.deviceId === host.deviceId);
+    return { ...tab, host, subtitle: [device?.name ?? host.name, computerDetails(device)].filter(Boolean).join('\n') };
   });
   return { ...panel, tabs, adopt, error, remove, removeTabs: (ids: string[]) => { ids.forEach(id => void remove(id)); } };
 }

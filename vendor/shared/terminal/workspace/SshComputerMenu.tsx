@@ -6,6 +6,7 @@ import { remoteErrorText } from '../../localization/errors';
 import { ComputerSearchBar } from '../../remote-chat/ComputerSearchBar';
 import type { ChatComputer } from '../../remote-chat/devices';
 import type { SshHostDirectory } from './useSshHosts';
+import { ComputerIdentity } from '../../remote-chat/ComputerIdentity';
 import './computerMenu.css';
 
 type ChooseComputer = (device: ChatComputer) => void;
@@ -20,7 +21,8 @@ export function useSshComputerMenu(directory: SshHostDirectory) {
       const status = local ? 'client.composer.thisComputer' : device.online ? 'client.chat.online' : 'client.chat.offline';
       return { key: prefix + ':device:' + device.deviceId, disabled: !device.online,
         icon: local ? <Laptop size={16} /> : <Monitor size={16} />, onClick: () => choose(device),
-        label: <span className="sshw-computer"><span>{device.name}</span><small>{t(status)}</small></span> };
+        label: <span className="sshw-computer"><ComputerIdentity name={device.name} device={device} />
+          <small>{t(status)}</small></span> };
     });
     return [...rows, { key: prefix + ':footer', type: 'group', label: <>
       {!matches.length && <p>{t(keyword ? 'client.workspaceSettings.noMatchingComputers'

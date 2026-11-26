@@ -19,8 +19,9 @@ main:has(> .rd-page:not([hidden])) { scrollbar-gutter: auto; }
 }
 .rd-computer-tabs.ant-tabs > .ant-tabs-nav > .ant-tabs-nav-wrap { flex: 0 1 auto; }
 .rd-computer-tabs .ant-tabs-nav .ant-tabs-tab-btn { display: flex; align-items: center; min-width: 0; }
-.rd-computer-tabs .ant-tabs-tab-btn > span[title] {
-  max-width: min(18em, 45vw); overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+.rd-computer-tabs .ant-tabs-tab-btn .computer-identity { max-width: min(18em, 45vw); }
+.rd-computer-tabs .computer-identity > span {
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
 }
 .rd-computer-tabs .ant-tabs-tab-icon, .rd-computer-tabs .ant-tabs-tab-remove { display: inline-flex; }
 .rd-computer-tabs .ant-tabs-extra-content { margin-inline-start: 4px; }

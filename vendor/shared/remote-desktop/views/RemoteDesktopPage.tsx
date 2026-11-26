@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Alert, Button, Spin, Tabs, Tooltip } from 'antd';
 import { ChevronRight, Monitor, MonitorOff, RefreshCw, X } from 'lucide-react';
 import type { ChatComputer } from '../../remote-chat/devices';
+import { ComputerIdentity } from '../../remote-chat/ComputerIdentity';
 import type { ComputerListRefresh } from '../../remote-chat/ComputerSearchBar';
 import { displayError, t } from '../../localization/browserClient';
 import { useViewActive } from '../../RetainedView';
@@ -43,8 +44,8 @@ export function RemoteDesktopPage({ devices, directory, login, connect, localCli
         devices={devices.filter(device => !tabs.some(tab => tab.deviceId === device.deviceId))} />}
       items={tabs.map(tab => {
         const { deviceId } = tab;
-        const name = devices.find(device => device.deviceId === deviceId)?.name ?? tab.name;
-        return { key: deviceId, icon: <Monitor size={15} />, label: <span title={name}>{name}</span>,
+        const device = devices.find(device => device.deviceId === deviceId) ?? tab;
+        return { key: deviceId, icon: <Monitor size={15} />, label: <ComputerIdentity name={device.name} device={device} />,
           children: <ConnectedDesktop deviceId={deviceId} connect={connect} visible={active && selected === deviceId}
             localClipboard={localClipboard} close={() => close(deviceId)} /> };
       })} /> : <>
@@ -68,7 +69,7 @@ function DesktopDirectory({ devices, directory, login, open }: Pick<Props, 'devi
       {devices.map(device => <button type="button" key={device.deviceId} disabled={!device.online}
         className="rd-device-card" onClick={() => open(device)}>
         <span className="rd-device-icon"><Monitor size={21} aria-hidden="true" /></span>
-        <span className="rd-device-label"><strong>{device.name}</strong><small>{device.platform}</small></span>
+        <span className="rd-device-label"><ComputerIdentity name={<strong>{device.name}</strong>} device={device} /></span>
         <span className="rd-device-presence">{t(device.online ? 'client.chat.online' : 'client.chat.offline')}</span>
         {device.online && <ChevronRight className="rd-device-open" size={16} aria-hidden="true" />}
       </button>)}

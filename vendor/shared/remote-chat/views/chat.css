@@ -229,6 +229,9 @@ html:has(.app-shell.chat-active), body:has(.app-shell.chat-active) { overscroll-
 }
 .chat-setting-entry > span:last-child { color: var(--chat-muted); }
 .chat-setting-entry > span:last-child[aria-hidden="true"] { font-size: 22px; }
+.chat-device-picker .chat-setting-entry > .computer-identity:first-of-type {
+  color: inherit; text-align: start; font-size: inherit; white-space: normal; overflow: visible;
+}
 .chat-device-picker .chat-setting-entry:hover:not(:disabled),
 .chat-device-picker .chat-setting-entry:focus-visible { background: var(--chat-menu-hover); }
 .chat-device-picker .chat-setting-entry:disabled { color: var(--chat-muted); opacity: .55; cursor: default; }

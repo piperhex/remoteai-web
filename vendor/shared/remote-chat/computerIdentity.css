@@ -1,0 +1,14 @@
+.computer-identity {
+  display: grid;
+  min-width: 0;
+  gap: .12em;
+  text-align: start;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.computer-identity > small {
+  color: var(--picker-muted, var(--muted, var(--chat-muted, currentColor)));
+  font-size: .88em;
+  font-weight: normal;
+  line-height: 1.4;
+}

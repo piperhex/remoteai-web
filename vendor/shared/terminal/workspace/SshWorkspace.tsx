@@ -46,7 +46,7 @@ export function SshWorkspace({ defaultHost, directory, active, scope, login }: P
   const { api, ready: available } = defaultHost;
   const ssh = api.ssh!;
   const saved = useSshProfiles(ssh.profiles, active);
-  const sessions = useSshSessions();
+  const sessions = useSshSessions(directory.devices);
   const recent = useRecentSshProfiles(scope);
   const uploads = useSshDropQueue(sessions.tabs.map(tab => tab.id));
   const [editor, setEditor] = useState<WorkspaceDialog>();

@@ -3,6 +3,7 @@ import { Alert, Button, Modal, Spin } from 'antd';
 import { displayText as t } from '../../localization/messages';
 import { remoteErrorText } from '../../localization/errors';
 import type { ChatComputer } from '../../remote-chat/devices';
+import { ComputerIdentity } from '../../remote-chat/ComputerIdentity';
 import { SshComputerMenu } from './SshComputerMenu';
 import { SshQuickConnectDialog } from '../SshQuickConnectDialog';
 import type { SshProfile } from '../sshProfiles';
@@ -25,7 +26,7 @@ export function SshLaunchDialog({ profile, directory, chosen, choose, projectCwd
     return null;
   }
   const error = online ? host?.error : t('client.chat.offline');
-  return <Modal open centered width={400} title={chosen.name} onCancel={close}
+  return <Modal open centered width={400} title={<ComputerIdentity name={chosen.name} device={chosen} />} onCancel={close}
     footer={<SshComputerMenu directory={directory} choose={choose}>
       <Button>{t('client.settings.chooseAComputer')}</Button>
     </SshComputerMenu>}>

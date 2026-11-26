@@ -4,6 +4,8 @@ import { useRef, useState } from 'react';
 import { Popover, Spin } from 'antd';
 import { Check, ChevronDown, Monitor, RefreshCw } from 'lucide-react';
 import type { GuiComputerNavigation } from './remote/types';
+import { ComputerIdentity } from '../remote-chat/ComputerIdentity';
+import { computerDetails } from '../remote-chat/devices';
 import styles from './ProxyAccountPicker.module.less';
 
 function DeviceList({ navigation, busy, choose }: {
@@ -12,13 +14,15 @@ function DeviceList({ navigation, busy, choose }: {
   return <section className={styles.deviceList} aria-label={uiText("client.workspaceSettings.devices")} aria-busy={navigation.loading}>
     {navigation.allowLocal !== false && <button type="button" className={styles.deviceOption} disabled={busy}
       aria-pressed={!navigation.current} onClick={() => choose(null)}>
-      <Monitor size={16} /><span>{uiText("client.composer.thisComputer")}</span>{!navigation.current && <Check size={16} />}
+      <Monitor size={16} /><ComputerIdentity name={uiText("client.composer.thisComputer")} device={navigation.localSystem} />
+      {!navigation.current && <Check size={16} />}
     </button>}
     {navigation.devices.map((device) => <button key={device.deviceId} type="button"
       className={styles.deviceOption} aria-pressed={navigation.current?.deviceId === device.deviceId}
       disabled={busy || !device.online} onClick={() => choose(device)}>
       <Monitor size={16} /><span><span className={styles.deviceName}>{device.name}</span>
-        <small>{device.online ? uiText("client.chat.online") : uiText("client.chat.offline")} · {device.platform}</small></span>
+        <small>{[computerDetails(device), uiText(device.online ? "client.chat.online" : "client.chat.offline")]
+          .filter(Boolean).join(' · ')}</small></span>
       {navigation.current?.deviceId === device.deviceId && <Check size={16} />}
     </button>)}
   </section>;

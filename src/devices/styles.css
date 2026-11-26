@@ -41,7 +41,7 @@
   display: grid; place-items: center; flex: 0 0 44px; height: 44px;
   border-radius: 12px; color: var(--app-accent, #00866b); background: var(--app-accentSoft, #dcf6ed);
 }
-.device-identity { flex: 1; min-width: 0; }
+.device-identity { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .device-identity strong { display: block; overflow-wrap: anywhere; font-size: 16px; font-weight: 800; }
 .device-identity > span { display: block; margin-top: 5px; color: var(--app-muted, #78818f); font-size: 12px; }
 .device-status {

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Popover, theme, type InputRef } from 'antd';
 import { Check, ChevronDown, Laptop, Monitor } from 'lucide-react';
 import { ComputerSearchBar } from '../remote-chat/ComputerSearchBar';
+import { ComputerIdentity } from '../remote-chat/ComputerIdentity';
 import type { GuiComputerNavigation } from './remote/types';
 import projectStyles from './ProjectPicker.module.less';
 import styles from './GuiHostPicker.module.less';
@@ -44,14 +45,15 @@ export function GuiHostPicker({ navigation, active }: { navigation: GuiComputerN
       aria-label={uiText("client.workspaceSettings.computers")} aria-busy={navigation.loading}>
       {showLocal && <button type="button" role="menuitemradio" aria-checked={!currentId}
         className={projectStyles.option} onClick={() => choose(null)}>
-        <Laptop size={18} /><span className={styles.deviceName}>{uiText("client.git.local")}</span>{!currentId && <Check size={16} />}
+        <Laptop size={18} /><ComputerIdentity name={uiText("client.git.local")} device={navigation.localSystem} />
+        {!currentId && <Check size={16} />}
       </button>}
       {devices.map(device => <button key={device.deviceId} type="button" role="menuitemradio"
         aria-checked={currentId === device.deviceId} disabled={!device.online}
         aria-description={uiText(device.online ? "client.chat.online" : "client.chat.offline")}
         className={projectStyles.option} onClick={() => choose(device)}>
         <Monitor size={18} className={device.online ? styles.online : undefined} />
-        <span className={styles.deviceName}>{device.name}</span>
+        <ComputerIdentity name={device.name} device={device} />
         {currentId === device.deviceId && <Check size={16} />}
       </button>)}
       {!showLocal && !devices.length && <p className={projectStyles.empty}>{uiText("client.workspaceSettings.noMatchingComputers")}</p>}

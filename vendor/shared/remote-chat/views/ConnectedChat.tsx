@@ -76,6 +76,7 @@ export interface ConnectedChatProps {
   scope: string; email: string; chooseDevice: (id: string) => void;
   chooseLocal?: () => void; accountPicker?: ReactNode; headerActions?: ReactNode;
   deviceRefresh?: ComputerListRefresh;
+  localSystem?: Pick<ChatComputer, 'platform' | 'ipAddress'>;
   headerConnectionActions?: ReactNode; headerEnd?: ReactNode;
   draggableHeader?: boolean;
   scrollableComposer?: boolean;
@@ -109,7 +110,7 @@ export function ConnectedChat(props: ConnectedChatProps) {
 }
 
 function ConnectedChatContent({ chat, device, devices, active, scope, email, chooseDevice,
-  chooseLocal, accountPicker, headerActions, headerConnectionActions, headerEnd, renderSidebar, composerHeader,
+  chooseLocal, localSystem, accountPicker, headerActions, headerConnectionActions, headerEnd, renderSidebar, composerHeader,
   conversationFooter, renderUserMessage, renderHistory = true, draggableHeader, scrollableComposer,
   readClipboardImages, nativeFileDrop, desktopDiffs, deviceRefresh, cliVersion, openAccounts,
   workspacePage, onWorkspaceChange, acceptDownload }: ConnectedChatProps) {
@@ -340,7 +341,7 @@ function ConnectedChatContent({ chat, device, devices, active, scope, email, cho
     {searching && <ChatSearch state={state} controller={controller} onClose={() => setSearching(false)}
       select={thread => { cli?.controller.showCodex(); workspacePage?.onClose(); setSearching(false);
         drawerMotion.closeDrawer(); void controller.select(thread); }} />}
-    {pickingDevice && <ChatDevices chooseLocal={chooseLocal} devices={devices} onClose={() => setPickingDevice(false)}
+    {pickingDevice && <ChatDevices localSystem={localSystem} chooseLocal={chooseLocal} devices={devices} onClose={() => setPickingDevice(false)}
       refresh={deviceRefresh} choose={(id) => { chooseDevice(id); setPickingDevice(false); }} />}
   </ChatQuotesProvider></ImageAnnotationsProvider></ChatFileReferencesProvider>
   </ChatDetailsWorkspace></ChatBrowserProvider>

@@ -45,6 +45,7 @@ export interface RemoteDevice {
   deviceId: string;
   name: string;
   platform: string;
+  ipAddress?: string | null;
   appVersion?: string | null;
   activeAccountId?: string | null;
   openaiAuthAccountId?: string | null;

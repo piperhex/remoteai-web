@@ -4,6 +4,7 @@ import { Monitor, Plus } from 'lucide-react';
 import { useThreadLongPress } from '../../chat/useThreadLongPress';
 import { t } from '../../localization/browserClient';
 import type { ChatComputer } from '../../remote-chat/devices';
+import { ComputerIdentity } from '../../remote-chat/ComputerIdentity';
 
 export function AddDesktopMenu({ devices, openDesktop }: {
   devices: ChatComputer[]; openDesktop: (device: ChatComputer) => void;
@@ -16,7 +17,8 @@ export function AddDesktopMenu({ devices, openDesktop }: {
       items: devices.length ? devices.map(device => ({
         key: device.deviceId, icon: <Monitor size={15} />, disabled: !device.online,
         label: <span className="rd-add-desktop-label">
-          <span>{device.name}</span>{!device.online && <small>{t('client.chat.offline')}</small>}
+          <ComputerIdentity name={device.name} device={device} />
+          {!device.online && <small>{t('client.chat.offline')}</small>}
         </span>,
         onClick: () => { setOpen(false); openDesktop(device); },
       })) : [{ key: 'empty', disabled: true, label: t('client.mobile.noDevicesAvailable') }],
