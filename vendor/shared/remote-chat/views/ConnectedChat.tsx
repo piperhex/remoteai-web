@@ -39,6 +39,7 @@ import { ChatConnectionInfo } from './ChatConnectionInfo';
 import { useRemoteCliInstaller } from '../useRemoteCliInstaller';
 import { ChatTaskStatus } from './ChatTaskStatus';
 import { visibleChatError } from '../chatError';
+import { HOST_KEYRING_REQUIRED } from '../connectionErrors';
 import { TaskReviewProvider } from '../TaskReviewContext';
 import { ChatRetryProvider } from '../ChatRetryProvider';
 import { ChatQuotesProvider } from './ChatQuotes';
@@ -140,7 +141,9 @@ function ConnectedChatContent({ chat, device, devices, active, scope, email, cho
   const usageSnapshot = useVisibleChatUsage(controller.readUsage, desktop && active && foreground && ready);
   const installer = useRemoteCliInstaller(controller.guiTools,
     cliVersion === undefined && desktop && active && foreground && ready);
-  const error = visibleAccountError(visibleChatError(state.error, state), accountRequired);
+  const error = state.error === HOST_KEYRING_REQUIRED && device?.name
+    ? t('client.keyring.remoteNamed', { name: device.name })
+    : visibleAccountError(visibleChatError(state.error, state), accountRequired);
   const connectionInfo = <ChatConnectionInfo state={state} controller={controller} device={device}
     active={active && foreground} chooseDevice={() => setPickingDevice(true)} />;
   const cwd = state.selected?.cwd ?? state.draftProject?.cwd ?? '';

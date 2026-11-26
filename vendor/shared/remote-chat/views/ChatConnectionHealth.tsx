@@ -1,4 +1,5 @@
 import { displayText } from '../../localization/browserClient';
+import { HOST_KEYRING_REQUIRED } from '../connectionErrors';
 import { Check, Clock3, CircleAlert, Info, MessageSquare, Monitor, RefreshCw, Share2, User } from 'lucide-react';
 import { AdaptiveSheet } from '../../layout/AdaptiveSheet';
 import { t, useLanguage } from '../../localization/browserClient';
@@ -13,7 +14,7 @@ const stepIcons = { login: User, computer: Monitor, path: Share2, chat: MessageS
 const statusIcons = { ok: Check, waiting: Clock3, blocked: CircleAlert };
 
 export function ChatConnectionHealth({ state, device, reconnect, close }: {
-  state: ChatState; device?: { online: boolean }; reconnect: () => void; close: () => void;
+  state: ChatState; device?: { online: boolean; name?: string }; reconnect: () => void; close: () => void;
 }) {
   useLanguage();
   const surfaceTheme = useChatSurfaceTheme();
@@ -37,7 +38,8 @@ export function ChatConnectionHealth({ state, device, reconnect, close }: {
         <Info size={22} aria-hidden="true" />
         <div className="connection-health-copy">
           <strong>{displayText(health.nextTitle)}</strong>
-          <p>{displayText(health.next)}</p>
+          <p>{health.next === HOST_KEYRING_REQUIRED && device?.name
+            ? t('client.keyring.remoteNamed', { name: device.name }) : displayText(health.next)}</p>
         </div>
       </div>
       {health.reconnect && <button type="button" className="connection-health-reconnect" onClick={reconnect}>
