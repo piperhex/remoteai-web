@@ -1,6 +1,26 @@
 import { expect, test } from '@playwright/test';
 import { verifyBrowserTabLoading } from '../../../shared/testing/browserTabLoading.mts';
 
+test('an HTTPS preview can open its exact address in the browser for certificate review', async ({ page, context }) => {
+  const destination = 'https://certificate.example.test/console?device=1#login';
+  const appliance = 'https://certificate.example.test/**';
+  await context.route(appliance, route => route.fulfill({ contentType: 'text/html', body: '<title>Appliance console</title>' }));
+  await page.route(appliance, route => route.abort('failed'));
+  await page.goto('e2e/web-browser-bookmarks-harness.html');
+  const browser = page.locator('.browser-main-page');
+  const address = browser.getByRole('combobox');
+  await address.fill(destination);
+  await address.press('Enter');
+  const open = browser.getByRole('link', { name: '在浏览器中打开', exact: true });
+  await expect(open).toHaveAttribute('href', destination);
+  const popup = page.waitForEvent('popup');
+  await open.click();
+  const site = await popup;
+  await expect(site).toHaveTitle('Appliance console');
+  expect(await site.evaluate(() => window.opener)).toBeNull();
+  await expect(address).toHaveValue(destination);
+});
+
 for (const narrow of [false, true]) {
   test(`web browser tab loading ring ${narrow ? 'narrow' : 'wide'}`, async ({ page }, info) => {
     await page.setViewportSize({ width: narrow ? 900 : 1440, height: 800 });

@@ -4,6 +4,7 @@ import { message } from 'antd';
 import { createBrowserTab, moveTab, navigateTab, type BrowserAction, type BrowserTab }
   from '../../provider-market/browserState';
 import { pageUrl } from '../../provider-market/pageLink';
+import { browserMappings } from '../../port-mapping/browserMappings';
 import type { BrowserSurfaceProps } from '../../provider-market/ProviderBrowser';
 import { FileEnvironmentContext } from '../../conversation/fileEnvironment';
 import { uiText } from '../../localization/uiText';
@@ -66,7 +67,8 @@ export function useWebsiteTabs({ reuseTabs = true }: { reuseTabs?: boolean } = {
     const request = Symbol(); requests.current.set(id, request);
     try {
       const resolve = options.resolve ?? environment?.resolveWebsite;
-      const address = resolve && !options.resolved ? await resolve(url) : url;
+      const localMapping = browserMappings.matches(new URL(url));
+      const address = resolve && !options.resolved && !localMapping ? await resolve(url) : url;
       if (requests.current.get(id) === request) pageNavigate(id, address);
     } catch {
       if (requests.current.get(id) === request) void message.error({
