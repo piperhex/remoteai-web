@@ -6,6 +6,7 @@ import { EditedFilesCard } from './EditedFilesSummary';
 import { FileEnvironmentContext } from './fileEnvironment';
 import { FileMenu } from './FileMenu';
 import { fileInfo, PageControls, useSavedReviewPage } from './SavedReviewFiles';
+import styles from './EditedFilesSummary.module.less';
 import type { ReadSavedReview, SavedReviewFile } from './savedReview';
 import type { DiffPanelEntry } from './detailsContext';
 
@@ -45,7 +46,7 @@ export function SavedReviewSummary({ read, target, entry, open, actions, localFi
     beforeReview={actions} onReview={() => open(entry)}
     renderFile={localFiles || environment ? props => <FileMenu {...props}>{props.path}</FileMenu> : undefined}
     onReviewFile={path => open({ ...entry, savedFile: indices.get(path) })}
-    footer={<PageControls {...page} />} />
+    footer={<div className={page.busy ? styles.loading : undefined}><PageControls {...page} /></div>} />
     {(result === 'tools' || result === 'incomplete') && <small>{t('client.changeReview.' + result)}</small>}
   </div>;
 }

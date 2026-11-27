@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/piperhex/remoteai",
-  "revision": "502b431044cfdd84007958f84f5fc70cb7d2e3e0",
+  "revision": "8c4449694124135f1aefe47946391d38a269a411",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "26f0c44bed3de883eab5f808138e2d1189337475"
+    "revision": "06251b6e93bcdd8cb66748bc6e4e69bd31ad1c5c"
   },
   "retainedTestSources": {
     "repository": "https://github.com/piperhex/remoteai",
@@ -14,7 +14,7 @@
   },
   "nativeSource": {
     "repository": "https://github.com/piperhex/remoteai-native.git",
-    "revision": "c7347bdd7b8188b2854d897f8275f41e247a92fc"
+    "revision": "2448d7841ba46aa968e6e223076f992b2afc7177"
   },
   "i18n": "https://github.com/piperhex/remoteai-i18n/releases/download/i18n-v0.1.46/remoteai-i18n-0.1.46.tgz",
   "files": {
@@ -1549,7 +1549,7 @@
     "apps/desktop/src/remoteChat/guiSettings.ts": "79fdd7bb880573eecc98161b6420c884492820255740efeb68163bbb6a71a678",
     "apps/desktop/src/remoteChat/terminalFlow.ts": "4a6a5ee99a5f4bf4b2f9c74f959e2220fddbc48a5b77fa2f485ab0c4a90d3036",
     "shared/conversation/sync/rate.ts": "ded5aec6ec3028742cb7bee870c3d60b311ce952809e9d4e0e900c1bdb5fd657",
-    "shared/conversation/EditedFilesSummary.module.less": "2942b29429a2fa5a5db66de775bfbeb27427cbff4d83b817434da926b258df06",
+    "shared/conversation/EditedFilesSummary.module.less": "a42ab509d2732dfe7051b56213caf33b753da7628739455b63df70c18c6b87fd",
     "shared/remote-chat/bulkReceiver.ts": "c9a9b3b40214a06cd92c160d9c812cec24d86d4de4ffe795e45f28afcaf5d6d3",
     "shared/downloads/bulkStorage.ts": "a02f072b72b1452bcd14c0efc16b31958760b06b57b489734ad60786f27a8893",
     "shared/remote-chat/downloadSession.ts": "c5559982a3dde154e5dde8cfb2f2cf121bb8bc917a8e68f290586167968eebcd",
@@ -2086,7 +2086,7 @@
     "shared/remote-desktop/views/RemoteDesktopPage.tsx": "f9a0573bb9a1db69f69f881841abe0c2325f92203463b7b259da48da3900dfe5",
     "shared/remote-desktop/views/ConnectedDesktop.tsx": "a8dc8a6c48da69955e311f02f78f4af9e1f5fbb621f23311b4f5f0664dda1616",
     "shared/remote-desktop/views/remoteDesktopPage.css": "ac0e56461df67e1249e5d87d792951167121f43e2caec7836335c04f9a018a4d",
-    "shared/conversation/SavedReviewSummary.tsx": "08cde4be4591f079421c79dda024abe843d09110de72bdd186ed222048756240",
+    "shared/conversation/SavedReviewSummary.tsx": "afab4bf3da668d2431381caedaeab2d87380e061dacd2f75a05e2e885e9a9160",
     "shared/layout/ResizableSidebar.tsx": "4150ded9b422dce5c6d0e378714bb5d3b0bb1cc7a8adbee96c2fd3904cfc9141",
     "shared/layout/useSidebarResize.ts": "c87a08718f5ae20920025d7a1b83bdcbb1b7b1172fd85a92dbe718fdd86df3ca",
     "shared/layout/ResizableSidebar.module.less": "4e61542b5a8c47377d93aceca7ea2c52f34cbcf292b3b83292fc692502d00f52",
