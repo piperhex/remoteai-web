@@ -16,13 +16,13 @@ const CLOSE_ACTIONS: { action: BrowserTabCloseAction; label: MarketKey }[] = [
 ];
 
 interface Props {
-  tab: BrowserTab; tabs: BrowserTab[]; active: boolean; menuOpen: boolean; t: MarketText;
+  tab: BrowserTab; tabs: BrowserTab[]; active: boolean; loading: boolean; menuOpen: boolean; t: MarketText;
   select: (id: string) => void; close: (id: string) => void; closeTabs: (ids: string[]) => void;
   setMenuOpen: (open: boolean) => void;
   descriptionId?: string;
 }
 
-export function BrowserTabItem({ tab, tabs, active, menuOpen, t, select, close, closeTabs, setMenuOpen,
+export function BrowserTabItem({ tab, tabs, active, loading, menuOpen, t, select, close, closeTabs, setMenuOpen,
   descriptionId }: Props) {
   const button = useRef<HTMLButtonElement>(null);
   // Let Dropdown position touch and keyboard menus just like a native context-menu event.
@@ -50,13 +50,13 @@ export function BrowserTabItem({ tab, tabs, active, menuOpen, t, select, close, 
     <div {...gesture} className={`pm-browser-tab${active ? ' active' : ''}`}
       data-overflow-tab data-path={tab.id} data-active={active}>
       <button ref={button} type="button" role="tab" aria-selected={active} tabIndex={active ? 0 : -1}
-        aria-controls={`page-${tab.id}`} aria-haspopup="menu" aria-expanded={menuOpen}
+        aria-controls={`page-${tab.id}`} aria-busy={loading} aria-haspopup="menu" aria-expanded={menuOpen}
         onClick={() => select(tab.id)} aria-describedby={descriptionId} onKeyDown={event => {
           const offsets: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1,
             Home: -index, End: tabs.length - index - 1 };
           if (!(event.key in offsets)) return;
           event.preventDefault(); select(tabs[(index + offsets[event.key] + tabs.length) % tabs.length].id);
-        }}><BrowserTabIcon tab={tab} /><span>{name}</span></button>
+        }}><BrowserTabIcon tab={tab} loading={loading} /><span>{name}</span></button>
       <button type="button" aria-label={t('market.browserCloseTab', { name })}
         onClick={() => close(tab.id)}><X size={14} /></button>
     </div>

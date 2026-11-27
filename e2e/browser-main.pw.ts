@@ -1,6 +1,12 @@
 import { expect, test } from '@playwright/test';
+import { verifyBrowserTabLoading } from '../../../shared/testing/browserTabLoading.mts';
 
 for (const narrow of [false, true]) {
+  test(`web browser tab loading ring ${narrow ? 'narrow' : 'wide'}`, async ({ page }, info) => {
+    await page.setViewportSize({ width: narrow ? 900 : 1440, height: 800 });
+    await verifyBrowserTabLoading(page, info, `e2e/web-browser-bookmarks-harness.html${narrow ? '?dark=1&font=20' : ''}`);
+  });
+
   test(`web background browser tab hover card ${narrow ? 'narrow' : 'wide'}`, async ({ page }, info) => {
     await page.setViewportSize({ width: narrow ? 900 : 1440, height: 800 });
     await page.goto(`e2e/web-browser-bookmarks-harness.html${narrow ? '?dark=1&font=20' : ''}`);

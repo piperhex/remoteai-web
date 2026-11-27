@@ -39,15 +39,32 @@
   padding: 4px; border-radius: 50%; }
 .pm-browser .pm-browser-tab > button:last-child:hover {
   background: color-mix(in srgb, var(--text, #182230) 12%, transparent); }
-.pm-browser-tab span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pm-browser-tab [role=tab] > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pm-browser-tab svg { flex-shrink: 0; }
+.pm-browser-tab-icon { position: relative; display: inline-grid; place-items: center; flex: none; }
+.pm-browser-tab-icon[data-loading=true] > :first-child { transform: scale(.6); }
+.pm-browser-tab-ring { position: absolute; inset: -1px; width: calc(100% + 2px); height: calc(100% + 2px);
+  fill: none; stroke: var(--accent, #4285f4); stroke-width: 1.7; stroke-linecap: round; stroke-dasharray: 65 100; }
+@media (prefers-reduced-motion: no-preference) {
+  .pm-browser-tab-icon > :first-child { transition: transform 120ms ease-out; }
+  .pm-browser-tab-ring { animation: pm-browser-tab-spin 1.2s linear infinite; }
+  .pm-browser-tab-ring circle { animation: pm-browser-tab-sweep 1.2s ease-in-out infinite; }
+}
+@keyframes pm-browser-tab-spin {
+  from { transform: rotate(-90deg); }
+  to { transform: rotate(270deg); }
+}
+@keyframes pm-browser-tab-sweep {
+  0% { stroke-dasharray: 6 100; stroke-dashoffset: 0; }
+  50% { stroke-dasharray: 72 100; stroke-dashoffset: 0; }
+  100% { stroke-dasharray: 6 100; stroke-dashoffset: -100; }
+}
 .pm-browser .pm-browser-tabs-more { border-left: 1px solid var(--border, #dce1e8); border-radius: 0; margin-left: 4px; }
 .pm-browser-tabs-menu { width: 300px; max-width: min(400px, calc(100vw - 16px)); z-index: 1700; }
 .pm-browser-tabs-menu .ant-dropdown-menu { max-height: min(440px, 60vh); overflow-y: auto; }
 .pm-browser-tabs-menu-item { display: flex; align-items: center; gap: 8px; }
-.pm-browser-tabs-menu-item > span:not(.provider-website-icon) {
+.pm-browser-tabs-menu-item > span:not(.pm-browser-tab-icon) {
   flex: 1; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
-.pm-browser-tabs-menu-item > svg { flex-shrink: 0; }
 .pm-browser-toolbar { position: relative; display: flex; gap: 6px; padding: 10px; align-items: center;
   border-bottom: 1px solid var(--border, #dce1e8); }
 .pm-browser-toolbar form { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;

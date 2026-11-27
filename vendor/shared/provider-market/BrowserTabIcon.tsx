@@ -1,14 +1,14 @@
 import type { BrowserTab } from './browserState';
 import { BrowserWebsiteIcon } from '../browser/icons/BrowserWebsiteIcon';
 
-/** Match the Chrome assistant's cursor for conversation-owned browser tabs. */
-export function BrowserTabIcon({ tab }: { tab: BrowserTab }) {
-  if (tab.automationThread) {
-    return <svg className="pm-browser-controlled-icon" width={14} height={14} viewBox="0 0 32 32"
-      aria-hidden="true">
+export function BrowserTabIcon({ tab, loading }: { tab: BrowserTab; loading: boolean }) {
+  return <span className="pm-browser-tab-icon" aria-hidden="true" data-loading={loading}>
+    {tab.automationThread ? <svg className="pm-browser-controlled-icon" width={14} height={14} viewBox="0 0 32 32">
       <path d="M7 3v24l7-7 5 10 5-2-5-10h9L7 3Z" fill="white" stroke="#16a34a"
         strokeWidth={2.5} strokeLinejoin="round" />
-    </svg>;
-  }
-  return <BrowserWebsiteIcon url={tab.url} size={14} />;
+    </svg> : <BrowserWebsiteIcon url={tab.url} size={14} />}
+    {loading && <svg className="pm-browser-tab-ring" viewBox="0 0 16 16">
+      <circle cx="8" cy="8" r="7" pathLength="100" />
+    </svg>}
+  </span>;
 }

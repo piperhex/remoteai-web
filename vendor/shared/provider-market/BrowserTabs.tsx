@@ -14,7 +14,7 @@ import { useBrowserOverlay } from '../browser/overlays/BrowserOverlayProvider';
 
 interface Props {
   tabs: BrowserTab[]; activeId: string; visible: boolean; t: MarketText;
-  language: Language; visits: ReadonlyMap<string, BrowserTabPage>;
+  language: Language; visits: ReadonlyMap<string, BrowserTabPage>; loadingTabs: ReadonlySet<string>;
   select: (id: string) => void; close: (id: string) => void; menuChanged: (open: boolean) => void;
   closeTabs: (ids: string[]) => void;
   windowDragRegion?: boolean;
@@ -22,7 +22,7 @@ interface Props {
 
 /** Match project and workspace tabs: reveal the selection, fade the clipped left edge and list hidden tabs. */
 export function BrowserTabs({ tabs: entries, activeId, visible, t, language, visits, select, close, closeTabs,
-  menuChanged, windowDragRegion }: Props) {
+  loadingTabs, menuChanged, windowDragRegion }: Props) {
   const tabs = entries.map(tab => {
     const title = currentTabPage(tab, visits.get(tab.id))?.title;
     return title ? { ...tab, title } : tab;
@@ -62,6 +62,7 @@ export function BrowserTabs({ tabs: entries, activeId, visible, t, language, vis
     <div ref={overflow.viewport} className="pm-browser-tabs" role="tablist" aria-label={t('market.browserTabs')}
       data-tauri-drag-region={windowDragRegion || undefined} {...hover.events}>
       {tabs.map(tab => <BrowserTabItem key={tab.id} tab={tab} tabs={tabs} active={tab.id === activeId}
+        loading={loadingTabs.has(tab.id)}
         t={t} select={choose} close={closeTab} closeTabs={closeMany} menuOpen={contextOpen && contextId === tab.id}
         descriptionId={hovered?.id === tab.id && !overlay ? `tab-hover-${tab.id}` : undefined}
         setMenuOpen={value => { setContextId(value ? tab.id : null); if (value) setOpen(false); }} />)}
@@ -71,7 +72,7 @@ export function BrowserTabs({ tabs: entries, activeId, visible, t, language, vis
       placement="bottomRight" getPopupContainer={trigger => trigger.parentElement ?? trigger}
       overlayClassName="pm-browser-tabs-menu" menu={{ 'aria-label': t('market.browserHiddenTabs'),
         items: hidden.map(tab => ({ key: tab.id, label: <div className="pm-browser-tabs-menu-item">
-          <BrowserTabIcon tab={tab} /><span>{name(tab)}</span>
+          <BrowserTabIcon tab={tab} loading={loadingTabs.has(tab.id)} /><span>{name(tab)}</span>
           <button type="button" aria-label={t('market.browserCloseTab', { name: name(tab) })}
             onClick={event => { event.stopPropagation(); closeTab(tab.id); }}><X size={14} /></button>
         </div> })), onClick: ({ key }) => choose(key),

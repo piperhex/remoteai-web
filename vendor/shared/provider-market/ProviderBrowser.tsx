@@ -161,8 +161,8 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
     data-tauri-drag-region={props.windowControls ? true : undefined}>
     {props.tabBarStart}
     <BrowserTabs tabs={tabs} activeId={activeId} visible={open} t={t} language={props.language} visits={records.pages}
-      windowDragRegion={Boolean(props.windowControls)} select={props.onSelect} close={props.onCloseTab}
-      closeTabs={props.onCloseTabs} menuChanged={setMenuOpen} />
+      loadingTabs={loadingTabs} windowDragRegion={Boolean(props.windowControls)}
+      select={props.onSelect} close={props.onCloseTab} closeTabs={props.onCloseTabs} menuChanged={setMenuOpen} />
     <button aria-label={t('market.browserNewTab')} title={t('market.browserNewTab')}
       onClick={props.onNewTab}><Plus size={17} /></button>
     {!props.embedded && <button className="pm-browser-close" aria-label={t('market.close')} title={t('market.close')}
