@@ -85,6 +85,22 @@ async function checkComputerPicker(page: Page, info: TestInfo, expect: typeof ex
   await menu.getByRole('menuitem', { name: 'Studio PC' }).click();
 }
 
+async function checkBlankDirectoryClick(page: Page, info: TestInfo, expect: typeof expectTest) {
+  const brand = page.locator('.sidebar-brand, .desktop-sidebar-heading .brand-lockup');
+  // A click in the non-selectable directory can leave Chromium's caret in the surrounding sidebar.
+  await brand.evaluate(element => window.getSelection()?.collapse(element, 1));
+  const directory = page.locator('.rd-page-directory');
+  const height = await directory.evaluate(element => element.clientHeight);
+  await directory.click({ position: { x: 24, y: height - 24 } });
+  const caretColor = await page.evaluate(() => {
+    const anchor = window.getSelection()?.anchorNode;
+    const element = anchor instanceof Element ? anchor : anchor?.parentElement;
+    return element ? getComputedStyle(element).caretColor : null;
+  });
+  expect([null, 'rgba(0, 0, 0, 0)']).toContain(caretColor);
+  await page.screenshot({ path: info.outputPath('blank-click.png'), animations: 'disabled', caret: 'initial' });
+}
+
 export async function checkDesktopTabs(page: Page, hosts: { office: Page; studio: Page },
   info: TestInfo, expect: typeof expectTest) {
   const viewer = page.locator('.rd-page');
@@ -97,7 +113,7 @@ export async function checkDesktopTabs(page: Page, hosts: { office: Page; studio
   await heading.dblclick();
   expect(await page.evaluate(() => window.getSelection()?.toString())).toBe('');
   await expect(page.locator('.adm-toast-mask')).toHaveCount(0);
-  await page.screenshot({ path: info.outputPath('choose-computer.png'), animations: 'disabled' });
+  await checkBlankDirectoryClick(page, info, expect);
   await viewer.getByRole('button', { name: /Office PC/ }).click();
   await waitForVideo();
   await expect.poll(sound).toEqual([true]);
@@ -105,6 +121,7 @@ export async function checkDesktopTabs(page: Page, hosts: { office: Page; studio
   await viewer.getByRole('button', { name: '键盘', exact: true }).click();
   const input = viewer.getByRole('textbox', { name: '发送到电脑的文字' });
   await expect(input).toHaveCSS('user-select', 'text');
+  await expect(input).not.toHaveCSS('caret-color', 'rgba(0, 0, 0, 0)');
   await input.fill('local text');
   await expect.poll(() => hosts.office.evaluate(() => window.desktopTest.inputs.at(-1)))
     .toEqual({ kind: 'text', text: 'local text' });

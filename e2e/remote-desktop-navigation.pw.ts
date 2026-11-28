@@ -1,6 +1,9 @@
 import { expect, test } from '@playwright/test';
 import type { desktopTest } from './remote-desktop-fixture';
 import { checkDesktopTabs, computers, connectCaptureHosts } from './remote-desktop-tab-checks';
+import { testBrowserLaunchOptions } from '../../../scripts/test-browser.mjs';
+
+test.use({ launchOptions: testBrowserLaunchOptions({ args: ['--enable-caret-browsing'] }) });
 
 declare global { interface Window { desktopTest: typeof desktopTest } }
 

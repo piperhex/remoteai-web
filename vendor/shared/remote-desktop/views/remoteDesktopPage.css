@@ -1,6 +1,13 @@
 /* The directory handles scrolling inside the desktop content pane. */
 main:has(> .rd-page:not([hidden])) { scrollbar-gutter: auto; }
 .rd-page[hidden] { display: none; }
+
+/* A blank directory click can leave the caret in the surrounding shell in caret browsing mode. */
+body:has(.rd-page:not([hidden])) { caret-color: transparent; }
+body:has(.rd-page:not([hidden])) :where(input, textarea, [contenteditable]:not([contenteditable='false'])) {
+  caret-color: auto;
+}
+
 .rd-page, .rd-add-desktop-menu {
   cursor: default;
   -webkit-user-select: none;
