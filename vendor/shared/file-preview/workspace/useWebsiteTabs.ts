@@ -1,7 +1,8 @@
 import { useCallback, useContext, useRef, useState } from 'react';
 import { isTauri } from '@tauri-apps/api/core';
 import { message } from 'antd';
-import { createBrowserTab, moveTab, navigateTab, type BrowserAction, type BrowserTab }
+import { createBrowserTab, moveTab, navigateTab, openBrowserDataTab, type BrowserAction, type BrowserDataPageKind,
+  type BrowserTab }
   from '../../provider-market/browserState';
 import { pageUrl } from '../../provider-market/pageLink';
 import { browserMappings } from '../../port-mapping/browserMappings';
@@ -151,6 +152,8 @@ export function useWebsiteTabs({ reuseTabs = true }: { reuseTabs?: boolean } = {
   }, [client]);
   return { ...state, open, reset, adopt, remove, resources, openResource, selectResource,
     onCloseTab: close, onCloseTabs: closeTabs, onNewTab: add,
+    onOpenDataPage: (kind: BrowserDataPageKind, opener: string) =>
+      setState(current => ({ ...current, ...openBrowserDataTab(current.tabs, kind, opener) })),
     onSelect: (activeId: string) => setState(current => ({ ...current, activeId })),
     onNavigate: (id: string, url: string) => { void navigate(id, url); }, onPageNavigate: pageNavigate,
     onPopup: (_id: string, url: string) => { if (pageUrl(url)) add(url, true); }, onAction: action };

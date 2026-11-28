@@ -49,7 +49,7 @@ export function BrowserTabItem({ tab, tabs, active, loading, menuOpen, t, select
     }}>
     <div {...gesture} className={`pm-browser-tab${active ? ' active' : ''}`}
       data-overflow-tab data-path={tab.id} data-active={active}>
-      <button ref={button} type="button" role="tab" aria-selected={active} tabIndex={active ? 0 : -1}
+      <button ref={button} type="button" role="tab" id={`tab-${tab.id}`} aria-selected={active} tabIndex={active ? 0 : -1}
         aria-controls={`page-${tab.id}`} aria-busy={loading} aria-haspopup="menu" aria-expanded={menuOpen}
         onClick={() => select(tab.id)} aria-describedby={descriptionId} onKeyDown={event => {
           const offsets: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1,

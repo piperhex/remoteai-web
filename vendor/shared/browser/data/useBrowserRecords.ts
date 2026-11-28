@@ -50,7 +50,7 @@ export function useBrowserRecords(options: {
     try { store.visit({ id: newDataId(random), kind: 'visit', url: page.url, title: page.title.slice(0, 512), at: Date.now() }); }
     catch { /* The store exposes persistence failures in the browser data UI. */ }
   }, [store, random]);
-  const active = options.tabs.find(tab => tab.id === options.activeId);
+  const active = options.tabs.find(tab => tab.id === options.activeId && !tab.dataPage);
   const suggestions = usePasswordSuggestions(active, options.active);
   useEffect(() => {
     if (!desktop || !options.active || !active) return;
@@ -82,15 +82,19 @@ export function useBrowserRecords(options: {
     return () => { stopped = true; clearInterval(timer); };
   }, [desktop, options.active, active?.id, active?.url, vault]);
   const controls: DataControls = {
-    tabs: options.tabs.map(tab => ({ id: tab.id, at: observed.current.get(tab.id)?.at ?? 0 })),
+    tabs: options.tabs.filter(tab => !tab.dataPage).map(tab => ({ id: tab.id, at: observed.current.get(tab.id)?.at ?? 0 })),
     closeTabs: options.closeTabs,
     clearSiteData: desktop ? request => invoke('provider_browser_clear_data', { request }) : undefined,
   };
-  const fill = desktop && active && !active.automationThread ? async (login: Login, focusId?: string) => {
+  return { controls, fill: passwordFill(active), candidate, closeCapture, recordVisit, updatePage, pages, ...suggestions };
+}
+
+export function passwordFill(tab: BrowserTab | undefined) {
+  if (!isTauri() || !tab || tab.automationThread || !loginOrigin(tab.url)) return undefined;
+  return async (login: Login, focusId?: string) => {
     const { origin, username, password } = login;
-    const done = await invoke<boolean>('provider_browser_password', { id: active.id,
+    const done = await invoke<boolean>('provider_browser_password', { id: tab.id,
       request: { action: 'fill', login: { origin, username, password }, focusId } });
     if (!done) throw new Error('password-fill');
-  } : undefined;
-  return { controls, fill, candidate, closeCapture, recordVisit, updatePage, pages, ...suggestions };
+  };
 }

@@ -23,6 +23,13 @@
 .browser-password-row > span { min-width: 0; overflow-wrap: anywhere; }
 .browser-password-row small { display: block; }
 .browser-data-modal .ant-modal-body { overflow-wrap: anywhere; }
+.browser-data-page { flex: 1; min-width: 0; overflow: auto; overscroll-behavior: contain; overflow-wrap: anywhere; }
+.browser-data-page-content { box-sizing: border-box; width: 100%; max-width: 780px;
+  padding: clamp(16px, 4vw, 36px); margin-inline: auto; }
+.browser-data-page-content > h2 { margin: 0 0 16px; font-weight: 600; }
+.browser-data-page-content > form { max-width: 480px; }
+.browser-data-page .browser-data-scroll { max-height: none; overflow: visible; }
+.pm-browser .browser-data-page .browser-data-visit { justify-content: flex-start; flex: 1; gap: 16px; }
 @media (max-width: 600px) {
   .browser-data-modal { max-width: calc(100vw - 16px); top: 8px; padding-bottom: 8px; }
   .browser-data-modal .ant-modal-content { padding: 18px 16px; }

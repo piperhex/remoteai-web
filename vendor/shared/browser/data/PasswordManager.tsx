@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Empty, Input, Modal, Space } from 'antd';
+import { isTauri } from '@tauri-apps/api/core';
 import { KeyRound, Lock, Plus, Search } from 'lucide-react';
 import type { Language } from '@remoteai/i18n';
 import { marketText, type MarketText } from '../../provider-market/i18n';
@@ -7,6 +8,7 @@ import { useBrowserData } from './context';
 import { loginOrigin, type Login } from './model';
 import type { SavedLogin } from './vault';
 import { dataStatusKeys } from './presentation';
+import { BrowserDataView, browserDataTabContainer } from './BrowserDataView';
 import './browserData.css';
 
 export function VaultUnlock({ t }: { t: MarketText }) {
@@ -37,18 +39,18 @@ export function VaultUnlock({ t }: { t: MarketText }) {
   </form>;
 }
 
-export function PasswordManager({ language, close, currentUrl, fill, candidate }: {
-  language: Language; close: () => void; currentUrl: string;
-  fill?: (login: Login) => Promise<void>; candidate?: Login;
+export function PasswordManager({ language, close, currentUrl, fill, onFilled }: {
+  language: Language; close?: () => void; currentUrl: string;
+  fill?: (login: Login) => Promise<void>; onFilled?: () => void;
 }) {
   const t = marketText(language), { vault, passwords, status } = useBrowserData();
-  const [query, setQuery] = useState(''), [editing, setEditing] = useState<Login | SavedLogin | null>(candidate ?? null);
+  const [query, setQuery] = useState(''), [editing, setEditing] = useState<Login | SavedLogin | null>(null);
   const [removing, setRemoving] = useState<SavedLogin>(), [error, setError] = useState(false);
+  const getContainer = close ? undefined : browserDataTabContainer;
   useEffect(() => { if (!passwords.unlocked) { setEditing(null); setRemoving(undefined); } }, [passwords.unlocked]);
   const shown = passwords.entries.filter(entry => `${entry.origin} ${entry.username}`
     .toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
-  return <Modal open title={t('market.browserPasswords')} width={640} zIndex={1800} onCancel={close}
-    footer={null} className="browser-data-modal browser-chrome">
+  return <BrowserDataView title={t('market.browserPasswords')} close={close}>
     <p role="status">{t(dataStatusKeys[status])}</p>
     {!passwords.unlocked ? <VaultUnlock t={t} /> : <>
       <div className="browser-data-tools"><Input prefix={<Search size="1em" />} value={query}
@@ -58,7 +60,7 @@ export function PasswordManager({ language, close, currentUrl, fill, candidate }
           username: '', password: '' })}>{t('market.browserPasswordAdd')}</Button>
         <Button icon={<Lock size="1em" />} aria-label={t('market.browserVaultLock')}
           onClick={() => { void vault.lock().catch(() => setError(true)); }} /></div>
-      {!fill && <p>{t('market.browserPasswordWebHint')}</p>}
+      {!isTauri() && <p>{t('market.browserPasswordWebHint')}</p>}
       {status === 'conflict' && <VaultConflict t={t} />}
       {passwords.error && <p role="alert">{t('market.browserVaultCorrupt')}</p>}
       {error && <p role="alert">{t('market.browserPasswordFillFailed')}</p>}
@@ -68,21 +70,21 @@ export function PasswordManager({ language, close, currentUrl, fill, candidate }
           <KeyRound size="1.4em" /><span style={{ flex: 1 }}><strong>{entry.origin}</strong><small>{entry.username}</small></span>
           <Space wrap>
             {fill && entry.origin === loginOrigin(currentUrl) && <Button onClick={() => {
-              void fill(entry).then(close).catch(() => setError(true));
+              void fill(entry).then(onFilled ?? close).catch(() => setError(true));
             }}>{t('market.browserPasswordFill')}</Button>}
             <Button onClick={() => setEditing(entry)}>{t('market.browserPasswordEdit')}</Button>
             <Button danger onClick={() => setRemoving(entry)}>{t('market.bookmarkDelete')}</Button>
           </Space>
         </div>)}
       </div>
-      {editing && <PasswordEditor t={t} login={editing} close={() => setEditing(null)} />}
+      {editing && <PasswordEditor t={t} login={editing} close={() => setEditing(null)} getContainer={getContainer} />}
     </>}
-    <Modal open={!!removing} title={t('market.browserPasswords')} zIndex={1900} width={400}
+    <Modal open={!!removing} title={t('market.browserPasswords')} zIndex={1900} width={400} getContainer={getContainer}
       okText={t('market.bookmarkDelete')} cancelText={t('market.cancel')} okButtonProps={{ danger: true }}
       onCancel={() => setRemoving(undefined)} onOk={() => {
         if (removing) { try { vault.remove([removing.id]); setRemoving(undefined); } catch { setError(true); } }
       }}>{t('market.browserPasswordDeleteConfirm')}</Modal>
-  </Modal>;
+  </BrowserDataView>;
 }
 
 function VaultConflict({ t }: { t: MarketText }) {
@@ -100,7 +102,9 @@ function VaultConflict({ t }: { t: MarketText }) {
   </form>;
 }
 
-function PasswordEditor({ t, login, close }: { t: MarketText; login: Login | SavedLogin; close: () => void }) {
+function PasswordEditor({ t, login, close, getContainer }: {
+  t: MarketText; login: Login | SavedLogin; close: () => void; getContainer?: () => HTMLElement;
+}) {
   const { vault } = useBrowserData(), [draft, setDraft] = useState<Login>(login), [error, setError] = useState(false);
   const update = (key: keyof Login, value: string) => setDraft(current => ({ ...current, [key]: value }));
   const save = () => {
@@ -110,7 +114,8 @@ function PasswordEditor({ t, login, close }: { t: MarketText; login: Login | Sav
     catch { setError(true); }
   };
   return <Modal open title={t('id' in login ? 'market.browserPasswordEdit' : 'market.browserPasswordAdd')}
-    zIndex={1900} width={480} onCancel={close} onOk={save} okText={t('market.save')} cancelText={t('market.cancel')}>
+    zIndex={1900} width={480} getContainer={getContainer}
+    onCancel={close} onOk={save} okText={t('market.save')} cancelText={t('market.cancel')}>
     <div className="browser-password-fields">
       <label>{t('market.browserPasswordOrigin')}<Input value={draft.origin} autoComplete="off" maxLength={2048}
         onChange={event => update('origin', event.target.value)} /></label>

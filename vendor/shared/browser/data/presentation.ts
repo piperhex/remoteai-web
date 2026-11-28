@@ -1,6 +1,13 @@
 import type { MarketKey } from '../../provider-market/i18n';
+import type { BrowserDataPageKind } from '../../provider-market/browserState';
 import type { DataStatus } from './store';
 import type { TimeRange } from './model';
+
+export const dataPageTitleKeys = {
+  history: 'market.browserHistory',
+  passwords: 'market.browserPasswords',
+} as const satisfies Record<BrowserDataPageKind, MarketKey>;
+
 export const dataStatusKeys: Record<DataStatus, MarketKey> = {
   local: 'market.browserDataLocal', syncing: 'market.browserDataSyncing', synced: 'market.browserDataSynced',
   offline: 'market.browserDataOffline', 'storage-error': 'market.browserDataStorage',

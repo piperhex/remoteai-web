@@ -11,6 +11,7 @@ import { BrowserTabIcon } from './BrowserTabIcon';
 import { BrowserTabHoverCard } from './BrowserTabHoverCard';
 import { useBrowserTabHover } from './useBrowserTabHover';
 import { useBrowserOverlay } from '../browser/overlays/BrowserOverlayProvider';
+import { dataPageTitleKeys } from '../browser/data/presentation';
 
 interface Props {
   tabs: BrowserTab[]; activeId: string; visible: boolean; t: MarketText;
@@ -24,6 +25,7 @@ interface Props {
 export function BrowserTabs({ tabs: entries, activeId, visible, t, language, visits, select, close, closeTabs,
   loadingTabs, menuChanged, windowDragRegion }: Props) {
   const tabs = entries.map(tab => {
+    if (tab.dataPage) return { ...tab, title: t(dataPageTitleKeys[tab.dataPage.kind]) };
     const title = currentTabPage(tab, visits.get(tab.id))?.title;
     return title ? { ...tab, title } : tab;
   });

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Empty, Input, Modal, theme } from 'antd';
+import { Button, Empty, Input, theme } from 'antd';
 import { Clock, Globe, Search, X } from 'lucide-react';
 import type { Language } from '@remoteai/i18n';
 import { marketText } from '../../provider-market/i18n';
@@ -8,16 +8,16 @@ import { historyGroups, type Visit } from './model';
 import { dataStatusKeys } from './presentation';
 import { ClearBrowserData } from './ClearBrowserData';
 import type { DataControls } from './clear';
+import { BrowserDataView, browserDataTabContainer } from './BrowserDataView';
 import './browserData.css';
 
 export function BrowserHistory({ language, close, visit, controls }: {
-  language: Language; close: () => void; visit: (url: string) => void; controls: DataControls;
+  language: Language; close?: () => void; visit: (url: string) => void; controls: DataControls;
 }) {
   const t = marketText(language), data = useBrowserData(), { token } = theme.useToken();
   const [query, setQuery] = useState(''), [clearing, setClearing] = useState(false), [error, setError] = useState(false);
   const groups = historyGroups(data.entries.filter((entry): entry is Visit => entry.kind === 'visit'), query);
-  return <Modal open title={t('market.browserHistory')} onCancel={close} footer={null} width={640}
-    zIndex={1800} className="browser-data-modal browser-chrome">
+  return <BrowserDataView title={t('market.browserHistory')} close={close}>
     <div className="browser-data-tools"><Input prefix={<Search size="1em" />} value={query}
       allowClear aria-label={t('market.browserHistorySearch')} placeholder={t('market.browserHistorySearch')}
       onChange={event => setQuery(event.target.value)} />
@@ -30,7 +30,7 @@ export function BrowserHistory({ language, close, visit, controls }: {
         <h3 className="browser-data-day"><Clock size="1em" />
           {new Date(day).toLocaleDateString(language, { dateStyle: 'full' })}</h3>
         {entries.map(entry => <div className="browser-data-row" key={entry.id}>
-          <button className="browser-data-visit" type="button" onClick={() => { visit(entry.url); close(); }}>
+          <button className="browser-data-visit" type="button" onClick={() => { visit(entry.url); close?.(); }}>
             <Globe size="1.5em" style={{ color: token.colorPrimary }} />
             <span><strong>{entry.title || new URL(entry.url).hostname}</strong>
               <small style={{ color: token.colorTextSecondary }}>{new URL(entry.url).host}</small></span>
@@ -40,6 +40,7 @@ export function BrowserHistory({ language, close, visit, controls }: {
         </div>)}
       </section>)}
     </div>
-    {clearing && <ClearBrowserData language={language} controls={controls} close={() => setClearing(false)} />}
-  </Modal>;
+    {clearing && <ClearBrowserData language={language} controls={controls} close={() => setClearing(false)}
+      getContainer={close ? undefined : browserDataTabContainer} />}
+  </BrowserDataView>;
 }

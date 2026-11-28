@@ -8,7 +8,10 @@ export function useMobileBrowserHome(browser: BrowserWindowProps, compact: boole
   useEffect(() => {
     setReturns(current => Object.fromEntries(Object.entries(current).filter(([id]) => browser.tabs.some(t => t.id === id))));
   }, [browser.tabs]);
-  const isHome = (id: string) => compact && (!browser.tabs.find(tab => tab.id === id)?.url || !!returns[id]);
+  const isHome = (id: string) => {
+    const tab = browser.tabs.find(tab => tab.id === id);
+    return compact && !tab?.dataPage && (!tab?.url || !!returns[id]);
+  };
   const leave = (id: string) => setReturns(current => {
     const next = { ...current }; delete next[id]; return next;
   });

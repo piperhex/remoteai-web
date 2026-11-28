@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { BrowserTabCanvas } from './zoom/BrowserTabCanvas';
 import { Globe, X } from 'lucide-react';
 import type { BrowserWindowProps } from '../provider-market/ProviderBrowser';
@@ -11,11 +11,12 @@ import './mobileBrowser.css';
 import { BrowserHome } from './BrowserHome';
 import { BrowserMousePanel } from './mouse/BrowserMousePanel';
 import { useMobileBrowserRenderers } from './useMobileBrowserRenderers';
-import type { BrowserTabPage } from '../provider-market/browserState';
+import type { BrowserDataPage, BrowserTabPage } from '../provider-market/browserState';
+import { dataPageTitleKeys } from './data/presentation';
 
 /** Keep tab cards and navigation available when an older mobile page releases its renderer. */
 export function BrowserPages({ browser, t, manager, compact, query, blocked, select, loadingChanged, desktopTabs,
-  home, bookmarks, recordVisit, updatePage, zoomAnchor, mouseEnabled }: {
+  home, bookmarks, recordVisit, updatePage, zoomAnchor, mouseEnabled, renderDataPage }: {
   mouseEnabled?: boolean;
   zoomAnchor: HTMLSpanElement | null;
   browser: BrowserWindowProps & { embedded?: boolean; onPageNavigate?: (id: string, url: string) => void };
@@ -25,6 +26,7 @@ export function BrowserPages({ browser, t, manager, compact, query, blocked, sel
   home: (id: string) => boolean; bookmarks: () => void;
   recordVisit?: (id: string, page: { url: string; title: string }) => void;
   updatePage: (id: string, page: BrowserTabPage) => void;
+  renderDataPage: (page: BrowserDataPage, id: string) => ReactNode;
 }) {
   const { tabs, activeId, Surface, commands, open } = browser;
   const { resident } = useMobileBrowserRenderers(activeId, compact && open);
@@ -61,9 +63,11 @@ export function BrowserPages({ browser, t, manager, compact, query, blocked, sel
     '--browser-preview-scale': Math.max(0.1, (viewport.width - 48) / 2 / viewport.width) } as CSSProperties;
   return <div ref={host} className={`pm-browser-pages${manager ? ' browser-tab-grid' : ''}`} style={previewStyle}>
     {tabs.map(entry => {
-      const title = entry.title || entry.url || t('market.browserNewTab');
+      const title = entry.dataPage ? t(dataPageTitleKeys[entry.dataPage.kind])
+        : entry.title || entry.url || t('market.browserNewTab');
       const mounted = !compact || resident.includes(entry.id);
       return <SwipeableBrowserPage key={entry.id} id={`page-${entry.id}`} role={manager ? 'group' : 'tabpanel'}
+        aria-labelledby={compact ? undefined : `tab-${entry.id}`}
         enabled={manager} dismiss={() => browser.onCloseTab(entry.id)}
         className={`pm-browser-page${entry.id === activeId ? ' browser-tab-selected' : ''}`
           + (compact && desktopTabs[entry.id] ? ' browser-site-desktop' : '')}
@@ -71,7 +75,8 @@ export function BrowserPages({ browser, t, manager, compact, query, blocked, sel
         {manager && <div className="browser-tab-card-header"><BrowserWebsiteIcon url={entry.url} size={16} />
           <span>{title}</span><button aria-label={t('market.browserCloseTab', { name: title })}
             onClick={() => browser.onCloseTab(entry.id)}><X size={18} /></button></div>}
-        <BrowserTabCanvas key="surface" id={entry.id} language={browser.language} desktop={!compact}
+        {entry.dataPage ? open && entry.id === activeId && !manager && renderDataPage(entry.dataPage, entry.id)
+          : <BrowserTabCanvas key="surface" id={entry.id} language={browser.language} desktop={!compact}
           anchor={!compact && open && entry.id === activeId && !blocked ? zoomAnchor : null}
           manager={manager} covered={home(entry.id)}>
           {mounted && <Surface tab={entry}
@@ -90,7 +95,7 @@ export function BrowserPages({ browser, t, manager, compact, query, blocked, sel
           {!mounted && manager && !home(entry.id) && <div className="pm-browser-feedback" aria-hidden>
             <Globe size={64} />
           </div>}
-        </BrowserTabCanvas>
+        </BrowserTabCanvas>}
         {home(entry.id) && <BrowserHome t={t} visit={url => browser.onNavigate(entry.id, url)} bookmarks={bookmarks} />}
         {mouseEnabled && compact && <BrowserMousePanel home={home(entry.id)}
           active={open && !manager && !blocked && entry.id === activeId} />}

@@ -1,5 +1,8 @@
 import { pageUrl, resolvedPageUrl, type ProviderMarketSource } from './pageLink';
 
+export type BrowserDataPageKind = 'history' | 'passwords';
+export interface BrowserDataPage { kind: BrowserDataPageKind; sourceId?: string }
+
 export interface BrowserTab {
   id: string;
   title: string;
@@ -8,6 +11,7 @@ export interface BrowserTab {
   headers: Record<string, string>;
   history: string[];
   historyIndex: number;
+  dataPage?: BrowserDataPage;
   /** Present only for conversation-owned tabs controlled by the built-in browser tools. */
   automationThread?: string;
   /** Preserve the owning computer when a conversation tab moves into the menu browser. */
@@ -29,10 +33,22 @@ export function createBrowserTab(source?: { name: string; marketSource: Provider
     history: url ? [url] : [], historyIndex: url ? 0 : -1 };
 }
 
+export function openBrowserDataTab(tabs: BrowserTab[], kind: BrowserDataPageKind, opener: string) {
+  const existing = tabs.find(tab => tab.dataPage?.kind === kind);
+  const source = tabs.find(tab => tab.id === opener && !tab.dataPage);
+  const sourceId = kind === 'passwords' ? source?.id : undefined;
+  if (existing) {
+    return { activeId: existing.id, tabs: sourceId ? tabs.map(tab => tab.id === existing.id
+      ? { ...tab, dataPage: { kind, sourceId } } : tab) : tabs };
+  }
+  const tab = { ...createBrowserTab(), dataPage: { kind, sourceId } };
+  return { activeId: tab.id, tabs: [...tabs, tab] };
+}
+
 export function navigateTab(tab: BrowserTab, url: string): BrowserTab {
   if (!pageUrl(url) || tab.url === url) return tab;
   const history = [...tab.history.slice(0, tab.historyIndex + 1), url];
-  return { ...tab, url, history, historyIndex: history.length - 1 };
+  return { ...tab, url, history, historyIndex: history.length - 1, dataPage: undefined };
 }
 
 export function moveTab(tab: BrowserTab, direction: -1 | 1): BrowserTab {

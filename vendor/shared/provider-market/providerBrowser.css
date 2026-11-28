@@ -8,11 +8,12 @@
   border: 1px solid var(--border, #dce1e8); border-radius: 14px; background: var(--panel-bg, #fff);
   color: var(--text, #182230); box-shadow: 0 24px 80px #10182840; }
 .pm-browser-fullscreen { width: 100vw; height: 100vh; border-radius: 0; }
-.pm-browser button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex-shrink: 0;
+.pm-browser button:not(:where(.browser-data-page .ant-btn)) {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex-shrink: 0;
   min-width: 32px; min-height: 32px; padding: 6px; border: 0; border-radius: 6px; background: transparent;
   color: inherit; cursor: pointer; }
-.pm-browser button:hover { background: var(--hover-bg, #e8edf4); }
-.pm-browser button:disabled { opacity: .4; cursor: default; }
+.pm-browser button:not(:where(.browser-data-page .ant-btn)):hover { background: var(--hover-bg, #e8edf4); }
+.pm-browser button:not(:where(.browser-data-page .ant-btn)):disabled { opacity: .4; cursor: default; }
 .pm-browser button:focus-visible { outline: 2px solid var(--accent, #6175db); }
 .pm-browser-titlebar { display: flex; align-items: center; gap: 6px; padding: 8px 10px 0;
   background: var(--surface-secondary, #eef1f6); }

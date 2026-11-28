@@ -7,7 +7,7 @@ import { marketText, type MarketText } from './i18n';
 import type { Language } from '@remoteai/i18n';
 import { useSearchEngine } from '../browser/useSearchEngine';
 import { BrowserSearchSetting } from '../browser/BrowserSearchSetting';
-import type { BrowserAction, BrowserPageTitle, BrowserTab } from './browserState';
+import type { BrowserAction, BrowserDataPage, BrowserDataPageKind, BrowserPageTitle, BrowserTab } from './browserState';
 import { BrowserTabs } from './BrowserTabs';
 import { BrowserToolbar } from '../browser/BrowserToolbar';
 import { useBrowserBookmarks } from '../browser/bookmarks/useBrowserBookmarks';
@@ -28,7 +28,7 @@ import { BrowserHistory } from '../browser/data/BrowserDataPanel';
 import { PasswordManager } from '../browser/data/PasswordManager';
 import { PasswordSuggestions } from '../browser/data/PasswordSuggestions';
 import { PasswordCapture } from '../browser/data/PasswordCapture';
-import { useBrowserRecords } from '../browser/data/useBrowserRecords';
+import { passwordFill, useBrowserRecords } from '../browser/data/useBrowserRecords';
 import { BrowserFullscreenControl } from '../browser/BrowserFullscreenControl';
 import { BrowserExtensions } from '../browser/extensions/BrowserExtensions';
 import { BrowserSidePanel, type BrowserPanelSelection } from '../browser/extensions/BrowserSidePanel';
@@ -53,6 +53,7 @@ export interface BrowserWindowProps {
   open: boolean; tabs: BrowserTab[]; activeId: string; language: Language;
   onSelect: (id: string) => void; onCloseTab: (id: string) => void; onNewTab: () => void; onClose: () => void;
   onCloseTabs: (ids: string[]) => void;
+  onOpenDataPage: (kind: BrowserDataPageKind, opener: string) => void;
   onNavigate: (id: string, url: string) => void; onAction: (id: string, action: BrowserAction) => void;
   onPopup: (id: string, url: string) => void;
   commands: Record<string, BrowserSurfaceProps['command']>; Surface: ComponentType<BrowserSurfaceProps>;
@@ -85,7 +86,7 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
   const [desktopTabs, setDesktopTabs] = useState<Record<string, boolean>>({});
   const [mouseEnabled, setMouseEnabled] = useMousePreference();
   const [mappingsOpen, setMappingsOpen] = useState(false);
-  const [dataPanel, setDataPanel] = useState<'history' | 'passwords'>();
+  const [dataPanel, setDataPanel] = useState<BrowserDataPageKind>();
   const [extensionsOpen, setExtensionsOpen] = useState(false);
   const [sidePanel, setSidePanel] = useState<BrowserPanelSelection>();
   const closeSidePanel = useCallback(() => setSidePanel(undefined), []);
@@ -97,7 +98,18 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
     props.onCloseTabs(ids);
   };
   const records = useBrowserRecords({ tabs, activeId, active: open, closeTabs });
-  useEffect(() => { if (!open) setDataPanel(undefined); }, [open]);
+  const openDataPage = (kind: BrowserDataPageKind) => {
+    if (compact) setDataPanel(kind);
+    else props.onOpenDataPage(kind, activeId);
+  };
+  const renderDataPage = (page: BrowserDataPage, id: string) => {
+    if (page.kind === 'history') return <BrowserHistory language={props.language} controls={records.controls}
+      visit={url => props.onPopup(id, url)} />;
+    const source = tabs.find(entry => entry.id === page.sourceId && !entry.dataPage);
+    return <PasswordManager language={props.language} currentUrl={source?.url ?? ''} fill={passwordFill(source)}
+      onFilled={source && (() => props.onSelect(source.id))} />;
+  };
+  useEffect(() => { if (!open || !compact) setDataPanel(undefined); }, [open, compact]);
   useEffect(() => { if (!open) { setManager(false); setMappingsOpen(false); } }, [open]);
   useEffect(() => {
     if (!compact || !open) return;
@@ -122,11 +134,11 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
         if (externalUrl) void openWebsiteInBrowser(externalUrl);
       }}>{uiText('client.workspaceActions.openInBrowser', {}, props.language)}</BrowserSettingsAction>}
       <div className="browser-settings-divider" />
-      <BrowserSettingsAction icon={History} onClick={() => { dismiss(); setDataPanel('history'); }}>
+      <BrowserSettingsAction icon={History} onClick={() => { dismiss(); openDataPage('history'); }}>
         {t('market.browserHistory')}</BrowserSettingsAction>
       {downloads && <BrowserSettingsAction icon={Download} onClick={() => { dismiss(); downloads.open(); }}>
         {uiText('client.downloads.downloads', {}, props.language)}</BrowserSettingsAction>}
-      <BrowserSettingsAction icon={KeyRound} onClick={() => { dismiss(); setDataPanel('passwords'); }}>
+      <BrowserSettingsAction icon={KeyRound} onClick={() => { dismiss(); openDataPage('passwords'); }}>
         {t('market.browserPasswords')}</BrowserSettingsAction>
       <BrowserSearchSetting t={t} search={search} />
       {!compact && <BrowserSettingsAction icon={Settings} onClick={() => {
@@ -205,7 +217,7 @@ function BrowserContentsView(props: Parameters<typeof BrowserContents>[0]) {
       blocked={!nativeOverlay && (addressOpen || menuOpen || extensionsOpen || bookmarks.overlayOpen || mappingsOpen
         || !!dataPanel || !!records.candidate || !!records.focus)}
       loadingChanged={loadingChanged}
-      recordVisit={records.recordVisit} updatePage={records.updatePage}
+      recordVisit={records.recordVisit} updatePage={records.updatePage} renderDataPage={renderDataPage}
       select={id => { props.onSelect(id); setManager(false); }} />
     {sidePanel && !compact && <BrowserSidePanel key={sidePanel.id ?? 'builtin'}
       selection={sidePanel} active={open && !addressOpen && !extensionsOpen && !bookmarks.overlayOpen && !dataPanel}

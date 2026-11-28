@@ -9,8 +9,8 @@ import { categoryKeys, categoryHints, rangeKeys, type DataCategory } from './pre
 import { clearBrowserData, type DataControls } from './clear';
 
 const icons = { history: Clock, cookies: Cookie, cache: Image, tabs: PanelsTopLeft, passwords: KeyRound };
-export function ClearBrowserData({ language, controls, close }: {
-  language: Language; controls: DataControls; close: () => void;
+export function ClearBrowserData({ language, controls, close, getContainer }: {
+  language: Language; controls: DataControls; close: () => void; getContainer?: () => HTMLElement;
 }) {
   const t = marketText(language), { store, vault, entries, passwords } = useBrowserData();
   const { token } = theme.useToken();
@@ -29,11 +29,13 @@ export function ClearBrowserData({ language, controls, close }: {
     catch { setResult('failed'); }
     finally { setBusy(false); setConfirm(false); }
   };
-  return <Modal open title={t('market.browserDataClear')} width={580} zIndex={1850} onCancel={() => !busy && close()}
+  return <Modal open title={t('market.browserDataClear')} width={580} zIndex={1850} getContainer={getContainer}
+    onCancel={() => !busy && close()}
     className="browser-data-modal browser-chrome" footer={<Button danger type="primary" loading={busy}
       disabled={!selected.length} onClick={() => setConfirm(true)}>{t('market.browserDataDelete')}</Button>}>
     <label className="browser-data-range">{t('market.browserDataRange')}
       <Select value={range} onChange={setRange} disabled={busy} aria-label={t('market.browserDataRange')}
+        getPopupContainer={getContainer}
         options={timeRanges.map(value => ({ value, label: t(rangeKeys[value]) }))} /></label>
     <div className="browser-data-scroll">
       {(Object.keys(categoryKeys) as DataCategory[]).map(category => {
@@ -57,7 +59,7 @@ export function ClearBrowserData({ language, controls, close }: {
     {!controls.clearSiteData && <p>{t('market.browserDataWebHint')}</p>}
     {result && <p role={result === 'failed' ? 'alert' : 'status'}>{t(result === 'failed'
       ? 'market.browserDataFailed' : 'market.browserDataDeleted')}</p>}
-    <Modal open={confirm} title={t('market.browserDataClear')} zIndex={1900} width={400}
+    <Modal open={confirm} title={t('market.browserDataClear')} zIndex={1900} width={400} getContainer={getContainer}
       onCancel={() => !busy && setConfirm(false)} onOk={() => void remove()} confirmLoading={busy}
       okText={t('market.browserDataDelete')} cancelText={t('market.cancel')} okButtonProps={{ danger: true }}>
       {t('market.browserDataConfirm')}
