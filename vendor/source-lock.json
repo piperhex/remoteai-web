@@ -3,7 +3,7 @@
   "revision": "8c4449694124135f1aefe47946391d38a269a411",
   "sharedSource": {
     "repository": "https://github.com/piperhex/remoteai-shared",
-    "revision": "06251b6e93bcdd8cb66748bc6e4e69bd31ad1c5c"
+    "revision": "5f7e5c03e314dedc194c3eb8766eefc60a30692b"
   },
   "retainedTestSources": {
     "repository": "https://github.com/piperhex/remoteai",
@@ -1907,7 +1907,7 @@
     "shared/browser/data/crypto.ts": "6cd0ed3b0996ba76b74c135cc705026c2f04ad03818004dc84969fb4500d482d",
     "shared/browser/data/BrowserDataPanel.tsx": "6025c3253dddf90da1b4f142a2ffd9e4974781f20706fefb9ed380624a396895",
     "shared/browser/data/PasswordManager.tsx": "063a2752d351fc0b1178a908085a1dbe81d8a9d787162a935929d5b4c3e13e30",
-    "shared/browser/data/PasswordCapture.tsx": "ed1ce72518bc3f3afff44b39843ceef22a99ed86dd940f4005fa650fa4f7df30",
+    "shared/browser/data/PasswordCapture.tsx": "4f425e5fdaee71327fa66f50b128814df41a9669111778907d16708a97d0777c",
     "shared/browser/data/useBrowserRecords.ts": "a135e7cfc8c562a402e663f9111893c521afd523f42ecda9fe16d8d041bd73ac",
     "shared/browser/data/channel.ts": "50d2a16d076b8b97ba068d518aa670f7d7ca4b71582fd3144ee0139e5a58d64a",
     "shared/browser/data/store.ts": "4d20c5992a193305b528151e8ce9a4f156bb4be64ac5a80882936ee817915dcb",
